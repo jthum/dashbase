@@ -8,7 +8,7 @@
  *
  * Architecture: --radio-* variables for surface, base rule uses them.
  *
- * Variants: .danger
+ * Variants: none
  * States: :checked, :focus-visible, [disabled], :user-invalid
  */
 
@@ -86,12 +86,5 @@
       --radio-border: var(--color-danger);
     }
 
-    /* ═══════════════════════════════
-     * Variants
-     * ═══════════════════════════════ */
-
-    &.danger {
-      --radio-checked-bg: var(--color-danger);
-    }
   }
 }

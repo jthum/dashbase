@@ -6,7 +6,7 @@
  *
  * Architecture: --slider-* variables for surface, base rule uses them.
  *
- * Variants: .danger
+ * Variants: none
  * States: :focus-visible, [disabled]
  */
 
@@ -110,12 +110,5 @@
       pointer-events: none;
     }
 
-    /* ═══════════════════════════════
-     * Variants
-     * ═══════════════════════════════ */
-
-    &.danger {
-      --slider-thumb: var(--color-danger);
-    }
   }
 }

@@ -9,7 +9,7 @@
  *
  * Architecture: --switch-* variables for surface, base rule uses them.
  *
- * Variants: .danger
+ * Variants: none
  * Sizes: .small, (default)
  * States: :checked, :focus-visible, [disabled]
  */
@@ -71,13 +71,6 @@
       pointer-events: none;
     }
 
-    /* ═══════════════════════════════
-     * Variants
-     * ═══════════════════════════════ */
-
-    &.danger {
-      --switch-checked-bg: var(--color-danger);
-    }
 
     /* ═══════════════════════════════
      * Sizes

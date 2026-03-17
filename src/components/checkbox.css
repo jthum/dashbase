@@ -9,7 +9,7 @@
  *
  * Architecture: --chk-* variables for surface, base rule uses them.
  *
- * Variants: .danger
+ * Variants: none
  * States: :checked, :indeterminate, :focus-visible, [disabled], :user-invalid
  */
 
@@ -101,12 +101,5 @@
       --chk-border: var(--color-danger);
     }
 
-    /* ═══════════════════════════════
-     * Variants
-     * ═══════════════════════════════ */
-
-    &.danger {
-      --chk-checked-bg: var(--color-danger);
-    }
   }
 }
