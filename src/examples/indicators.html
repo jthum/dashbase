@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Indicators & Status Components</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="../components/badge.css">
+  <link rel="stylesheet" href="../components/alert.css">
+  <link rel="stylesheet" href="../components/progress.css">
+  <link rel="stylesheet" href="../components/skeleton.css">
+  <link rel="stylesheet" href="../components/spinner.css">
+
+  <style>
+    main {
+      max-width: 40rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+    section {
+      margin-block-end: var(--space-2xl);
+    }
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--color-border);
+      margin-block: var(--space-xl);
+    }
+    .theme-toggle {
+      position: fixed;
+      top: var(--space-lg);
+      right: var(--space-lg);
+    }
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .inline-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+    .skeleton-card {
+      display: flex;
+      gap: var(--space-md);
+      padding: var(--space-lg);
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .skeleton-card-lines {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+  </style>
+</head>
+<body>
+  <button class="ghost theme-toggle" onclick="toggleTheme()">🌗 Toggle Theme</button>
+
+  <main>
+    <h1>Indicators & Status</h1>
+    <p>Non-interactive feedback components: alerts, progress bars, loading skeletons, and spinners.</p>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Alert
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Alert</h2>
+
+      <div class="stack">
+        <ui-alert>
+          <div>
+            <strong>Default alert</strong>
+            <p>This is a neutral informational message.</p>
+          </div>
+        </ui-alert>
+
+        <ui-alert class="primary">
+          <div>
+            <strong>Primary</strong>
+            <p>New version available. Please update your application.</p>
+          </div>
+        </ui-alert>
+
+        <ui-alert class="danger">
+          <div>
+            <strong>Error</strong>
+            <p>Something went wrong. Please try again later.</p>
+          </div>
+        </ui-alert>
+
+        <ui-alert class="success">
+          <div>
+            <strong>Success</strong>
+            <p>Your changes have been saved successfully.</p>
+          </div>
+        </ui-alert>
+
+        <ui-alert class="warning">
+          <div>
+            <strong>Warning</strong>
+            <p>Your trial expires in 3 days. Upgrade to continue.</p>
+          </div>
+        </ui-alert>
+
+        <ui-alert class="outline">
+          <div>
+            <strong>Outline</strong>
+            <p>A minimal alert with just a border.</p>
+          </div>
+        </ui-alert>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Progress
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Progress</h2>
+
+      <div class="stack">
+        <div>
+          <label class="small">Default (50%)</label>
+          <progress value="50" max="100"></progress>
+        </div>
+
+        <div>
+          <label class="small">Success (75%)</label>
+          <progress class="success" value="75" max="100"></progress>
+        </div>
+
+        <div>
+          <label class="small">Danger (25%)</label>
+          <progress class="danger" value="25" max="100"></progress>
+        </div>
+
+        <div>
+          <label class="small">Warning (90%)</label>
+          <progress class="warning" value="90" max="100"></progress>
+        </div>
+      </div>
+
+      <h3 style="margin-top: var(--space-lg);">Sizes</h3>
+      <div class="stack">
+        <div>
+          <label class="small">Small</label>
+          <progress class="small" value="60" max="100"></progress>
+        </div>
+        <div>
+          <label class="small">Default</label>
+          <progress value="60" max="100"></progress>
+        </div>
+        <div>
+          <label class="small">Large</label>
+          <progress class="large" value="60" max="100"></progress>
+        </div>
+      </div>
+
+      <h3 style="margin-top: var(--space-lg);">Indeterminate</h3>
+      <progress></progress>
+    </section>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Skeleton
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Skeleton</h2>
+
+      <h3>Lines</h3>
+      <div class="stack">
+        <ui-skeleton></ui-skeleton>
+        <ui-skeleton style="width: 80%"></ui-skeleton>
+        <ui-skeleton style="width: 60%"></ui-skeleton>
+      </div>
+
+      <h3 style="margin-top: var(--space-lg);">Card layout</h3>
+      <div class="skeleton-card">
+        <ui-skeleton class="circle"></ui-skeleton>
+        <div class="skeleton-card-lines">
+          <ui-skeleton style="width: 40%"></ui-skeleton>
+          <ui-skeleton></ui-skeleton>
+          <ui-skeleton style="width: 70%"></ui-skeleton>
+        </div>
+      </div>
+
+      <h3 style="margin-top: var(--space-lg);">Block</h3>
+      <ui-skeleton class="block"></ui-skeleton>
+
+      <h3 style="margin-top: var(--space-lg);">Sizes</h3>
+      <div class="stack">
+        <div class="inline-group">
+          <ui-skeleton class="circle small"></ui-skeleton>
+          <span>Small circle</span>
+        </div>
+        <div class="inline-group">
+          <ui-skeleton class="circle"></ui-skeleton>
+          <span>Default circle</span>
+        </div>
+        <div class="inline-group">
+          <ui-skeleton class="circle large"></ui-skeleton>
+          <span>Large circle</span>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Spinner
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Spinner</h2>
+
+      <div class="inline-group">
+        <ui-spinner></ui-spinner>
+        <span>Default</span>
+      </div>
+
+      <h3 style="margin-top: var(--space-lg);">Variants</h3>
+      <div class="inline-group">
+        <ui-spinner class="primary"></ui-spinner>
+        <span>Primary</span>
+      </div>
+      <div class="inline-group" style="margin-top: var(--space-sm);">
+        <ui-spinner class="danger"></ui-spinner>
+        <span>Danger</span>
+      </div>
+
+      <h3 style="margin-top: var(--space-lg);">Sizes</h3>
+      <div class="inline-group">
+        <ui-spinner class="small primary"></ui-spinner>
+        <ui-spinner class="primary"></ui-spinner>
+        <ui-spinner class="large primary"></ui-spinner>
+        <ui-spinner class="xl primary"></ui-spinner>
+      </div>
+
+      <h3 style="margin-top: var(--space-lg);">In a button</h3>
+      <div class="inline-group">
+        <button class="primary" disabled>
+          <ui-spinner class="small" style="--spinner-color: currentColor; border-color: color-mix(in oklch, currentColor 30%, transparent); border-top-color: currentColor;"></ui-spinner>
+          Loading…
+        </button>
+        <button class="outline" disabled>
+          <ui-spinner class="small primary"></ui-spinner>
+          Saving…
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute("data-theme");
+      html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    }
+  </script>
+</body>
+</html>
