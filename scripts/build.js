@@ -57,6 +57,7 @@ async function build() {
 
   // 2. Copy individual component files
   let componentContents = [];
+  let componentSizes = [];
 
   try {
     const componentFiles = await readdir(COMPONENTS_DIR);
@@ -70,6 +71,7 @@ async function build() {
 
       const content = await Bun.file(src).text();
       componentContents.push(content);
+      componentSizes.push({ name: file, size: new Blob([content]).size });
     }
   } catch {
     console.log("  ℹ No components found (yet)");
@@ -94,15 +96,22 @@ async function build() {
   const elapsed = (performance.now() - startTime).toFixed(1);
 
   console.log("");
-  console.log(`  baseline.css: ${(baselineSize / 1024).toFixed(2)} KB`);
-  console.log(`  dashbase.css: ${(bundleSize / 1024).toFixed(2)} KB`);
+  console.log(`  baseline.css:  ${(baselineSize / 1024).toFixed(2)} KB`);
+  for (const { name, size } of componentSizes) {
+    const kb = (size / 1024).toFixed(2);
+    const warn = size > 4096 ? " ⚠ >4KB" : "";
+    console.log(`  ${name.padEnd(16)} ${kb} KB${warn}`);
+  }
+  console.log(`  dashbase.css:  ${(bundleSize / 1024).toFixed(2)} KB (${componentSizes.length} components)`);
   console.log(`  Built in ${elapsed}ms`);
 
   if (baselineSize > 8192) {
-    console.warn(`  ⚠ baseline.css exceeds 8KB target (${(baselineSize / 1024).toFixed(2)} KB)`);
+    console.warn(`  ⚠ baseline.css exceeds 8KB target`);
   }
-  if (bundleSize > 18432) {
-    console.warn(`  ⚠ dashbase.css exceeds 18KB target (${(bundleSize / 1024).toFixed(2)} KB)`);
+  for (const { name, size } of componentSizes) {
+    if (size > 4096) {
+      console.warn(`  ⚠ ${name} exceeds 4KB component target (${(size / 1024).toFixed(2)} KB)`);
+    }
   }
 }
 
