@@ -1,0 +1,45 @@
+/*
+ * Theme — Default
+ *
+ * Fully opinionated design system. Overrides the base tokens
+ * to create a polished, modern look.
+ * Import after baseline.css.
+ */
+
+@layer tokens {
+  :root {
+    /* ── Colors ── */
+    --color-primary: oklch(55% 0.22 260);
+    --color-primary-fg: oklch(99% 0 0);
+    --color-danger: oklch(55% 0.25 28);
+    --color-danger-fg: oklch(99% 0 0);
+    --color-success: oklch(55% 0.2 150);
+    --color-success-fg: oklch(99% 0 0);
+    --color-warning: oklch(78% 0.16 75);
+    --color-warning-fg: oklch(20% 0 0);
+    --color-neutral: oklch(45% 0.02 270);
+    --color-neutral-fg: oklch(98% 0 0);
+
+    /* ── Surfaces ── */
+    --color-surface: light-dark(oklch(98.5% 0.002 270), oklch(14% 0.005 270));
+    --color-surface-raised: light-dark(oklch(100% 0 0), oklch(18% 0.005 270));
+    --color-border: light-dark(oklch(88% 0.01 270), oklch(28% 0.01 270));
+    --color-text: light-dark(oklch(15% 0.005 270), oklch(95% 0 0));
+    --color-text-muted: light-dark(oklch(42% 0.01 270), oklch(62% 0.01 270));
+
+    /* ── Typography ── */
+    --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+
+    /* ── Radius ── */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.625rem;
+    --radius-xl: 0.875rem;
+
+    /* ── Shadows ── */
+    --shadow-sm: 0 1px 3px light-dark(oklch(0% 0 0 / 0.08), oklch(0% 0 0 / 0.3)),
+                 0 1px 2px light-dark(oklch(0% 0 0 / 0.05), oklch(0% 0 0 / 0.2));
+    --shadow-md: 0 4px 8px light-dark(oklch(0% 0 0 / 0.06), oklch(0% 0 0 / 0.35)),
+                 0 2px 4px light-dark(oklch(0% 0 0 / 0.04), oklch(0% 0 0 / 0.25));
+  }
+}

@@ -1,0 +1,14 @@
+/*
+ * Baseline CSS — Reset
+ *
+ * Minimal. Only box-sizing.
+ * All other browser defaults are preserved as load-bearing.
+ */
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}

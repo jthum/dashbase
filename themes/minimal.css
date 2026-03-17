@@ -1,0 +1,14 @@
+/*
+ * Theme — Minimal
+ *
+ * Near-native look. Only overrides the bare minimum
+ * to give browser defaults a slight identity.
+ * Import after baseline.css.
+ */
+
+@layer tokens {
+  :root {
+    --color-primary: oklch(50% 0.18 240);
+    --control-radius: 0.25rem;
+  }
+}

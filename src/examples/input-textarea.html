@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Input & Textarea Components</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="../components/input.css">
+  <link rel="stylesheet" href="../components/textarea.css">
+
+  <style>
+    main {
+      max-width: 32rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+    section {
+      margin-block-end: var(--space-2xl);
+    }
+    .field {
+      margin-block-end: var(--space-lg);
+    }
+    label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      margin-block-end: var(--space-xs);
+      color: var(--color-text);
+    }
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--color-border);
+      margin-block: var(--space-xl);
+    }
+    .theme-toggle {
+      position: fixed;
+      top: var(--space-lg);
+      right: var(--space-lg);
+    }
+  </style>
+</head>
+<body>
+  <button class="ghost theme-toggle" onclick="toggleTheme()">🌗 Toggle Theme</button>
+
+  <main>
+    <h1>Input & Textarea</h1>
+    <p>Native <code>&lt;input&gt;</code> and <code>&lt;textarea&gt;</code> elements styled directly. Shared geometry from Baseline primitives. Validation shows only after user interaction (<code>:user-invalid</code>).</p>
+
+    <hr>
+
+    <!-- ── Basic Inputs ── -->
+    <section>
+      <h2>Input Types</h2>
+
+      <div class="field">
+        <label for="i-text">Text</label>
+        <input type="text" id="i-text" placeholder="Enter text…">
+      </div>
+
+      <div class="field">
+        <label for="i-email">Email (required — type and blur to see validation)</label>
+        <input type="email" id="i-email" placeholder="user@example.com" required>
+      </div>
+
+      <div class="field">
+        <label for="i-password">Password</label>
+        <input type="password" id="i-password" placeholder="••••••••">
+      </div>
+
+      <div class="field">
+        <label for="i-number">Number</label>
+        <input type="number" id="i-number" placeholder="0" min="0" max="100">
+      </div>
+
+      <div class="field">
+        <label for="i-search">Search</label>
+        <input type="search" id="i-search" placeholder="Search…">
+      </div>
+
+      <div class="field">
+        <label for="i-url">URL (required — type invalid and blur to see validation)</label>
+        <input type="url" id="i-url" placeholder="https://example.com" required>
+      </div>
+
+      <div class="field">
+        <label for="i-tel">Telephone</label>
+        <input type="tel" id="i-tel" placeholder="+1 (555) 000-0000">
+      </div>
+
+      <div class="field">
+        <label for="i-date">Date</label>
+        <input type="date" id="i-date">
+      </div>
+
+      <div class="field">
+        <label for="i-time">Time</label>
+        <input type="time" id="i-time">
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ── States ── -->
+    <section>
+      <h2>Input States</h2>
+
+      <div class="field">
+        <label for="i-disabled">Disabled</label>
+        <input type="text" id="i-disabled" value="Cannot edit this" disabled>
+      </div>
+
+      <div class="field">
+        <label for="i-readonly">Read-only</label>
+        <input type="text" id="i-readonly" value="Read-only text" readonly>
+      </div>
+
+      <div class="field">
+        <label for="i-valid">Pre-filled valid email</label>
+        <input type="email" id="i-valid" value="user@example.com" required>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ── Textarea ── -->
+    <section>
+      <h2>Textarea</h2>
+
+      <div class="field">
+        <label for="t-default">Default (auto-grows)</label>
+        <textarea id="t-default" placeholder="Start typing — the textarea grows automatically…"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="t-required">Required (blur empty to see validation)</label>
+        <textarea id="t-required" placeholder="This field is required" required></textarea>
+      </div>
+
+      <div class="field">
+        <label for="t-disabled">Disabled</label>
+        <textarea id="t-disabled" disabled>Cannot edit this textarea</textarea>
+      </div>
+
+      <div class="field">
+        <label for="t-readonly">Read-only</label>
+        <textarea id="t-readonly" readonly>This is read-only content that can be selected but not edited.</textarea>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ── Focus Test ── -->
+    <section>
+      <h2>Focus Test</h2>
+      <p>Tab through to verify focus rings on inputs and textarea:</p>
+      <div class="field">
+        <input type="text" placeholder="Tab to me">
+      </div>
+      <div class="field">
+        <textarea placeholder="Then tab to me"></textarea>
+      </div>
+      <button class="primary">Submit</button>
+    </section>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute("data-theme");
+      html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    }
+  </script>
+</body>
+</html>

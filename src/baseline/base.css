@@ -1,0 +1,47 @@
+/*
+ * Baseline CSS — Base Element Styles
+ *
+ * Minimal global styling. No tokens defined here.
+ */
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--color-text);
+    background-color: var(--color-surface);
+  }
+
+  /* ── Reduced Motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* ── Focus Styles ── */
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* ── Typography Defaults ── */
+  :where(h1, h2, h3, h4, h5, h6) {
+    line-height: var(--leading-tight);
+    text-wrap: balance;
+  }
+
+  :where(p, li, dd, blockquote) {
+    text-wrap: pretty;
+  }
+
+  code, kbd, samp, pre {
+    font-family: var(--font-mono);
+  }
+}

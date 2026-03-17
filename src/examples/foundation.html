@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Foundation Test</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+
+  <style>
+    /* Test-page-only styles */
+    main {
+      max-width: 48rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+    section {
+      margin-block-end: var(--space-2xl);
+    }
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+      gap: var(--space-md);
+    }
+    .swatch {
+      padding: var(--space-lg);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-family: var(--font-mono);
+    }
+    .theme-toggle {
+      position: fixed;
+      top: var(--space-lg);
+      right: var(--space-lg);
+      padding: var(--space-sm) var(--space-lg);
+      background: var(--color-surface-raised);
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--text-sm);
+    }
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--color-border);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark/Light</button>
+
+  <main>
+    <h1>Dashbase Foundation</h1>
+    <p>This page verifies the token system, layer architecture, and base styles. All elements below use browser defaults refined by Baseline CSS tokens.</p>
+
+    <hr>
+
+    <!-- ── Color Tokens ── -->
+    <section>
+      <h2>Color Tokens</h2>
+
+      <h3>Semantic Colors</h3>
+      <div class="swatch-grid">
+        <div class="swatch" style="background: var(--color-primary); color: var(--color-primary-fg);">primary</div>
+        <div class="swatch" style="background: var(--color-danger); color: var(--color-danger-fg);">danger</div>
+        <div class="swatch" style="background: var(--color-success); color: var(--color-success-fg);">success</div>
+        <div class="swatch" style="background: var(--color-warning); color: var(--color-warning-fg);">warning</div>
+        <div class="swatch" style="background: var(--color-neutral); color: var(--color-neutral-fg);">neutral</div>
+      </div>
+
+      <h3>Derived States (color-mix)</h3>
+      <div class="swatch-grid">
+        <div class="swatch" style="background: var(--color-primary); color: var(--color-primary-fg);">primary</div>
+        <div class="swatch" style="background: var(--color-primary-hover); color: var(--color-primary-fg);">hover</div>
+        <div class="swatch" style="background: var(--color-primary-active); color: var(--color-primary-fg);">active</div>
+        <div class="swatch" style="background: var(--color-primary-subtle); color: var(--color-primary);">subtle</div>
+      </div>
+
+      <h3>Surface & Text</h3>
+      <div class="swatch-grid">
+        <div class="swatch" style="background: var(--color-surface); border: var(--border-width) solid var(--color-border);">surface</div>
+        <div class="swatch" style="background: var(--color-surface-raised); border: var(--border-width) solid var(--color-border);">raised</div>
+        <div class="swatch" style="background: var(--color-border);">border</div>
+      </div>
+      <p style="color: var(--color-text);">Text color (default)</p>
+      <p style="color: var(--color-text-muted);">Text color (muted)</p>
+    </section>
+
+    <hr>
+
+    <!-- ── Typography ── -->
+    <section>
+      <h2>Typography</h2>
+      <p style="font-size: var(--text-xs);">Text XS (--text-xs)</p>
+      <p style="font-size: var(--text-sm);">Text SM (--text-sm)</p>
+      <p style="font-size: var(--text-base);">Text Base (--text-base)</p>
+      <p style="font-size: var(--text-lg);">Text LG (--text-lg)</p>
+      <p style="font-size: var(--text-xl);">Text XL (--text-xl)</p>
+      <p style="font-size: var(--text-2xl);">Text 2XL (--text-2xl)</p>
+      <p style="font-size: var(--text-3xl);">Text 3XL (--text-3xl)</p>
+      <p>Paragraph text with <code>inline code</code> using <kbd>kbd element</kbd>.</p>
+    </section>
+
+    <hr>
+
+    <!-- ── Spacing ── -->
+    <section>
+      <h2>Spacing Scale</h2>
+      <p>Base unit: <code>--space-unit</code> (0.25rem). All sizes derived via multiplier.</p>
+      <div style="display: flex; align-items: flex-end; gap: var(--space-sm); flex-wrap: wrap;">
+        <div style="width: var(--space-xs); height: var(--space-2xl); background: var(--color-primary);" title="--space-xs"></div>
+        <div style="width: var(--space-sm); height: var(--space-2xl); background: var(--color-primary);" title="--space-sm"></div>
+        <div style="width: var(--space-md); height: var(--space-2xl); background: var(--color-primary);" title="--space-md"></div>
+        <div style="width: var(--space-lg); height: var(--space-2xl); background: var(--color-primary);" title="--space-lg"></div>
+        <div style="width: var(--space-xl); height: var(--space-2xl); background: var(--color-primary);" title="--space-xl"></div>
+        <div style="width: var(--space-2xl); height: var(--space-2xl); background: var(--color-primary);" title="--space-2xl"></div>
+        <div style="width: var(--space-3xl); height: var(--space-2xl); background: var(--color-primary);" title="--space-3xl"></div>
+        <div style="width: var(--space-4xl); height: var(--space-2xl); background: var(--color-primary);" title="--space-4xl"></div>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ── Radius ── -->
+    <section>
+      <h2>Border Radius</h2>
+      <div style="display: flex; gap: var(--space-lg); flex-wrap: wrap;">
+        <div style="width: 4rem; height: 4rem; background: var(--color-primary-subtle); border: var(--border-width) solid var(--color-primary); border-radius: var(--radius-sm);" title="--radius-sm"></div>
+        <div style="width: 4rem; height: 4rem; background: var(--color-primary-subtle); border: var(--border-width) solid var(--color-primary); border-radius: var(--radius-md);" title="--radius-md"></div>
+        <div style="width: 4rem; height: 4rem; background: var(--color-primary-subtle); border: var(--border-width) solid var(--color-primary); border-radius: var(--radius-lg);" title="--radius-lg"></div>
+        <div style="width: 4rem; height: 4rem; background: var(--color-primary-subtle); border: var(--border-width) solid var(--color-primary); border-radius: var(--radius-xl);" title="--radius-xl"></div>
+        <div style="width: 4rem; height: 4rem; background: var(--color-primary-subtle); border: var(--border-width) solid var(--color-primary); border-radius: var(--radius-full);" title="--radius-full"></div>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ── Shadows ── -->
+    <section>
+      <h2>Shadows</h2>
+      <div style="display: flex; gap: var(--space-xl); flex-wrap: wrap;">
+        <div style="width: 8rem; height: 5rem; background: var(--color-surface-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-xs); display: grid; place-items: center; font-size: var(--text-sm);">XS</div>
+        <div style="width: 8rem; height: 5rem; background: var(--color-surface-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); display: grid; place-items: center; font-size: var(--text-sm);">SM</div>
+        <div style="width: 8rem; height: 5rem; background: var(--color-surface-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-md); display: grid; place-items: center; font-size: var(--text-sm);">MD</div>
+        <div style="width: 8rem; height: 5rem; background: var(--color-surface-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); display: grid; place-items: center; font-size: var(--text-sm);">LG</div>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ── Native Elements ── -->
+    <section>
+      <h2>Native Elements (No Component CSS)</h2>
+      <p>These use browser defaults + Baseline primitives. No component CSS loaded.</p>
+
+      <h3>Form Elements</h3>
+      <form onsubmit="event.preventDefault()">
+        <p>
+          <label for="test-input">Text input:</label><br>
+          <input type="text" id="test-input" placeholder="Type here…">
+        </p>
+        <p>
+          <label for="test-email">Email:</label><br>
+          <input type="email" id="test-email" placeholder="user@example.com">
+        </p>
+        <p>
+          <label for="test-textarea">Textarea:</label><br>
+          <textarea id="test-textarea" rows="3" placeholder="Multi-line text…"></textarea>
+        </p>
+        <p>
+          <label for="test-select">Select:</label><br>
+          <select id="test-select">
+            <option>Option 1</option>
+            <option>Option 2</option>
+            <option>Option 3</option>
+          </select>
+        </p>
+        <p>
+          <label><input type="checkbox"> Checkbox</label><br>
+          <label><input type="radio" name="test-radio"> Radio A</label><br>
+          <label><input type="radio" name="test-radio"> Radio B</label>
+        </p>
+        <p>
+          <button type="submit">Submit (native)</button>
+          <button type="button" disabled>Disabled</button>
+        </p>
+      </form>
+
+      <h3>Focus Test</h3>
+      <p>Tab through these elements to verify focus rings:</p>
+      <a href="#">Link</a> ·
+      <button type="button">Button</button> ·
+      <input type="text" placeholder="Input" style="width: 8rem;">
+    </section>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute("data-theme");
+      if (current === "dark") {
+        html.removeAttribute("data-theme");
+      } else {
+        html.setAttribute("data-theme", "dark");
+      }
+    }
+  </script>
+</body>
+</html>

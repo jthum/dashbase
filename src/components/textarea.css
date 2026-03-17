@@ -1,0 +1,68 @@
+/*
+ * Dashbase — Textarea
+ *
+ * Styles the native <textarea> element.
+ * Primitives handle: padding, font, border, radius, transition.
+ * Auto-grows via field-sizing: content (no JS).
+ */
+
+@layer components {
+  textarea {
+    display: block;
+    width: 100%;
+    min-height: 5rem;
+    line-height: var(--leading-normal);
+    resize: vertical;
+    field-sizing: content;
+
+    /* ── Placeholder ── */
+    &::placeholder {
+      color: var(--color-text-muted);
+      opacity: 1;
+    }
+
+    /* ── Focus ── */
+    &:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+      border-color: var(--color-primary);
+    }
+
+    /* ── Hover ── */
+    &:hover:not(:focus-visible):not([disabled]):not([readonly]) {
+      border-color: color-mix(in oklch, var(--color-border) 70%, var(--color-text));
+    }
+
+    /* ── Disabled ── */
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background-color: var(--color-neutral-subtle);
+      resize: none;
+    }
+
+    /* ── Read-only ── */
+    &[readonly] {
+      background-color: var(--color-neutral-subtle);
+      cursor: default;
+    }
+
+    /* ── User-invalid ── */
+    &:user-invalid {
+      border-color: var(--color-danger);
+
+      &:focus-visible {
+        outline-color: var(--color-danger);
+      }
+    }
+
+    /* ── User-valid ── */
+    &:user-valid:not(:placeholder-shown) {
+      border-color: var(--color-success);
+
+      &:focus-visible {
+        outline-color: var(--color-success);
+      }
+    }
+  }
+}

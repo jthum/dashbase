@@ -1,0 +1,91 @@
+/*
+ * Dashbase — Input
+ *
+ * Styles native <input> for text-like types.
+ * Primitives handle: padding, font, border, radius, transition.
+ * States via native attributes: :user-invalid, :focus-visible, [disabled], [readonly]
+ */
+
+@layer components {
+  input:where(
+    [type="text"],
+    [type="email"],
+    [type="password"],
+    [type="number"],
+    [type="search"],
+    [type="url"],
+    [type="tel"],
+    [type="date"],
+    [type="time"],
+    [type="datetime-local"],
+    :not([type])
+  ) {
+    display: block;
+    width: 100%;
+    line-height: var(--leading-normal);
+
+    /* ── Placeholder ── */
+    &::placeholder {
+      color: var(--color-text-muted);
+      opacity: 1;
+    }
+
+    /* ── Focus ── */
+    &:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+      border-color: var(--color-primary);
+    }
+
+    /* ── Hover ── */
+    &:hover:not(:focus-visible):not([disabled]):not([readonly]) {
+      border-color: color-mix(in oklch, var(--color-border) 70%, var(--color-text));
+    }
+
+    /* ── Disabled ── */
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background-color: var(--color-neutral-subtle);
+    }
+
+    /* ── Read-only ── */
+    &[readonly] {
+      background-color: var(--color-neutral-subtle);
+      cursor: default;
+    }
+
+    /* ── User-invalid (shows only after interaction) ── */
+    &:user-invalid {
+      border-color: var(--color-danger);
+
+      &:focus-visible {
+        outline-color: var(--color-danger);
+      }
+    }
+
+    /* ── User-valid ── */
+    &:user-valid:not(:placeholder-shown) {
+      border-color: var(--color-success);
+
+      &:focus-visible {
+        outline-color: var(--color-success);
+      }
+    }
+
+    /* ── Search: clear button ── */
+    &[type="search"] {
+      &::-webkit-search-cancel-button {
+        cursor: pointer;
+      }
+    }
+
+    /* ── Number: spinners ── */
+    &[type="number"] {
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        opacity: 1;
+      }
+    }
+  }
+}

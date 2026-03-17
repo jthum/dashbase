@@ -1,0 +1,128 @@
+/*
+ * Baseline CSS — Design Tokens
+ *
+ * All design tokens in one file. Themes override these values.
+ * Uses oklch for perceptual uniformity, color-mix for derived states,
+ * light-dark() for automatic dark mode.
+ */
+
+@layer tokens {
+  :root {
+    /* ── Color Scheme ── */
+    color-scheme: light dark;
+
+    /* ── Colors (oklch for perceptual uniformity) ── */
+    --color-primary: oklch(55% 0.2 250);
+    --color-primary-fg: oklch(98% 0 0);
+    --color-danger: oklch(55% 0.22 25);
+    --color-danger-fg: oklch(98% 0 0);
+    --color-success: oklch(55% 0.18 145);
+    --color-success-fg: oklch(98% 0 0);
+    --color-warning: oklch(75% 0.15 80);
+    --color-warning-fg: oklch(25% 0 0);
+    --color-neutral: oklch(50% 0.01 270);
+    --color-neutral-fg: oklch(98% 0 0);
+
+    /* ── Surface & Border ── */
+    --color-surface: light-dark(oklch(99% 0 0), oklch(15% 0.005 270));
+    --color-surface-raised: light-dark(oklch(100% 0 0), oklch(20% 0.005 270));
+    --color-border: light-dark(oklch(85% 0.01 270), oklch(30% 0.01 270));
+    --color-text: light-dark(oklch(20% 0 0), oklch(93% 0 0));
+    --color-text-muted: light-dark(oklch(45% 0.01 270), oklch(65% 0.01 270));
+
+    /* ── Derived States (color-mix) ── */
+    --color-primary-hover: color-mix(in oklch, var(--color-primary) 85%, black);
+    --color-primary-active: color-mix(in oklch, var(--color-primary) 75%, black);
+    --color-primary-subtle: color-mix(in oklch, var(--color-primary) 12%, var(--color-surface));
+    --color-danger-hover: color-mix(in oklch, var(--color-danger) 85%, black);
+    --color-danger-active: color-mix(in oklch, var(--color-danger) 75%, black);
+    --color-danger-subtle: color-mix(in oklch, var(--color-danger) 12%, var(--color-surface));
+    --color-neutral-hover: color-mix(in oklch, var(--color-neutral) 85%, black);
+    --color-neutral-active: color-mix(in oklch, var(--color-neutral) 75%, black);
+    --color-neutral-subtle: color-mix(in oklch, var(--color-neutral) 12%, var(--color-surface));
+
+    /* ── Typography ── */
+    --font-sans: system-ui, -apple-system, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+    --text-xs: clamp(0.6875rem, 1.2vw, 0.75rem);
+    --text-sm: clamp(0.75rem, 1.5vw, 0.875rem);
+    --text-base: clamp(0.875rem, 2vw, 1rem);
+    --text-lg: clamp(1rem, 2.5vw, 1.125rem);
+    --text-xl: clamp(1.125rem, 3vw, 1.25rem);
+    --text-2xl: clamp(1.375rem, 3.5vw, 1.5rem);
+    --text-3xl: clamp(1.75rem, 4vw, 1.875rem);
+    --leading-tight: 1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.75;
+
+    /* ── Spacing (t-shirt scale, adjustable via --space-unit) ── */
+    --space-unit: 0.25rem;
+    --space-xs:  calc(var(--space-unit) * 1);
+    --space-sm:  calc(var(--space-unit) * 2);
+    --space-md:  calc(var(--space-unit) * 3);
+    --space-lg:  calc(var(--space-unit) * 4);
+    --space-xl:  calc(var(--space-unit) * 6);
+    --space-2xl: calc(var(--space-unit) * 8);
+    --space-3xl: calc(var(--space-unit) * 12);
+    --space-4xl: calc(var(--space-unit) * 16);
+
+    /* ── Border ── */
+    --border-width: 1px;
+
+    /* ── Border Radius ── */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-full: 9999px;
+
+    /* ── Shadows ── */
+    --shadow-xs: 0 1px 2px light-dark(oklch(0% 0 0 / 0.04), oklch(0% 0 0 / 0.2));
+    --shadow-sm: 0 1px 3px light-dark(oklch(0% 0 0 / 0.06), oklch(0% 0 0 / 0.25)),
+                 0 1px 2px light-dark(oklch(0% 0 0 / 0.04), oklch(0% 0 0 / 0.2));
+    --shadow-md: 0 4px 6px light-dark(oklch(0% 0 0 / 0.05), oklch(0% 0 0 / 0.3)),
+                 0 2px 4px light-dark(oklch(0% 0 0 / 0.04), oklch(0% 0 0 / 0.25));
+    --shadow-lg: 0 10px 15px light-dark(oklch(0% 0 0 / 0.06), oklch(0% 0 0 / 0.35)),
+                 0 4px 6px light-dark(oklch(0% 0 0 / 0.04), oklch(0% 0 0 / 0.25));
+
+    /* ── Transitions ── */
+    --duration-instant: 50ms;
+    --duration-fast: 100ms;
+    --duration-base: 150ms;
+    --duration-moderate: 250ms;
+    --duration-slow: 350ms;
+    --easing-default: ease;
+    --easing-in: ease-in;
+    --easing-out: ease-out;
+    --easing-in-out: ease-in-out;
+
+    /* ── Focus Ring ── */
+    --focus-ring-width: 2px;
+    --focus-ring-offset: 2px;
+    --focus-ring-color: var(--color-primary);
+
+    /* ── Z-Index Scale ── */
+    --z-dropdown: 50;
+    --z-sticky: 100;
+    --z-overlay: 200;
+    --z-modal: 300;
+    --z-popover: 400;
+    --z-toast: 500;
+
+    /* ── Control Tokens (shared geometry for button/input/select/textarea) ── */
+    --control-padding-inline: var(--space-lg);
+    --control-padding-block: var(--space-sm);
+    --control-radius: var(--radius-md);
+    --control-font-size: var(--text-sm);
+  }
+
+  /* ── Manual Dark Mode Override ── */
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  [data-theme="light"] {
+    color-scheme: light;
+  }
+}

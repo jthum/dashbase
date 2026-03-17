@@ -1,0 +1,22 @@
+/*
+ * Baseline CSS — Primitives
+ *
+ * Shared structural styles for interactive controls.
+ * Uses :where() for zero specificity — components can override freely.
+ */
+
+@layer primitives {
+  :where(button, input, select, textarea) {
+    font-family: inherit;
+    font-size: var(--control-font-size);
+    padding-inline: var(--control-padding-inline);
+    padding-block: var(--control-padding-block);
+    color: var(--color-text);
+    background-color: var(--color-surface-raised);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--control-radius);
+    transition-property: background-color, color, border-color, box-shadow, outline;
+    transition-duration: var(--duration-fast);
+    transition-timing-function: var(--easing-default);
+  }
+}

@@ -1,0 +1,193 @@
+/*
+ * Dashbase — Button
+ *
+ * Styles the native <button> element.
+ * Primitives handle: padding, font, border, radius, transition.
+ *
+ * Variants: .primary, .danger, .ghost, .outline, .link
+ * Sizes: .xs, .small, (default), .large, .xl
+ * Icon: .icon
+ */
+
+@layer components {
+  button,
+  [role="button"] {
+    /* ── Layout ── */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+
+    /* ── Typography ── */
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-decoration: none;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    /* ── Hover ── */
+    &:hover:not([disabled]) {
+      background-color: var(--color-neutral-subtle);
+    }
+
+    /* ── Active ── */
+    &:active:not([disabled]) {
+      background-color: color-mix(in oklch, var(--color-neutral-subtle) 80%, var(--color-neutral));
+    }
+
+    /* ── Focus ── */
+    &:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+    }
+
+    /* ── Disabled ── */
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════
+     * Variants
+     * ═══════════════════════════════ */
+
+    /* ── Primary ── */
+    &.primary {
+      background-color: var(--color-primary);
+      color: var(--color-primary-fg);
+      border-color: var(--color-primary);
+
+      &:hover:not([disabled]) {
+        background-color: var(--color-primary-hover);
+        border-color: var(--color-primary-hover);
+      }
+
+      &:active:not([disabled]) {
+        background-color: var(--color-primary-active);
+        border-color: var(--color-primary-active);
+      }
+    }
+
+    /* ── Danger ── */
+    &.danger {
+      background-color: var(--color-danger);
+      color: var(--color-danger-fg);
+      border-color: var(--color-danger);
+
+      &:hover:not([disabled]) {
+        background-color: var(--color-danger-hover);
+        border-color: var(--color-danger-hover);
+      }
+
+      &:active:not([disabled]) {
+        background-color: var(--color-danger-active);
+        border-color: var(--color-danger-active);
+      }
+    }
+
+    /* ── Ghost ── */
+    &.ghost {
+      background-color: transparent;
+      border-color: transparent;
+
+      &:hover:not([disabled]) {
+        background-color: var(--color-neutral-subtle);
+      }
+
+      &:active:not([disabled]) {
+        background-color: color-mix(in oklch, var(--color-neutral-subtle) 80%, var(--color-neutral));
+      }
+    }
+
+    /* ── Outline ── */
+    &.outline {
+      background-color: transparent;
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+
+      &:hover:not([disabled]) {
+        background-color: var(--color-primary-subtle);
+      }
+
+      &:active:not([disabled]) {
+        background-color: color-mix(in oklch, var(--color-primary-subtle) 70%, var(--color-primary));
+      }
+    }
+
+    /* ── Link ── */
+    &.link {
+      background-color: transparent;
+      border-color: transparent;
+      color: var(--color-primary);
+      padding-inline: var(--space-xs);
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+
+      &:hover:not([disabled]) {
+        background-color: transparent;
+        color: var(--color-primary-hover);
+      }
+    }
+
+    /* ═══════════════════════════════
+     * Sizes
+     * ═══════════════════════════════ */
+
+    &.xs {
+      padding-block: var(--space-xs);
+      padding-inline: var(--space-sm);
+      font-size: var(--text-xs);
+      border-radius: var(--radius-sm);
+    }
+
+    &.small {
+      padding-block: var(--space-xs);
+      padding-inline: var(--space-md);
+      border-radius: var(--radius-sm);
+    }
+
+    /* default: from primitives */
+
+    &.large {
+      padding-block: var(--space-md);
+      padding-inline: var(--space-xl);
+      font-size: var(--text-base);
+      border-radius: var(--radius-lg);
+    }
+
+    &.xl {
+      padding-block: var(--space-lg);
+      padding-inline: var(--space-xl);
+      font-size: var(--text-lg);
+      border-radius: var(--radius-xl);
+    }
+
+    /* ═══════════════════════════════
+     * Icon Button
+     * Usage: <button class="icon" aria-label="Close">
+     *          <svg>...</svg>
+     *        </button>
+     * ═══════════════════════════════ */
+
+    &.icon {
+      padding: var(--space-sm);
+      aspect-ratio: 1;
+
+      & svg,
+      & img {
+        width: 1.125em;
+        height: 1.125em;
+      }
+    }
+
+    /* ── Inline icon sizing for text + icon buttons ── */
+    & svg,
+    & img {
+      flex-shrink: 0;
+      width: 1em;
+      height: 1em;
+    }
+  }
+}
