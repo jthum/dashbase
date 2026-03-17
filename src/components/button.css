@@ -4,6 +4,9 @@
  * Styles the native <button> element.
  * Primitives handle: padding, font, border, radius, transition.
  *
+ * Architecture: variants set --btn-* variables, base rule uses them.
+ * Hover/active logic written once, not per variant.
+ *
  * Variants: .primary, .danger, .ghost, .outline, .link
  * Sizes: .xs, .small, (default), .large, .xl
  * Icon: .icon
@@ -26,14 +29,20 @@
 
     cursor: pointer;
 
+    /* ── Surface (driven by variant variables) ── */
+    background-color: var(--btn-bg, var(--color-surface-raised));
+    color: var(--btn-fg, var(--color-text));
+    border-color: var(--btn-border, var(--color-border));
+
     /* ── Hover ── */
     &:hover:not([disabled]) {
-      background-color: var(--color-neutral-subtle);
+      background-color: var(--btn-bg-hover, color-mix(in oklch, var(--btn-bg, var(--color-surface-raised)) 85%, black));
+      border-color: var(--btn-border-hover, var(--btn-border, var(--color-border)));
     }
 
     /* ── Active ── */
     &:active:not([disabled]) {
-      background-color: color-mix(in oklch, var(--color-neutral-subtle) 80%, var(--color-neutral));
+      background-color: var(--btn-bg-active, color-mix(in oklch, var(--btn-bg, var(--color-surface-raised)) 75%, black));
     }
 
     /* ── Focus ── */
@@ -50,83 +59,48 @@
     }
 
     /* ═══════════════════════════════
-     * Variants
+     * Variants (variable assignments only)
      * ═══════════════════════════════ */
 
-    /* ── Primary ── */
     &.primary {
-      background-color: var(--color-primary);
-      color: var(--color-primary-fg);
-      border-color: var(--color-primary);
-
-      &:hover:not([disabled]) {
-        background-color: var(--color-primary-hover);
-        border-color: var(--color-primary-hover);
-      }
-
-      &:active:not([disabled]) {
-        background-color: var(--color-primary-active);
-        border-color: var(--color-primary-active);
-      }
+      --btn-bg: var(--color-primary);
+      --btn-fg: var(--color-primary-fg);
+      --btn-border: var(--color-primary);
+      --btn-border-hover: var(--color-primary-hover);
     }
 
-    /* ── Danger ── */
     &.danger {
-      background-color: var(--color-danger);
-      color: var(--color-danger-fg);
-      border-color: var(--color-danger);
-
-      &:hover:not([disabled]) {
-        background-color: var(--color-danger-hover);
-        border-color: var(--color-danger-hover);
-      }
-
-      &:active:not([disabled]) {
-        background-color: var(--color-danger-active);
-        border-color: var(--color-danger-active);
-      }
+      --btn-bg: var(--color-danger);
+      --btn-fg: var(--color-danger-fg);
+      --btn-border: var(--color-danger);
+      --btn-border-hover: var(--color-danger-hover);
     }
 
-    /* ── Ghost ── */
     &.ghost {
-      background-color: transparent;
-      border-color: transparent;
-
-      &:hover:not([disabled]) {
-        background-color: var(--color-neutral-subtle);
-      }
-
-      &:active:not([disabled]) {
-        background-color: color-mix(in oklch, var(--color-neutral-subtle) 80%, var(--color-neutral));
-      }
+      --btn-bg: transparent;
+      --btn-border: transparent;
+      --btn-bg-hover: var(--color-neutral-subtle);
+      --btn-bg-active: color-mix(in oklch, var(--color-neutral-subtle) 80%, var(--color-neutral));
     }
 
-    /* ── Outline ── */
     &.outline {
-      background-color: transparent;
-      color: var(--color-primary);
-      border-color: var(--color-primary);
-
-      &:hover:not([disabled]) {
-        background-color: var(--color-primary-subtle);
-      }
-
-      &:active:not([disabled]) {
-        background-color: color-mix(in oklch, var(--color-primary-subtle) 70%, var(--color-primary));
-      }
+      --btn-bg: transparent;
+      --btn-fg: var(--color-primary);
+      --btn-border: var(--color-primary);
+      --btn-bg-hover: var(--color-primary-subtle);
+      --btn-bg-active: color-mix(in oklch, var(--color-primary-subtle) 70%, var(--color-primary));
     }
 
-    /* ── Link ── */
     &.link {
-      background-color: transparent;
-      border-color: transparent;
-      color: var(--color-primary);
+      --btn-bg: transparent;
+      --btn-border: transparent;
+      --btn-fg: var(--color-primary);
+      --btn-bg-hover: transparent;
       padding-inline: var(--space-xs);
       text-decoration: underline;
       text-underline-offset: 0.2em;
 
       &:hover:not([disabled]) {
-        background-color: transparent;
         color: var(--color-primary-hover);
       }
     }
@@ -182,7 +156,7 @@
       }
     }
 
-    /* ── Inline icon sizing for text + icon buttons ── */
+    /* ── Inline icon sizing ── */
     & svg,
     & img {
       flex-shrink: 0;
