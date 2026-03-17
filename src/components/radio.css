@@ -16,13 +16,18 @@
   input[type="radio"] {
     /* ── Layout ── */
     appearance: none;
+    box-sizing: border-box;
     display: inline-grid;
     place-content: center;
     width: 1.125rem;
     height: 1.125rem;
+    aspect-ratio: 1 / 1;
     margin: 0;
+    padding: 0;
     cursor: pointer;
     flex-shrink: 0;
+    justify-self: start;
+    align-self: center;
 
     /* ── Surface ── */
     background-color: var(--radio-bg, var(--color-surface-raised));
