@@ -1,0 +1,88 @@
+/*
+ * Dashbase — Alert
+ *
+ * Styles the <ui-alert> custom element.
+ * A non-interactive status message with optional icon and dismissibility.
+ *
+ * Presentational UI element (ui-* namespace) — no native equivalent.
+ * Does not use control primitives (bespoke padding/radius).
+ *
+ * Structure:
+ *   <ui-alert class="danger">
+ *     <strong>Error</strong>
+ *     <span>Something went wrong.</span>
+ *   </ui-alert>
+ *
+ * Architecture: --alert-* variables for surface, variants reassign them.
+ *
+ * Variants: .primary, .danger, .success, .warning, .outline
+ */
+
+@layer components {
+  ui-alert {
+    /* ── Layout ── */
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+
+    /* ── Typography ── */
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+
+    /* ── Surface (driven by variant variables) ── */
+    background-color: var(--alert-bg, var(--color-neutral-subtle));
+    color: var(--alert-fg, var(--color-text));
+    border: var(--border-width) solid var(--alert-border, var(--color-border));
+    border-radius: var(--radius-lg);
+
+    /* ── Title ── */
+    & > strong {
+      font-weight: 600;
+      line-height: var(--leading-tight);
+    }
+
+    /* ── Icon slot (svg/img as first child) ── */
+    & > svg,
+    & > img {
+      flex-shrink: 0;
+      width: 1.25em;
+      height: 1.25em;
+      margin-top: 0.125em;
+    }
+
+    /* ═══════════════════════════════
+     * Variants (variable assignments only)
+     * ═══════════════════════════════ */
+
+    &.primary {
+      --alert-bg: var(--color-primary-subtle);
+      --alert-fg: var(--color-primary-hover);
+      --alert-border: color-mix(in oklch, var(--color-primary) 30%, transparent);
+    }
+
+    &.danger {
+      --alert-bg: var(--color-danger-subtle);
+      --alert-fg: var(--color-danger-hover);
+      --alert-border: color-mix(in oklch, var(--color-danger) 30%, transparent);
+    }
+
+    &.success {
+      --alert-bg: color-mix(in oklch, var(--color-success) 12%, var(--color-surface));
+      --alert-fg: color-mix(in oklch, var(--color-success) 85%, black);
+      --alert-border: color-mix(in oklch, var(--color-success) 30%, transparent);
+    }
+
+    &.warning {
+      --alert-bg: color-mix(in oklch, var(--color-warning) 15%, var(--color-surface));
+      --alert-fg: color-mix(in oklch, var(--color-warning) 75%, black);
+      --alert-border: color-mix(in oklch, var(--color-warning) 30%, transparent);
+    }
+
+    &.outline {
+      --alert-bg: transparent;
+      --alert-fg: var(--color-text);
+      --alert-border: var(--color-border);
+    }
+  }
+}

@@ -1,0 +1,90 @@
+/*
+ * Dashbase — Skeleton
+ *
+ * Styles the <ui-skeleton> custom element.
+ * A loading placeholder that pulses to indicate content is loading.
+ *
+ * Presentational UI element (ui-* namespace).
+ *
+ * Structure:
+ *   <ui-skeleton></ui-skeleton>                  (line)
+ *   <ui-skeleton class="circle"></ui-skeleton>    (avatar)
+ *   <ui-skeleton class="block"></ui-skeleton>     (card/area)
+ *
+ * Variants: .circle, .block
+ * Sizes: .small, (default), .large
+ */
+
+@layer components {
+  ui-skeleton {
+    /* ── Layout ── */
+    display: block;
+
+    /* ── Dimensions (line shape by default) ── */
+    width: 100%;
+    height: var(--skeleton-height, 0.875rem);
+
+    /* ── Surface ── */
+    background-color: var(--color-neutral-subtle);
+    border-radius: var(--radius-md);
+
+    /* ── Pulse animation ── */
+    animation: skeleton-pulse var(--duration-slow) var(--easing-in-out) infinite alternate;
+
+    /* ═══════════════════════════════
+     * Variants
+     * ═══════════════════════════════ */
+
+    /* Circle (avatar placeholder) */
+    &.circle {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: var(--radius-full);
+    }
+
+    /* Block (card/area placeholder) */
+    &.block {
+      height: var(--skeleton-height, 6rem);
+      border-radius: var(--radius-lg);
+    }
+
+    /* ═══════════════════════════════
+     * Sizes (affect height of line/block)
+     * ═══════════════════════════════ */
+
+    &.small {
+      --skeleton-height: 0.625rem;
+
+      &.circle {
+        width: 2rem;
+        height: 2rem;
+      }
+
+      &.block {
+        --skeleton-height: 4rem;
+      }
+    }
+
+    &.large {
+      --skeleton-height: 1.25rem;
+
+      &.circle {
+        width: 3.5rem;
+        height: 3.5rem;
+      }
+
+      &.block {
+        --skeleton-height: 8rem;
+      }
+    }
+  }
+
+  @keyframes skeleton-pulse {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0.4;
+    }
+  }
+}

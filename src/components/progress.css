@@ -1,0 +1,80 @@
+/*
+ * Dashbase — Progress
+ *
+ * Styles the native <progress> element.
+ * Uses appearance: none with vendor pseudo-elements.
+ *
+ * Architecture: --progress-* variables for surface, variants reassign them.
+ *
+ * Variants: .primary (default), .danger, .success, .warning
+ * Sizes: .small, (default), .large
+ */
+
+@layer components {
+  progress {
+    /* ── Layout ── */
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: var(--progress-height, 0.5rem);
+    border: none;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+
+    /* ── Track: WebKit ── */
+    &::-webkit-progress-bar {
+      background: var(--progress-track, var(--color-neutral-subtle));
+      border-radius: var(--radius-full);
+    }
+
+    /* ── Fill: WebKit ── */
+    &::-webkit-progress-value {
+      background: var(--progress-fill, var(--color-primary));
+      border-radius: var(--radius-full);
+      transition: width var(--duration-moderate) var(--easing-default);
+    }
+
+    /* ── Fill: Firefox ── */
+    &::-moz-progress-bar {
+      background: var(--progress-fill, var(--color-primary));
+      border-radius: var(--radius-full);
+    }
+
+    /* ── Indeterminate animation ── */
+    &:indeterminate {
+      &::-webkit-progress-bar {
+        background: var(--progress-track, var(--color-neutral-subtle));
+      }
+    }
+
+    /* ═══════════════════════════════
+     * Variants
+     * ═══════════════════════════════ */
+
+    &.danger {
+      --progress-fill: var(--color-danger);
+    }
+
+    &.success {
+      --progress-fill: var(--color-success);
+    }
+
+    &.warning {
+      --progress-fill: var(--color-warning);
+    }
+
+    /* ═══════════════════════════════
+     * Sizes
+     * ═══════════════════════════════ */
+
+    &.small {
+      --progress-height: 0.25rem;
+    }
+
+    /* default: 0.5rem */
+
+    &.large {
+      --progress-height: 0.75rem;
+    }
+  }
+}

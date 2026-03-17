@@ -1,0 +1,77 @@
+/*
+ * Dashbase — Spinner
+ *
+ * Styles the <ui-spinner> custom element.
+ * A CSS-only loading indicator using a spinning border arc.
+ *
+ * Presentational UI element (ui-* namespace).
+ *
+ * Structure:
+ *   <ui-spinner></ui-spinner>
+ *   <ui-spinner class="small"></ui-spinner>
+ *   <ui-spinner class="primary"></ui-spinner>
+ *
+ * Variants: .primary, .danger
+ * Sizes: .small, (default), .large, .xl
+ */
+
+@layer components {
+  ui-spinner {
+    /* ── Layout ── */
+    display: inline-block;
+    width: var(--spinner-size, 1.5rem);
+    height: var(--spinner-size, 1.5rem);
+    flex-shrink: 0;
+
+    /* ── Spinning arc ── */
+    border: 2px solid var(--color-border);
+    border-top-color: var(--spinner-color, var(--color-text));
+    border-radius: var(--radius-full);
+
+    /* ── Animation ── */
+    animation: spinner-rotate var(--duration-slow) linear infinite;
+
+    /* ═══════════════════════════════
+     * Variants
+     * ═══════════════════════════════ */
+
+    &.primary {
+      --spinner-color: var(--color-primary);
+      border-color: var(--color-primary-subtle);
+      border-top-color: var(--color-primary);
+    }
+
+    &.danger {
+      --spinner-color: var(--color-danger);
+      border-color: var(--color-danger-subtle);
+      border-top-color: var(--color-danger);
+    }
+
+    /* ═══════════════════════════════
+     * Sizes
+     * ═══════════════════════════════ */
+
+    &.small {
+      --spinner-size: 1rem;
+      border-width: 1.5px;
+    }
+
+    /* default: 1.5rem */
+
+    &.large {
+      --spinner-size: 2rem;
+      border-width: 2.5px;
+    }
+
+    &.xl {
+      --spinner-size: 3rem;
+      border-width: 3px;
+    }
+  }
+
+  @keyframes spinner-rotate {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
