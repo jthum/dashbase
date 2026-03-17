@@ -115,13 +115,21 @@ States are reactions to user interaction: `:user-invalid`, `[disabled]`, `[reado
 States use native CSS selectors and attribute selectors.
 States do NOT use classes (no `.is-invalid`, `.is-disabled`).
 
-### 9. One element, one file
+### 9. Naming Custom Elements
+
+If a native element doesn't exist for your component, use an unregistered custom element to build a semantic vocabulary.
+Follow this strict naming law:
+
+- **Structural Elements (Descriptive):** For containers that describe relationships between children, use plain descriptive names: `<form-field>`, `<input-group>`, `<tab-list>`.
+- **Presentational Elements (`ui-*`):** For visual patterns that have no semantic document meaning (painted rectangles), explicitly mark them as UI polyfills: `<ui-badge>`, `<ui-alert>`, `<ui-skeleton>`.
+
+### 10. One element, one file
 
 Each component gets its own CSS file in `src/components/`.
 The file targets the native element directly or a semantic class.
 All rules must be inside `@layer components { }`.
 
-### 10. Token hygiene
+### 11. Token hygiene
 
 - Never hardcode colors — use `--color-*` tokens
 - Never hardcode spacing — use `--space-*` tokens

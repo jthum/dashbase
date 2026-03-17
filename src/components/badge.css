@@ -13,10 +13,10 @@
 
 @layer components {
   /*
-   * We use a bespoke class `.badge` here because there is no single
-   * native HTML element for this concept (unlike <button>).
+   * We use the `ui-` namespace for presentational components that
+   * have no native semantic HTML equivalent. 
    */
-  .badge {
+  ui-badge {
     /* ── Layout ── */
     display: inline-flex;
     align-items: center;
