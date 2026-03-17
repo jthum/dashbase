@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Forms & Inputs Components</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="../components/input.css">
+  <link rel="stylesheet" href="../components/textarea.css">
+  <link rel="stylesheet" href="../components/label.css">
+  <link rel="stylesheet" href="../components/checkbox.css">
+  <link rel="stylesheet" href="../components/radio.css">
+  <link rel="stylesheet" href="../components/switch.css">
+  <link rel="stylesheet" href="../components/slider.css">
+  <link rel="stylesheet" href="../components/select.css">
+  <link rel="stylesheet" href="../components/form-field.css">
+
+  <style>
+    main {
+      max-width: 40rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+    section {
+      margin-block-end: var(--space-2xl);
+    }
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--color-border);
+      margin-block: var(--space-xl);
+    }
+    .theme-toggle {
+      position: fixed;
+      top: var(--space-lg);
+      right: var(--space-lg);
+    }
+    /* Layout helpers for inline groups (checkbox/radio rows) */
+    .inline-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .group-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .field-gap {
+      margin-block-end: var(--space-lg);
+    }
+  </style>
+</head>
+<body>
+  <button class="ghost theme-toggle" onclick="toggleTheme()">🌗 Toggle Theme</button>
+
+  <main>
+    <h1>Forms & Inputs</h1>
+    <p>Comprehensive showcase of all form components. Every element uses native HTML styled by Dashbase CSS. Validation uses <code>:user-invalid</code> — interact then blur to see states.</p>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Label
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Label</h2>
+
+      <div class="field-gap">
+        <label>Default label</label>
+      </div>
+
+      <div class="field-gap">
+        <label class="required">Required label</label>
+      </div>
+
+      <div class="field-gap">
+        <label class="small">Small label</label>
+      </div>
+
+      <div class="field-gap">
+        <label class="large">Large label</label>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Form Field (layout + errors)
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Form Field</h2>
+      <p>Uses <code>&lt;form-field&gt;</code> to group label + control + help/error text. Error cascades automatically when input becomes <code>:user-invalid</code>.</p>
+
+      <form novalidate>
+        <div class="field-gap">
+          <form-field>
+            <label class="required" for="ff-email">Email address</label>
+            <input type="email" id="ff-email" placeholder="user@example.com" required>
+            <small>We'll never share your email.</small>
+            <small class="error">Please enter a valid email address.</small>
+          </form-field>
+        </div>
+
+        <div class="field-gap">
+          <form-field>
+            <label class="required" for="ff-name">Full name</label>
+            <input type="text" id="ff-name" placeholder="John Doe" required minlength="2">
+            <small class="error">Name is required (min 2 characters).</small>
+          </form-field>
+        </div>
+
+        <div class="field-gap">
+          <form-field>
+            <label for="ff-bio">Bio</label>
+            <textarea id="ff-bio" placeholder="Tell us about yourself…"></textarea>
+            <small>Optional. Max 280 characters.</small>
+          </form-field>
+        </div>
+      </form>
+    </section>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Checkbox
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Checkbox</h2>
+
+      <div class="group-stack">
+        <div class="inline-group">
+          <input type="checkbox" id="chk-1">
+          <label for="chk-1">Default checkbox</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="checkbox" id="chk-2" checked>
+          <label for="chk-2">Checked</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="checkbox" id="chk-3" disabled>
+          <label for="chk-3">Disabled</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="checkbox" id="chk-4" checked disabled>
+          <label for="chk-4">Checked + Disabled</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="checkbox" id="chk-5" class="danger" checked>
+          <label for="chk-5">Danger variant</label>
+        </div>
+      </div>
+
+      <h3 style="margin-top: var(--space-lg);">Indeterminate</h3>
+      <div class="inline-group">
+        <input type="checkbox" id="chk-indet">
+        <label for="chk-indet">Indeterminate (set via JS)</label>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Radio
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Radio Group</h2>
+
+      <div class="group-stack">
+        <div class="inline-group">
+          <input type="radio" name="plan" id="radio-1" value="free" checked>
+          <label for="radio-1">Free</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="radio" name="plan" id="radio-2" value="pro">
+          <label for="radio-2">Pro</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="radio" name="plan" id="radio-3" value="enterprise">
+          <label for="radio-3">Enterprise</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="radio" name="plan-disabled" id="radio-4" value="x" disabled>
+          <label for="radio-4">Disabled</label>
+        </div>
+      </div>
+
+      <h3 style="margin-top: var(--space-lg);">Danger variant</h3>
+      <div class="group-stack">
+        <div class="inline-group">
+          <input type="radio" name="danger-radio" id="radio-d1" class="danger" value="a" checked>
+          <label for="radio-d1">Option A</label>
+        </div>
+        <div class="inline-group">
+          <input type="radio" name="danger-radio" id="radio-d2" class="danger" value="b">
+          <label for="radio-d2">Option B</label>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Switch
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Switch / Toggle</h2>
+
+      <div class="group-stack">
+        <div class="inline-group">
+          <input type="checkbox" class="switch" id="sw-1">
+          <label for="sw-1">Notifications</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="checkbox" class="switch" id="sw-2" checked>
+          <label for="sw-2">Dark mode (on)</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="checkbox" class="switch" id="sw-3" disabled>
+          <label for="sw-3">Disabled off</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="checkbox" class="switch" id="sw-4" checked disabled>
+          <label for="sw-4">Disabled on</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="checkbox" class="switch danger" id="sw-5">
+          <label for="sw-5">Danger variant</label>
+        </div>
+      </div>
+
+      <h3 style="margin-top: var(--space-lg);">Small size</h3>
+      <div class="group-stack">
+        <div class="inline-group">
+          <input type="checkbox" class="switch small" id="sw-sm-1">
+          <label for="sw-sm-1">Small switch</label>
+        </div>
+        <div class="inline-group">
+          <input type="checkbox" class="switch small" id="sw-sm-2" checked>
+          <label for="sw-sm-2">Small switch (on)</label>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Slider
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Slider / Range</h2>
+
+      <div class="field-gap">
+        <form-field>
+          <label for="sl-1">Volume</label>
+          <input type="range" id="sl-1" min="0" max="100" value="50">
+        </form-field>
+      </div>
+
+      <div class="field-gap">
+        <form-field>
+          <label for="sl-2">Danger slider</label>
+          <input type="range" id="sl-2" class="danger" min="0" max="100" value="75">
+        </form-field>
+      </div>
+
+      <div class="field-gap">
+        <form-field>
+          <label for="sl-3">Disabled</label>
+          <input type="range" id="sl-3" min="0" max="100" value="30" disabled>
+        </form-field>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Select
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Select</h2>
+
+      <div class="field-gap">
+        <form-field>
+          <label for="sel-1">Choose a framework</label>
+          <select id="sel-1">
+            <option value="" disabled selected>Select an option…</option>
+            <option value="react">React</option>
+            <option value="vue">Vue</option>
+            <option value="svelte">Svelte</option>
+            <option value="angular">Angular</option>
+          </select>
+        </form-field>
+      </div>
+
+      <div class="field-gap">
+        <form-field>
+          <label for="sel-2">Disabled</label>
+          <select id="sel-2" disabled>
+            <option value="">Cannot change</option>
+          </select>
+        </form-field>
+      </div>
+
+      <div class="field-gap">
+        <form-field>
+          <label class="required" for="sel-3">Required (blur without selecting to see validation)</label>
+          <select id="sel-3" required>
+            <option value="">Select one…</option>
+            <option value="a">Option A</option>
+            <option value="b">Option B</option>
+          </select>
+          <small class="error">Please select an option.</small>
+        </form-field>
+      </div>
+
+      <div class="field-gap">
+        <form-field>
+          <label for="sel-multi">Multiple select</label>
+          <select id="sel-multi" multiple>
+            <option value="js">JavaScript</option>
+            <option value="ts">TypeScript</option>
+            <option value="py">Python</option>
+            <option value="go">Go</option>
+            <option value="rs">Rust</option>
+          </select>
+          <small>Hold Ctrl/Cmd to select multiple.</small>
+        </form-field>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ══════════════════════════════════
+         Complete Form Example
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Complete Form</h2>
+      <p>A realistic form combining all components.</p>
+
+      <form novalidate style="display: grid; gap: var(--space-lg);">
+        <form-field>
+          <label class="required" for="form-name">Name</label>
+          <input type="text" id="form-name" placeholder="Jane Doe" required>
+          <small class="error">Name is required.</small>
+        </form-field>
+
+        <form-field>
+          <label class="required" for="form-email">Email</label>
+          <input type="email" id="form-email" placeholder="jane@example.com" required>
+          <small class="error">Please enter a valid email.</small>
+        </form-field>
+
+        <form-field>
+          <label for="form-role">Role</label>
+          <select id="form-role">
+            <option value="" disabled selected>Select role…</option>
+            <option value="dev">Developer</option>
+            <option value="design">Designer</option>
+            <option value="pm">Product Manager</option>
+          </select>
+        </form-field>
+
+        <form-field>
+          <label for="form-exp">Experience (years)</label>
+          <input type="range" id="form-exp" min="0" max="20" value="5">
+        </form-field>
+
+        <form-field>
+          <label for="form-bio">Bio</label>
+          <textarea id="form-bio" placeholder="A few words about you…"></textarea>
+        </form-field>
+
+        <div class="inline-group">
+          <input type="checkbox" id="form-terms" required>
+          <label class="required" for="form-terms">I agree to the terms</label>
+        </div>
+
+        <div class="inline-group">
+          <input type="checkbox" class="switch" id="form-newsletter">
+          <label for="form-newsletter">Subscribe to newsletter</label>
+        </div>
+
+        <div>
+          <button class="primary" type="submit">Submit</button>
+          <button class="ghost" type="reset">Reset</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ══════════════════════════════════
+         Focus / Tab Test
+         ══════════════════════════════════ -->
+    <section>
+      <h2>Focus / Tab Test</h2>
+      <p>Tab through to verify focus rings on all interactive elements:</p>
+      <div style="display: grid; gap: var(--space-md);">
+        <input type="text" placeholder="Input">
+        <select><option>Select</option></select>
+        <textarea placeholder="Textarea"></textarea>
+        <div class="inline-group">
+          <input type="checkbox" id="focus-chk">
+          <label for="focus-chk">Checkbox</label>
+        </div>
+        <div class="inline-group">
+          <input type="radio" name="focus-radio" id="focus-rad">
+          <label for="focus-rad">Radio</label>
+        </div>
+        <div class="inline-group">
+          <input type="checkbox" class="switch" id="focus-sw">
+          <label for="focus-sw">Switch</label>
+        </div>
+        <input type="range" min="0" max="100" value="50">
+        <button class="primary">Button</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute("data-theme");
+      html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    }
+
+    // Set one checkbox to indeterminate for demo
+    document.getElementById("chk-indet").indeterminate = true;
+  </script>
+</body>
+</html>
