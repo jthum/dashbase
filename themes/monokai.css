@@ -1,0 +1,48 @@
+/*
+ * Theme — Monokai (Syntax/Developer Inspired)
+ *
+ * A dark-mode only theme inspired by classic developer
+ * syntax highlighting themes. Vibrant neon accents on deep grey.
+ * Import after baseline.css.
+ */
+
+@layer tokens {
+  :root {
+    /* ── Colors ── */
+    --color-primary: oklch(75% 0.18 320);     /* Pink/Magenta */
+    --color-primary-fg: oklch(15% 0 0);
+    --color-danger: oklch(70% 0.22 20);       /* Vibrant Red */
+    --color-danger-fg: oklch(98% 0 0);
+    --color-success: oklch(85% 0.2 140);      /* Neon Green */
+    --color-success-fg: oklch(15% 0 0);
+    --color-warning: oklch(85% 0.18 85);      /* Bright Yellow */
+    --color-warning-fg: oklch(15% 0 0);
+    --color-neutral: oklch(65% 0.1 240);      /* Cool Blue/Grey */
+    --color-neutral-fg: oklch(15% 0 0);
+
+    /* ── Surfaces (Dark Mode Only by Design) ── */
+    --color-surface: oklch(20% 0.01 240);       /* Deep Charcoal */
+    --color-surface-raised: oklch(25% 0.01 240); /* Slightly lighter Charcoal */
+    --color-border: oklch(35% 0.01 240);
+    --color-text: oklch(95% 0.02 100);          /* Off-white/Cream */
+    --color-text-muted: oklch(65% 0.02 240);
+
+    /* ── Typography ── */
+    --font-sans: "Fira Code", "JetBrains Mono", ui-monospace, monospace;
+    
+    /* ── Geometry ── */
+    --radius-sm: 0.125rem;
+    --radius-md: 0.25rem;
+    --radius-lg: 0.375rem;
+    --radius-xl: 0.5rem;
+    
+    /* ── Interaction ── */
+    --focus-ring-width: 2px;
+    --focus-ring-color: var(--color-warning);   /* Yellow focus ring */
+    --focus-ring-offset: 2px;
+
+    /* ── Shadows ── */
+    --shadow-sm: 0 2px 4px oklch(0% 0 0 / 0.5);
+    --shadow-md: 0 4px 12px oklch(0% 0 0 / 0.6);
+  }
+}

@@ -1,0 +1,49 @@
+/*
+ * Theme — Soft
+ *
+ * Friendly, rounded geometry with softer pastel-leaning
+ * tokens and diffused shadows.
+ * Import after baseline.css.
+ */
+
+@layer tokens {
+  :root {
+    /* ── Colors ── */
+    --color-primary: oklch(65% 0.16 280);
+    --color-primary-fg: oklch(98% 0 0);
+    --color-danger: oklch(62% 0.18 20);
+    --color-danger-fg: oklch(98% 0 0);
+    --color-success: oklch(65% 0.15 145);
+    --color-success-fg: oklch(98% 0 0);
+    --color-warning: oklch(82% 0.14 80);
+    --color-warning-fg: oklch(30% 0.05 80);
+    --color-neutral: oklch(55% 0.02 280);
+    --color-neutral-fg: oklch(98% 0 0);
+
+    /* ── Surfaces ── */
+    --color-surface: light-dark(oklch(99% 0.005 280), oklch(18% 0.01 280));
+    --color-surface-raised: light-dark(oklch(100% 0 0), oklch(22% 0.01 280));
+    --color-border: light-dark(oklch(92% 0.01 280), oklch(32% 0.01 280));
+    --color-text: light-dark(oklch(22% 0.01 280), oklch(95% 0.01 280));
+    --color-text-muted: light-dark(oklch(50% 0.01 280), oklch(75% 0.01 280));
+
+    /* ── Typography ── */
+    --font-sans: "Outfit", "Nunito", system-ui, sans-serif;
+    
+    /* ── Geometry ── */
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --radius-full: 9999px;
+    
+    /* ── Interaction ── */
+    --control-radius: var(--radius-full);
+    --focus-ring-width: 3px;
+    --focus-ring-color: color-mix(in oklch, var(--color-primary) 50%, transparent);
+
+    /* ── Shadows ── */
+    --shadow-sm: 0 4px 12px light-dark(oklch(0% 0 0 / 0.04), oklch(0% 0 0 / 0.2));
+    --shadow-md: 0 8px 24px light-dark(oklch(0% 0 0 / 0.06), oklch(0% 0 0 / 0.3));
+  }
+}

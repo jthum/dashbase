@@ -1,0 +1,48 @@
+/*
+ * Theme — Earthy
+ *
+ * Warm, natural tones with low contrast and organic geometry.
+ * Inspired by paper, clay, and nature.
+ * Import after baseline.css.
+ */
+
+@layer tokens {
+  :root {
+    /* ── Colors ── */
+    --color-primary: oklch(45% 0.08 140);     /* Forest Green */
+    --color-primary-fg: oklch(98% 0.01 80);   /* Warm Off-white */
+    --color-danger: oklch(50% 0.15 35);       /* Rust/Terracotta */
+    --color-danger-fg: oklch(98% 0.01 80);
+    --color-success: oklch(55% 0.12 125);     /* Sage */
+    --color-success-fg: oklch(15% 0.05 80);
+    --color-warning: oklch(75% 0.12 70);      /* Ochre */
+    --color-warning-fg: oklch(15% 0.05 80);
+    --color-neutral: oklch(55% 0.04 75);      /* Warm Stone */
+    --color-neutral-fg: oklch(98% 0.01 80);
+
+    /* ── Surfaces ── */
+    --color-surface: light-dark(oklch(96% 0.02 85), oklch(22% 0.03 75));     /* Paper / Dark Clay */
+    --color-surface-raised: light-dark(oklch(99% 0.01 85), oklch(28% 0.03 75)); 
+    --color-border: light-dark(oklch(85% 0.04 80), oklch(35% 0.03 75));
+    --color-text: light-dark(oklch(20% 0.03 75), oklch(95% 0.02 85));        /* Espresso / Warm White */
+    --color-text-muted: light-dark(oklch(45% 0.04 75), oklch(70% 0.03 75));
+
+    /* ── Typography ── */
+    --font-sans: "Lora", "Merriweather", "Georgia", serif;
+    
+    /* ── Geometry ── */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1.25rem;
+    --radius-xl: 2rem;
+    
+    /* ── Interaction ── */
+    --control-radius: var(--radius-md);
+    --focus-ring-width: 2px;
+    --focus-ring-color: var(--color-primary);
+
+    /* ── Shadows ── */
+    --shadow-sm: 0 4px 6px light-dark(oklch(20% 0.03 75 / 0.05), oklch(0% 0 0 / 0.2));
+    --shadow-md: 0 10px 15px light-dark(oklch(20% 0.03 75 / 0.08), oklch(0% 0 0 / 0.3));
+  }
+}

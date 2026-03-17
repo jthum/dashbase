@@ -1,0 +1,50 @@
+/*
+ * Theme — Cyber
+ *
+ * A high-octane dark theme featuring intense neon cyan and purple.
+ * Built for futuristic, dashboard, or gaming interfaces.
+ * Import after baseline.css.
+ */
+
+@layer tokens {
+  :root {
+    /* ── Colors ── */
+    --color-primary: oklch(75% 0.17 195);     /* Neon Cyan */
+    --color-primary-fg: oklch(15% 0 0);
+    --color-danger: oklch(65% 0.25 15);       /* Neon Red/Orange */
+    --color-danger-fg: oklch(98% 0 0);
+    --color-success: oklch(75% 0.18 150);     /* Neon Green */
+    --color-success-fg: oklch(15% 0 0);
+    --color-warning: oklch(85% 0.18 85);      /* Bright Yellow */
+    --color-warning-fg: oklch(15% 0 0);
+    --color-neutral: oklch(45% 0.2 300);      /* Deep Purple/Magenta */
+    --color-neutral-fg: oklch(98% 0 0);
+
+    /* ── Surfaces (Dark Mode Only) ── */
+    --color-surface: oklch(12% 0.05 300);       /* Deep Purple Black */
+    --color-surface-raised: oklch(18% 0.06 300);
+    --color-border: oklch(35% 0.1 300);
+    --color-text: oklch(95% 0.05 195);          /* Ice Cyan White */
+    --color-text-muted: oklch(65% 0.1 300);
+
+    /* ── Typography ── */
+    --font-sans: "Share Tech Mono", "Orbitron", system-ui, sans-serif;
+    
+    /* ── Geometry ── */
+    --radius-sm: 0;
+    --radius-md: 0;
+    --radius-lg: 0;
+    --radius-xl: 0;
+    
+    /* ── Interaction ── */
+    --control-radius: 0;
+    --border-width: 2px;
+    --focus-ring-width: 2px;
+    --focus-ring-color: var(--color-primary);
+    --focus-ring-offset: 4px;
+
+    /* ── Shadows (Neon Glows) ── */
+    --shadow-sm: 0 0 10px oklch(75% 0.17 195 / 0.2);
+    --shadow-md: 0 0 20px oklch(75% 0.17 195 / 0.4);
+  }
+}

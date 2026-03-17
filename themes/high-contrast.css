@@ -1,0 +1,48 @@
+/*
+ * Theme — High Contrast
+ *
+ * Maximizes legibility and stark borders.
+ * Built for accessibility or severe, brutalist aesthetics.
+ * Import after baseline.css.
+ */
+
+@layer tokens {
+  :root {
+    /* ── Colors ── */
+    --color-primary: oklch(25% 0 0);
+    --color-primary-fg: oklch(100% 0 0);
+    --color-danger: oklch(40% 0.2 25);
+    --color-danger-fg: oklch(100% 0 0);
+    --color-success: oklch(35% 0.15 150);
+    --color-success-fg: oklch(100% 0 0);
+    --color-neutral: oklch(10% 0 0);
+    --color-neutral-fg: oklch(100% 0 0);
+
+    /* ── Surfaces ── */
+    --color-surface: light-dark(oklch(100% 0 0), oklch(0% 0 0));
+    --color-surface-raised: light-dark(oklch(100% 0 0), oklch(10% 0 0));
+    --color-border: light-dark(oklch(0% 0 0), oklch(100% 0 0));
+    --color-text: light-dark(oklch(0% 0 0), oklch(100% 0 0));
+    --color-text-muted: light-dark(oklch(15% 0 0), oklch(85% 0 0));
+
+    /* ── Typography ── */
+    --font-sans: system-ui, -apple-system, sans-serif;
+    
+    /* ── Geometry ── */
+    --radius-sm: 0;
+    --radius-md: 0;
+    --radius-lg: 0;
+    --radius-xl: 0;
+    --radius-full: 0;
+    
+    /* ── Interaction ── */
+    --border-width: 2px;
+    --focus-ring-width: 3px;
+    --focus-ring-color: light-dark(oklch(0% 0 0), oklch(100% 0 0));
+    --focus-ring-offset: 4px;
+
+    /* ── Shadows ── */
+    --shadow-sm: none;
+    --shadow-md: 4px 4px 0px light-dark(oklch(0% 0 0), oklch(100% 0 0));
+  }
+}
