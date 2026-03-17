@@ -1,0 +1,70 @@
+/*
+ * Dashbase — Select
+ *
+ * Styles the native <select> element.
+ * Primitives handle: padding, font, border, radius, transition.
+ *
+ * Uses appearance: none with inline SVG arrow.
+ * States: :focus-visible, [disabled], :user-invalid, [multiple]
+ *
+ * Variants: none (semantic use only)
+ */
+
+@layer components {
+  select {
+    /* ── Layout ── */
+    display: block;
+    width: 100%;
+    line-height: var(--leading-normal);
+    cursor: pointer;
+
+    /* ── Custom appearance ── */
+    appearance: none;
+
+    /* ── Dropdown arrow (inline SVG) ── */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M2.22 4.22a.75.75 0 0 1 1.06 0L6 6.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L2.22 5.28a.75.75 0 0 1 0-1.06Z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--control-padding-inline) center;
+    background-size: 0.75rem;
+    padding-inline-end: calc(var(--control-padding-inline) + 1.25rem);
+
+    /* ── Focus ── */
+    &:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+      border-color: var(--color-primary);
+    }
+
+    /* ── Hover ── */
+    &:hover:not(:focus-visible):not([disabled]) {
+      border-color: color-mix(in oklch, var(--color-border) 70%, var(--color-text));
+    }
+
+    /* ── Disabled ── */
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background-color: var(--color-neutral-subtle);
+    }
+
+    /* ── User-invalid ── */
+    &:user-invalid {
+      border-color: var(--color-danger);
+
+      &:focus-visible {
+        outline-color: var(--color-danger);
+      }
+    }
+
+    /* ── Multiple select ── */
+    &[multiple] {
+      background-image: none;
+      padding-inline-end: var(--control-padding-inline);
+      height: auto;
+
+      & option {
+        padding: var(--space-xs) var(--space-sm);
+      }
+    }
+  }
+}

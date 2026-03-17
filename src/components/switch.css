@@ -1,0 +1,101 @@
+/*
+ * Dashbase — Switch (Toggle)
+ *
+ * Styles input[type="checkbox"].switch as a toggle track with sliding thumb.
+ * Uses appearance: none for full custom rendering.
+ *
+ * Track is the element itself, thumb is ::after.
+ * Checked state slides thumb right and changes track color.
+ *
+ * Architecture: --switch-* variables for surface, base rule uses them.
+ *
+ * Variants: .danger
+ * Sizes: .small, (default)
+ * States: :checked, :focus-visible, [disabled]
+ */
+
+@layer components {
+  input[type="checkbox"].switch {
+    /* ── Layout ── */
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    width: 2.75rem;
+    height: 1.5rem;
+    margin: 0;
+    padding: 2px;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    /* ── Track surface ── */
+    background-color: var(--switch-bg, var(--color-border));
+    border: none;
+    border-radius: var(--radius-full);
+    transition: background-color var(--duration-fast) var(--easing-default);
+
+    /* ── Thumb ── */
+    &::after {
+      content: "";
+      width: calc(1.5rem - 4px);
+      height: calc(1.5rem - 4px);
+      border-radius: var(--radius-full);
+      background-color: var(--switch-fg, var(--color-surface-raised));
+      box-shadow: var(--shadow-xs);
+      transition: translate var(--duration-base) var(--easing-default);
+    }
+
+    /* ── Checked ── */
+    &:checked {
+      --switch-bg: var(--switch-checked-bg, var(--color-primary));
+
+      &::after {
+        translate: calc(2.75rem - 1.5rem) 0;
+      }
+    }
+
+    /* ── Hover ── */
+    &:hover:not([disabled]) {
+      background-color: color-mix(in oklch, var(--switch-bg, var(--color-border)) 85%, black);
+    }
+
+    /* ── Focus ── */
+    &:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+    }
+
+    /* ── Disabled ── */
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════
+     * Variants
+     * ═══════════════════════════════ */
+
+    &.danger {
+      --switch-checked-bg: var(--color-danger);
+    }
+
+    /* ═══════════════════════════════
+     * Sizes
+     * ═══════════════════════════════ */
+
+    &.small {
+      width: 2rem;
+      height: 1.125rem;
+      padding: 2px;
+
+      &::after {
+        width: calc(1.125rem - 4px);
+        height: calc(1.125rem - 4px);
+      }
+
+      &:checked::after {
+        translate: calc(2rem - 1.125rem) 0;
+      }
+    }
+  }
+}

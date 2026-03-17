@@ -1,0 +1,56 @@
+/*
+ * Dashbase — Form Field
+ *
+ * Styles the <form-field> structural custom element.
+ * Groups label + control + help/error text with consistent spacing.
+ *
+ * Uses :has(:user-invalid) to cascade error styling to label and error text.
+ * Primitives handle: nothing (custom element).
+ *
+ * Structure:
+ *   <form-field>
+ *     <label>Email</label>
+ *     <input type="email" required>
+ *     <small>Help text shown by default</small>
+ *     <small class="error">Error shown on :user-invalid</small>
+ *   </form-field>
+ *
+ * Variants: none
+ */
+
+@layer components {
+  form-field {
+    /* ── Layout ── */
+    display: grid;
+    gap: var(--space-xs);
+
+    /* ── Help text ── */
+    & > small {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      line-height: var(--leading-normal);
+    }
+
+    /* ── Error text (hidden until invalid) ── */
+    & > small.error {
+      display: none;
+    }
+
+    /* ── Invalid state — cascade to label + error ── */
+    &:has(:user-invalid) {
+      & > label {
+        --label-fg: var(--color-danger);
+      }
+
+      & > small.error {
+        display: block;
+        color: var(--color-danger);
+      }
+
+      /* Hide help text when error is showing */
+      & > small:not(.error) {
+        display: none;
+      }
+    }
+  }
+}

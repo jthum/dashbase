@@ -1,0 +1,92 @@
+/*
+ * Dashbase — Radio
+ *
+ * Styles input[type="radio"] with appearance: none for full custom rendering.
+ * Primitives handle: border, transition.
+ *
+ * Selected state uses CSS ::after for a filled circle dot.
+ *
+ * Architecture: --radio-* variables for surface, base rule uses them.
+ *
+ * Variants: .danger
+ * States: :checked, :focus-visible, [disabled], :user-invalid
+ */
+
+@layer components {
+  input[type="radio"] {
+    /* ── Layout ── */
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    /* ── Surface ── */
+    background-color: var(--radio-bg, var(--color-surface-raised));
+    border: var(--border-width) solid var(--radio-border, var(--color-border));
+    border-radius: var(--radius-full);
+
+    /* ── Inner dot (hidden by default) ── */
+    &::after {
+      content: "";
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: var(--radius-full);
+      background-color: var(--radio-fg, var(--color-primary-fg));
+      opacity: 0;
+      transform: scale(0);
+      transition: opacity var(--duration-fast) var(--easing-default),
+                  transform var(--duration-fast) var(--easing-default);
+    }
+
+    /* ── Checked ── */
+    &:checked {
+      --radio-bg: var(--radio-checked-bg, var(--color-primary));
+      --radio-border: var(--radio-checked-bg, var(--color-primary));
+
+      &::after {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* ── Hover ── */
+    &:hover:not([disabled]) {
+      border-color: color-mix(in oklch, var(--radio-border, var(--color-border)) 70%, var(--color-text));
+    }
+
+    &:checked:hover:not([disabled]) {
+      --radio-bg: var(--radio-checked-bg-hover, color-mix(in oklch, var(--radio-checked-bg, var(--color-primary)) 85%, black));
+      --radio-border: var(--radio-checked-bg-hover, color-mix(in oklch, var(--radio-checked-bg, var(--color-primary)) 85%, black));
+    }
+
+    /* ── Focus ── */
+    &:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+    }
+
+    /* ── Disabled ── */
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ── User-invalid ── */
+    &:user-invalid {
+      --radio-border: var(--color-danger);
+    }
+
+    /* ═══════════════════════════════
+     * Variants
+     * ═══════════════════════════════ */
+
+    &.danger {
+      --radio-checked-bg: var(--color-danger);
+    }
+  }
+}

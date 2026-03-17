@@ -1,0 +1,107 @@
+/*
+ * Dashbase — Checkbox
+ *
+ * Styles input[type="checkbox"] with appearance: none for full custom rendering.
+ * Primitives handle: border, transition.
+ *
+ * Checked state uses CSS ::after for checkmark (border trick).
+ * Indeterminate state shows a dash indicator.
+ *
+ * Architecture: --chk-* variables for surface, base rule uses them.
+ *
+ * Variants: .danger
+ * States: :checked, :indeterminate, :focus-visible, [disabled], :user-invalid
+ */
+
+@layer components {
+  input[type="checkbox"]:not(.switch) {
+    /* ── Layout ── */
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    /* ── Surface ── */
+    background-color: var(--chk-bg, var(--color-surface-raised));
+    border: var(--border-width) solid var(--chk-border, var(--color-border));
+    border-radius: var(--radius-sm);
+
+    /* ── Checkmark (hidden by default) ── */
+    &::after {
+      content: "";
+      width: 0.625rem;
+      height: 0.375rem;
+      border-bottom: 2px solid var(--chk-fg, var(--color-primary-fg));
+      border-left: 2px solid var(--chk-fg, var(--color-primary-fg));
+      transform: rotate(-45deg) translate(0.5px, -0.5px);
+      opacity: 0;
+      transition: opacity var(--duration-fast) var(--easing-default);
+    }
+
+    /* ── Checked ── */
+    &:checked {
+      --chk-bg: var(--chk-checked-bg, var(--color-primary));
+      --chk-border: var(--chk-checked-bg, var(--color-primary));
+
+      &::after {
+        opacity: 1;
+      }
+    }
+
+    /* ── Indeterminate ── */
+    &:indeterminate {
+      --chk-bg: var(--chk-checked-bg, var(--color-primary));
+      --chk-border: var(--chk-checked-bg, var(--color-primary));
+
+      &::after {
+        width: 0.5rem;
+        height: 0;
+        border-bottom: 2px solid var(--chk-fg, var(--color-primary-fg));
+        border-left: none;
+        transform: none;
+        opacity: 1;
+      }
+    }
+
+    /* ── Hover ── */
+    &:hover:not([disabled]) {
+      border-color: color-mix(in oklch, var(--chk-border, var(--color-border)) 70%, var(--color-text));
+    }
+
+    &:checked:hover:not([disabled]),
+    &:indeterminate:hover:not([disabled]) {
+      --chk-bg: var(--chk-checked-bg-hover, color-mix(in oklch, var(--chk-checked-bg, var(--color-primary)) 85%, black));
+      --chk-border: var(--chk-checked-bg-hover, color-mix(in oklch, var(--chk-checked-bg, var(--color-primary)) 85%, black));
+    }
+
+    /* ── Focus ── */
+    &:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+    }
+
+    /* ── Disabled ── */
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ── User-invalid ── */
+    &:user-invalid {
+      --chk-border: var(--color-danger);
+    }
+
+    /* ═══════════════════════════════
+     * Variants
+     * ═══════════════════════════════ */
+
+    &.danger {
+      --chk-checked-bg: var(--color-danger);
+    }
+  }
+}

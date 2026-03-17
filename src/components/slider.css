@@ -1,0 +1,121 @@
+/*
+ * Dashbase — Slider (Range)
+ *
+ * Styles input[type="range"] with appearance: none.
+ * Uses vendor pseudo-elements for track and thumb.
+ *
+ * Architecture: --slider-* variables for surface, base rule uses them.
+ *
+ * Variants: .danger
+ * States: :focus-visible, [disabled]
+ */
+
+@layer components {
+  input[type="range"] {
+    /* ── Layout ── */
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: 1.5rem;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+
+    /* ── WebKit Track ── */
+    &::-webkit-slider-runnable-track {
+      height: 0.25rem;
+      border-radius: var(--radius-full);
+      background: var(--slider-track, var(--color-border));
+    }
+
+    /* ── WebKit Thumb ── */
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-top: calc((0.25rem - 1.25rem) / 2);
+      border-radius: var(--radius-full);
+      background: var(--slider-thumb, var(--color-primary));
+      border: 2px solid var(--color-surface-raised);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--duration-fast) var(--easing-default),
+                  box-shadow var(--duration-fast) var(--easing-default);
+    }
+
+    /* ── Firefox Track ── */
+    &::-moz-range-track {
+      height: 0.25rem;
+      border-radius: var(--radius-full);
+      background: var(--slider-track, var(--color-border));
+      border: none;
+    }
+
+    /* ── Firefox Thumb ── */
+    &::-moz-range-thumb {
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: var(--radius-full);
+      background: var(--slider-thumb, var(--color-primary));
+      border: 2px solid var(--color-surface-raised);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--duration-fast) var(--easing-default),
+                  box-shadow var(--duration-fast) var(--easing-default);
+    }
+
+    /* ── Hover (thumb grow) ── */
+    &:hover:not([disabled]) {
+      &::-webkit-slider-thumb {
+        transform: scale(1.1);
+        box-shadow: var(--shadow-md);
+      }
+
+      &::-moz-range-thumb {
+        transform: scale(1.1);
+        box-shadow: var(--shadow-md);
+      }
+    }
+
+    /* ── Active ── */
+    &:active:not([disabled]) {
+      &::-webkit-slider-thumb {
+        transform: scale(0.95);
+      }
+
+      &::-moz-range-thumb {
+        transform: scale(0.95);
+      }
+    }
+
+    /* ── Focus ── */
+    &:focus-visible {
+      outline: none;
+
+      &::-webkit-slider-thumb {
+        outline: var(--focus-ring-width) solid var(--focus-ring-color);
+        outline-offset: var(--focus-ring-offset);
+      }
+
+      &::-moz-range-thumb {
+        outline: var(--focus-ring-width) solid var(--focus-ring-color);
+        outline-offset: var(--focus-ring-offset);
+      }
+    }
+
+    /* ── Disabled ── */
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════
+     * Variants
+     * ═══════════════════════════════ */
+
+    &.danger {
+      --slider-thumb: var(--color-danger);
+    }
+  }
+}

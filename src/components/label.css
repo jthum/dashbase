@@ -1,0 +1,44 @@
+/*
+ * Dashbase — Label
+ *
+ * Styles the native <label> element.
+ * Purely presentational — no interaction logic.
+ * Primitives handle: nothing (label is not a control).
+ *
+ * Works with <form-field> to cascade error state styling.
+ * Use .required to add a red asterisk indicator.
+ *
+ * Variants: none
+ * Sizes: .small, (default), .large
+ */
+
+@layer components {
+  label {
+    /* ── Layout ── */
+    display: block;
+
+    /* ── Typography ── */
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    color: var(--label-fg, var(--color-text));
+
+    /* ── Required indicator ── */
+    &.required::after {
+      content: " *";
+      color: var(--color-danger);
+    }
+
+    /* ═══════════════════════════════
+     * Sizes
+     * ═══════════════════════════════ */
+
+    &.small {
+      font-size: var(--text-xs);
+    }
+
+    &.large {
+      font-size: var(--text-base);
+    }
+  }
+}
