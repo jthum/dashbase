@@ -1,7 +1,11 @@
 /*
- * Dashbase — Badge
+ * Dashbase — Badge, Status & Tag
  *
- * Styles a small, non-interactive status indicator.
+ * Styles a small, non-interactive indicator.
+ * - <ui-badge>: Numerical counts
+ * - <ui-status>: Live states (Beta, Online, etc.)
+ * - <ui-tag>: Taxonomy categories (JavaScript, Design)
+ *
  * Does not use primitives for padding/radius (it's bespoke).
  *
  * Architecture: variants set --badge-* variables, base rule uses them.
@@ -16,7 +20,9 @@
    * We use the `ui-` namespace for presentational components that
    * have no native semantic HTML equivalent. 
    */
-  ui-badge {
+  ui-badge,
+  ui-status,
+  ui-tag {
     /* ── Layout ── */
     display: inline-flex;
     align-items: center;

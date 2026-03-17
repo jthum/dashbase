@@ -45,31 +45,43 @@
 <body>
     <div class="kitchen-sink">
       <section>
-        <h2>Default Badges</h2>
+        <h2>Count Badges (<ui-badge>)</h2>
+        <p style="margin-bottom: 1rem; color: var(--color-text-muted); font-size: var(--text-sm)">Used strictly for numerical indicators like notifications or cart items.</p>
         <div class="row">
-          <ui-badge>Default</ui-badge>
-          <ui-badge class="primary">Primary</ui-badge>
-          <ui-badge class="danger">Danger</ui-badge>
-          <ui-badge class="success">Success</ui-badge>
-          <ui-badge class="outline">Outline</ui-badge>
+          <ui-badge class="danger">4</ui-badge>
+          <ui-badge class="primary">12</ui-badge>
+          <ui-badge class="neutral">99+</ui-badge>
         </div>
       </section>
 
       <section>
-        <h2>Subtle Variants</h2>
+        <h2>Status Badges (<ui-status>)</h2>
+        <p style="margin-bottom: 1rem; color: var(--color-text-muted); font-size: var(--text-sm)">Used for application state that changes at runtime. (e.g., Online, Error, Pending)</p>
         <div class="row">
-          <ui-badge class="primary-subtle">Primary Subtle</ui-badge>
-          <ui-badge class="danger-subtle">Danger Subtle</ui-badge>
-          <ui-badge class="success-subtle">Success Subtle</ui-badge>
+          <ui-status class="success">Online</ui-status>
+          <ui-status class="warning">Pending</ui-status>
+          <ui-status class="danger">Error</ui-status>
+          <ui-status class="primary">Active</ui-status>
+        </div>
+      </section>
+
+      <section>
+        <h2>Taxonomy Tags (<ui-tag>)</h2>
+        <p style="margin-bottom: 1rem; color: var(--color-text-muted); font-size: var(--text-sm)">Used for static categorization, keywords, and metadata.</p>
+        <div class="row">
+          <ui-tag class="outline">JavaScript</ui-tag>
+          <ui-tag class="outline">Design System</ui-tag>
+          <ui-tag class="primary-subtle">Frontend</ui-tag>
+          <ui-tag class="success-subtle">Open Source</ui-tag>
         </div>
       </section>
 
       <section>
         <h2>Sizes</h2>
         <div class="row">
-          <ui-badge class="small primary">Small</ui-badge>
-          <ui-badge class="primary">Default</ui-badge>
-          <ui-badge class="large primary">Large</ui-badge>
+          <ui-status class="small primary">Small</ui-status>
+          <ui-status class="primary">Default</ui-status>
+          <ui-status class="large primary">Large</ui-status>
         </div>
       </section>
     </div>

@@ -118,10 +118,19 @@ States do NOT use classes (no `.is-invalid`, `.is-disabled`).
 ### 9. Naming Custom Elements
 
 If a native element doesn't exist for your component, use an unregistered custom element to build a semantic vocabulary.
-Follow this strict naming law:
+
+Before introducing a new custom element into the vocabulary, it must pass this **Definition Boundary Rubric**:
+1. What is its semantic role?
+2. What ARIA treatment does it need?
+3. Is it interactive or static?
+4. What content does it accept?
+
+If a proposed element has distinct answers to these four questions, it earns its own name. If not, it is merely a variant class of an existing element.
+
+If it passes the rubric, follow this strict naming law:
 
 - **Structural Elements (Descriptive):** For containers that describe relationships between children, use plain descriptive names: `<form-field>`, `<input-group>`, `<tab-list>`.
-- **Presentational Elements (`ui-*`):** For visual patterns that have no semantic document meaning (painted rectangles), explicitly mark them as UI polyfills: `<ui-badge>`, `<ui-alert>`, `<ui-skeleton>`.
+- **Presentational Elements (`ui-*`):** For visual patterns that have no semantic document meaning (painted rectangles), explicitly mark them as UI polyfills: `<ui-badge>` (numerical counts), `<ui-status>` (live state labels), `<ui-tag>` (taxonomy categories).
 
 ### 10. One element, one file
 
