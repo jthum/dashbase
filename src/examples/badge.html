@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashbase - Badge Example</title>
+
+    <!-- Import Baseline (Tokens + Primitives) -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../baseline/tokens.css">
+    <link rel="stylesheet" href="../baseline/primitives.css">
+    <link rel="stylesheet" href="../baseline/base.css">
+
+    <!-- Active Theme -->
+    <link rel="stylesheet" href="../../themes/default.css">
+
+    <!-- Components -->
+    <link rel="stylesheet" href="../components/badge.css">
+
+    <style>
+      body {
+        padding: 3rem;
+        background: var(--color-surface);
+        color: var(--color-text);
+      }
+      .kitchen-sink {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .row {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      h2 {
+        font-size: var(--text-lg);
+        margin-bottom: 1rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+      }
+    </style>
+</head>
+<body>
+    <div class="kitchen-sink">
+      <section>
+        <h2>Default Badges</h2>
+        <div class="row">
+          <span class="badge">Default</span>
+          <span class="badge primary">Primary</span>
+          <span class="badge danger">Danger</span>
+          <span class="badge success">Success</span>
+          <span class="badge outline">Outline</span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Subtle Variants</h2>
+        <div class="row">
+          <span class="badge primary-subtle">Primary Subtle</span>
+          <span class="badge danger-subtle">Danger Subtle</span>
+          <span class="badge success-subtle">Success Subtle</span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Sizes</h2>
+        <div class="row">
+          <span class="badge small primary">Small</span>
+          <span class="badge primary">Default</span>
+          <span class="badge large primary">Large</span>
+        </div>
+      </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+/*
+ * Dashbase — Badge
+ *
+ * Styles a small, non-interactive status indicator.
+ * Does not use primitives for padding/radius (it's bespoke).
+ *
+ * Architecture: variants set --badge-* variables, base rule uses them.
+ * No hover/active/focus logic since it is purely presentational.
+ *
+ * Variants: .primary, .danger, .success, .neutral, .outline
+ * Sizes: .small, (default), .large
+ */
+
+@layer components {
+  /*
+   * We use a bespoke class `.badge` here because there is no single
+   * native HTML element for this concept (unlike <button>).
+   */
+  .badge {
+    /* ── Layout ── */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+
+    /* ── Typography ── */
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    /* ── Surface (driven by variant variables) ── */
+    background-color: var(--badge-bg, var(--color-surface-raised));
+    color: var(--badge-fg, var(--color-text));
+    border: var(--border-width) solid var(--badge-border, var(--color-border));
+    border-radius: var(--badge-radius, var(--radius-full));
+    
+    /* ── Default spacing (can be overridden by size classes) ── */
+    padding-block: var(--space-xs);
+    padding-inline: var(--space-md);
+    font-size: var(--text-xs);
+
+    /* ═══════════════════════════════
+     * Variants (variable assignments only)
+     * ═══════════════════════════════ */
+
+    &.primary {
+      --badge-bg: var(--color-primary);
+      --badge-fg: var(--color-primary-fg);
+      --badge-border: var(--color-primary);
+    }
+
+    &.primary-subtle {
+      --badge-bg: var(--color-primary-subtle);
+      --badge-fg: var(--color-primary-hover);
+      --badge-border: transparent;
+    }
+
+    &.danger {
+      --badge-bg: var(--color-danger);
+      --badge-fg: var(--color-danger-fg);
+      --badge-border: var(--color-danger);
+    }
+    
+    &.danger-subtle {
+      --badge-bg: var(--color-danger-subtle);
+      --badge-fg: var(--color-danger-hover);
+      --badge-border: transparent;
+    }
+
+    &.success {
+      --badge-bg: var(--color-success);
+      --badge-fg: var(--color-success-fg);
+      --badge-border: var(--color-success);
+    }
+    
+    &.success-subtle {
+      --badge-bg: var(--color-success-subtle);
+      --badge-fg: var(--color-success-hover);
+      --badge-border: transparent;
+    }
+
+    &.outline {
+      --badge-bg: transparent;
+      --badge-fg: var(--color-text-muted);
+      --badge-border: var(--color-border);
+    }
+
+    /* ═══════════════════════════════
+     * Sizes
+     * ═══════════════════════════════ */
+
+    &.small {
+      padding-block: calc(var(--space-xs) / 2);
+      padding-inline: var(--space-sm);
+      font-size: calc(var(--text-xs) * 0.9);
+    }
+
+    /* default specified in base rule */
+
+    &.large {
+      padding-block: var(--space-sm);
+      padding-inline: var(--space-lg);
+      font-size: var(--text-sm);
+    }
+  }
+}
