@@ -1,0 +1,73 @@
+/*
+ * Dashbase — Input Group
+ *
+ * Wraps an input to allow absolute positioning of prefix/suffix elements
+ * (icons, text, decorators) inside the input visually.
+ *
+ * Structure:
+ *   <div class="input-group">
+ *     <svg class="icon prefix">...</svg>
+ *     <input type="text">
+ *     <span class="suffix">.com</span>
+ *   </div>
+ *
+ * Primitives handle: nothing (structural wrapper).
+ */
+
+@layer components {
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    /* ── Prefix/suffix elements ── */
+    & > .prefix,
+    & > .suffix {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      /* Icons shouldn't intercept clicks, but buttons inside should */
+      pointer-events: none; 
+    }
+
+    /* If it's explicitly an interactive button/element, restore pointer events */
+    & > button.prefix,
+    & > button.suffix,
+    & > a.prefix,
+    & > a.suffix {
+      pointer-events: auto;
+    }
+
+    & > .prefix {
+      inset-inline-start: var(--control-padding-inline);
+    }
+
+    & > .suffix {
+      inset-inline-end: var(--control-padding-inline);
+    }
+
+    /* Set a standard size for slotted icons */
+    & > .prefix svg,
+    & > .suffix svg,
+    & > .prefix img,
+    & > .suffix img {
+      width: 1.125em;
+      height: 1.125em;
+    }
+
+    /* ── Input padding adjustments ── */
+    /* Add padding so the input text doesn't overlap the absolute positioned elements.
+       Formula: edge padding + icon width (1.125em) + gap (--control-gap) */
+    
+    &:has(> .prefix) > input {
+      padding-inline-start: calc(var(--control-padding-inline) + 1.125em + var(--control-gap));
+    }
+    
+    &:has(> .suffix) > input {
+      padding-inline-end: calc(var(--control-padding-inline) + 1.125em + var(--control-gap));
+    }
+  }
+}

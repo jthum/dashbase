@@ -18,6 +18,7 @@
     [type="date"],
     [type="time"],
     [type="datetime-local"],
+    [type="file"],
     :not([type])
   ) {
     display: block;
@@ -85,6 +86,44 @@
       &::-webkit-inner-spin-button,
       &::-webkit-outer-spin-button {
         opacity: 1;
+      }
+    }
+
+    /* ── File: selector button ── */
+    &[type="file"] {
+      /* File inputs in some browsers add extra padding/margins */
+      padding-inline-end: 0;
+      
+      &::-file-selector-button,
+      &::-webkit-file-upload-button {
+        appearance: none;
+        background-color: var(--bg-raised);
+        color: var(--text-default);
+        border: none;
+        border-inline-end: var(--border-width) solid var(--border-default);
+        /* Pull button flush with the input's primitive boundaries */
+        margin-block: calc(var(--control-padding-block) * -1);
+        margin-inline-start: calc(var(--control-padding-inline) * -1);
+        margin-inline-end: var(--control-padding-inline);
+        padding-block: var(--control-padding-block);
+        padding-inline: var(--control-padding-inline);
+        cursor: pointer;
+        font-weight: 500;
+        transition: background-color var(--duration-fast) var(--easing-default);
+      }
+      
+      &:hover:not([disabled]) {
+        &::-file-selector-button,
+        &::-webkit-file-upload-button {
+          background-color: color-mix(in oklch, var(--bg-raised) var(--state-hover-mix), light-dark(black, white));
+        }
+      }
+      
+      &[disabled] {
+        &::-file-selector-button,
+        &::-webkit-file-upload-button {
+          cursor: not-allowed;
+        }
       }
     }
   }
