@@ -20,8 +20,8 @@
     <style>
       body {
         padding: 3rem;
-        background: var(--color-surface);
-        color: var(--color-text);
+        background: var(--bg-default);
+        color: var(--text-default);
       }
       .kitchen-sink {
         display: flex;
@@ -38,7 +38,7 @@
         font-size: var(--text-lg);
         margin-bottom: 1rem;
         font-weight: 500;
-        color: var(--color-text-muted);
+        color: var(--text-muted);
       }
     </style>
 </head>
@@ -46,7 +46,7 @@
     <div class="kitchen-sink">
       <section>
         <h2>Count Badges (<ui-badge>)</h2>
-        <p style="margin-bottom: 1rem; color: var(--color-text-muted); font-size: var(--text-sm)">Used strictly for numerical indicators like notifications or cart items.</p>
+        <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: var(--text-sm)">Used strictly for numerical indicators like notifications or cart items.</p>
         <div class="row">
           <ui-badge class="danger">4</ui-badge>
           <ui-badge class="primary">12</ui-badge>
@@ -56,7 +56,7 @@
 
       <section>
         <h2>Status Badges (<ui-status>)</h2>
-        <p style="margin-bottom: 1rem; color: var(--color-text-muted); font-size: var(--text-sm)">Used for application state that changes at runtime. (e.g., Online, Error, Pending)</p>
+        <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: var(--text-sm)">Used for application state that changes at runtime. (e.g., Online, Error, Pending)</p>
         <div class="row">
           <ui-status class="success">Online</ui-status>
           <ui-status class="warning">Pending</ui-status>
@@ -67,7 +67,7 @@
 
       <section>
         <h2>Taxonomy Tags (<ui-tag>)</h2>
-        <p style="margin-bottom: 1rem; color: var(--color-text-muted); font-size: var(--text-sm)">Used for static categorization, keywords, and metadata.</p>
+        <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: var(--text-sm)">Used for static categorization, keywords, and metadata.</p>
         <div class="row">
           <ui-tag class="outline">JavaScript</ui-tag>
           <ui-tag class="outline">Design System</ui-tag>

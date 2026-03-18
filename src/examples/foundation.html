@@ -32,15 +32,15 @@
       top: var(--space-lg);
       right: var(--space-lg);
       padding: var(--space-sm) var(--space-lg);
-      background: var(--color-surface-raised);
-      border: var(--border-width) solid var(--color-border);
+      background: var(--bg-raised);
+      border: var(--border-width) solid var(--border-default);
       border-radius: var(--radius-md);
       cursor: pointer;
       font-size: var(--text-sm);
     }
     hr {
       border: none;
-      border-top: var(--border-width) solid var(--color-border);
+      border-top: var(--border-width) solid var(--border-default);
       margin-block: var(--space-xl);
     }
   </style>
@@ -77,12 +77,12 @@
 
       <h3>Surface & Text</h3>
       <div class="swatch-grid">
-        <div class="swatch" style="background: var(--color-surface); border: var(--border-width) solid var(--color-border);">surface</div>
-        <div class="swatch" style="background: var(--color-surface-raised); border: var(--border-width) solid var(--color-border);">raised</div>
-        <div class="swatch" style="background: var(--color-border);">border</div>
+        <div class="swatch" style="background: var(--bg-default); border: var(--border-width) solid var(--border-default);">surface</div>
+        <div class="swatch" style="background: var(--bg-raised); border: var(--border-width) solid var(--border-default);">raised</div>
+        <div class="swatch" style="background: var(--border-default);">border</div>
       </div>
-      <p style="color: var(--color-text);">Text color (default)</p>
-      <p style="color: var(--color-text-muted);">Text color (muted)</p>
+      <p style="color: var(--text-default);">Text color (default)</p>
+      <p style="color: var(--text-muted);">Text color (muted)</p>
     </section>
 
     <hr>
@@ -138,10 +138,10 @@
     <section>
       <h2>Shadows</h2>
       <div style="display: flex; gap: var(--space-xl); flex-wrap: wrap;">
-        <div style="width: 8rem; height: 5rem; background: var(--color-surface-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-xs); display: grid; place-items: center; font-size: var(--text-sm);">XS</div>
-        <div style="width: 8rem; height: 5rem; background: var(--color-surface-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); display: grid; place-items: center; font-size: var(--text-sm);">SM</div>
-        <div style="width: 8rem; height: 5rem; background: var(--color-surface-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-md); display: grid; place-items: center; font-size: var(--text-sm);">MD</div>
-        <div style="width: 8rem; height: 5rem; background: var(--color-surface-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); display: grid; place-items: center; font-size: var(--text-sm);">LG</div>
+        <div style="width: 8rem; height: 5rem; background: var(--bg-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-xs); display: grid; place-items: center; font-size: var(--text-sm);">XS</div>
+        <div style="width: 8rem; height: 5rem; background: var(--bg-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); display: grid; place-items: center; font-size: var(--text-sm);">SM</div>
+        <div style="width: 8rem; height: 5rem; background: var(--bg-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-md); display: grid; place-items: center; font-size: var(--text-sm);">MD</div>
+        <div style="width: 8rem; height: 5rem; background: var(--bg-raised); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); display: grid; place-items: center; font-size: var(--text-sm);">LG</div>
       </div>
     </section>
 
