@@ -31,8 +31,8 @@
     align-self: center;
 
     /* ── Surface ── */
-    background-color: var(--chk-bg, var(--color-surface-raised));
-    border: var(--border-width) solid var(--chk-border, var(--color-border));
+    background-color: var(--chk-bg, var(--bg-raised));
+    border: var(--border-width) solid var(--chk-border, var(--border-default));
     border-radius: var(--radius-sm);
 
     /* ── Checkmark (hidden by default) ── */
@@ -74,7 +74,7 @@
 
     /* ── Hover ── */
     &:hover:not([disabled]) {
-      border-color: color-mix(in oklch, var(--chk-border, var(--color-border)) 70%, var(--color-text));
+      border-color: color-mix(in oklch, var(--chk-border, var(--border-default)) 70%, var(--text-default));
     }
 
     &:checked:hover:not([disabled]),

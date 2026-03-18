@@ -25,7 +25,7 @@
     height: var(--skeleton-height, 0.875rem);
 
     /* ── Surface ── */
-    background-color: var(--color-neutral-subtle);
+    background-color: var(--bg-subtle);
     border-radius: var(--radius-md);
 
     /* ── Pulse animation ── */

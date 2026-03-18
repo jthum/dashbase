@@ -23,7 +23,7 @@
 
     /* ── Track: WebKit ── */
     &::-webkit-progress-bar {
-      background: var(--progress-track, var(--color-neutral-subtle));
+      background: var(--progress-track, var(--bg-subtle));
       border-radius: var(--radius-full);
     }
 
@@ -43,7 +43,7 @@
     /* ── Indeterminate animation ── */
     &:indeterminate {
       &::-webkit-progress-bar {
-        background: var(--progress-track, var(--color-neutral-subtle));
+        background: var(--progress-track, var(--bg-subtle));
       }
     }
 

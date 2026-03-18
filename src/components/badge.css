@@ -36,9 +36,9 @@
     letter-spacing: 0.05em;
 
     /* ── Surface (driven by variant variables) ── */
-    background-color: var(--badge-bg, var(--color-surface-raised));
-    color: var(--badge-fg, var(--color-text));
-    border: var(--border-width) solid var(--badge-border, var(--color-border));
+    background-color: var(--badge-bg, var(--bg-raised));
+    color: var(--badge-fg, var(--text-default));
+    border: var(--border-width) solid var(--badge-border, var(--border-default));
     border-radius: var(--badge-radius, var(--radius-full));
     
     /* ── Default spacing (can be overridden by size classes) ── */
@@ -88,8 +88,8 @@
 
     &.outline {
       --badge-bg: transparent;
-      --badge-fg: var(--color-text-muted);
-      --badge-border: var(--color-border);
+      --badge-fg: var(--text-muted);
+      --badge-border: var(--border-default);
     }
 
     /* ═══════════════════════════════

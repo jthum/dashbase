@@ -24,8 +24,8 @@
     flex-shrink: 0;
 
     /* ── Spinning arc ── */
-    border: 2px solid var(--color-border);
-    border-top-color: var(--spinner-color, var(--color-text));
+    border: 2px solid var(--border-default);
+    border-top-color: var(--spinner-color, var(--text-default));
     border-radius: var(--radius-full);
 
     /* ── Animation ── */

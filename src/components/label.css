@@ -21,7 +21,7 @@
     font-size: var(--text-sm);
     font-weight: 500;
     line-height: var(--leading-tight);
-    color: var(--label-fg, var(--color-text));
+    color: var(--label-fg, var(--text-default));
 
     /* ── Required indicator ── */
     &.required::after {

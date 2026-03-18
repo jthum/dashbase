@@ -30,8 +30,8 @@
     align-self: center;
 
     /* ── Surface ── */
-    background-color: var(--radio-bg, var(--color-surface-raised));
-    border: var(--border-width) solid var(--radio-border, var(--color-border));
+    background-color: var(--radio-bg, var(--bg-raised));
+    border: var(--border-width) solid var(--radio-border, var(--border-default));
     border-radius: var(--radius-full);
 
     /* ── Inner dot (hidden by default) ── */
@@ -60,7 +60,7 @@
 
     /* ── Hover ── */
     &:hover:not([disabled]) {
-      border-color: color-mix(in oklch, var(--radio-border, var(--color-border)) 70%, var(--color-text));
+      border-color: color-mix(in oklch, var(--radio-border, var(--border-default)) 70%, var(--text-default));
     }
 
     &:checked:hover:not([disabled]) {

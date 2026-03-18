@@ -27,7 +27,7 @@
     &::-webkit-slider-runnable-track {
       height: 0.25rem;
       border-radius: var(--radius-full);
-      background: var(--slider-track, var(--color-border));
+      background: var(--slider-track, var(--border-default));
     }
 
     /* ── WebKit Thumb ── */
@@ -38,7 +38,7 @@
       margin-top: calc((0.25rem - 1.25rem) / 2);
       border-radius: var(--radius-full);
       background: var(--slider-thumb, var(--color-primary));
-      border: 2px solid var(--color-surface-raised);
+      border: 2px solid var(--bg-raised);
       box-shadow: var(--shadow-sm);
       transition: transform var(--duration-fast) var(--easing-default),
                   box-shadow var(--duration-fast) var(--easing-default);
@@ -48,7 +48,7 @@
     &::-moz-range-track {
       height: 0.25rem;
       border-radius: var(--radius-full);
-      background: var(--slider-track, var(--color-border));
+      background: var(--slider-track, var(--border-default));
       border: none;
     }
 
@@ -58,7 +58,7 @@
       height: 1.25rem;
       border-radius: var(--radius-full);
       background: var(--slider-thumb, var(--color-primary));
-      border: 2px solid var(--color-surface-raised);
+      border: 2px solid var(--bg-raised);
       box-shadow: var(--shadow-sm);
       transition: transform var(--duration-fast) var(--easing-default),
                   box-shadow var(--duration-fast) var(--easing-default);

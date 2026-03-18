@@ -19,7 +19,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-sm);
+    gap: var(--control-gap);
 
     /* ── Typography ── */
     font-weight: 500;
@@ -30,19 +30,19 @@
     cursor: pointer;
 
     /* ── Surface (driven by variant variables) ── */
-    background-color: var(--btn-bg, var(--color-surface-raised));
-    color: var(--btn-fg, var(--color-text));
-    border-color: var(--btn-border, var(--color-border));
+    background-color: var(--btn-bg, var(--bg-raised));
+    color: var(--btn-fg, var(--text-default));
+    border-color: var(--btn-border, var(--border-default));
 
     /* ── Hover ── */
     &:hover:not([disabled]) {
-      background-color: var(--btn-bg-hover, color-mix(in oklch, var(--btn-bg, var(--color-surface-raised)) 85%, black));
-      border-color: var(--btn-border-hover, var(--btn-border, var(--color-border)));
+      background-color: var(--btn-bg-hover, color-mix(in oklch, var(--btn-bg, var(--bg-raised)) var(--state-hover-mix), light-dark(black, white)));
+      border-color: var(--btn-border-hover, var(--btn-border, var(--border-default)));
     }
 
     /* ── Active ── */
     &:active:not([disabled]) {
-      background-color: var(--btn-bg-active, color-mix(in oklch, var(--btn-bg, var(--color-surface-raised)) 75%, black));
+      background-color: var(--btn-bg-active, color-mix(in oklch, var(--btn-bg, var(--bg-raised)) var(--state-active-mix), light-dark(black, white)));
     }
 
     /* ── Focus ── */
@@ -79,8 +79,8 @@
     &.ghost {
       --btn-bg: transparent;
       --btn-border: transparent;
-      --btn-bg-hover: var(--color-neutral-subtle);
-      --btn-bg-active: color-mix(in oklch, var(--color-neutral-subtle) 80%, var(--color-neutral));
+      --btn-bg-hover: var(--bg-subtle);
+      --btn-bg-active: color-mix(in oklch, var(--bg-subtle) var(--state-active-mix), light-dark(black, white));
     }
 
     &.outline {

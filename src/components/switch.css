@@ -28,7 +28,7 @@
     flex-shrink: 0;
 
     /* ── Track surface ── */
-    background-color: var(--switch-bg, var(--color-border));
+    background-color: var(--switch-bg, var(--border-default));
     border: none;
     border-radius: var(--radius-full);
     transition: background-color var(--duration-fast) var(--easing-default);
@@ -39,7 +39,7 @@
       width: calc(1.5rem - 4px);
       height: calc(1.5rem - 4px);
       border-radius: var(--radius-full);
-      background-color: var(--switch-fg, var(--color-surface-raised));
+      background-color: var(--switch-fg, var(--bg-raised));
       box-shadow: var(--shadow-xs);
       transition: translate var(--duration-base) var(--easing-default);
     }
@@ -55,7 +55,7 @@
 
     /* ── Hover ── */
     &:hover:not([disabled]) {
-      background-color: color-mix(in oklch, var(--switch-bg, var(--color-border)) 85%, black);
+      background-color: color-mix(in oklch, var(--switch-bg, var(--border-default)) var(--state-hover-mix), light-dark(black, white));
     }
 
     /* ── Focus ── */

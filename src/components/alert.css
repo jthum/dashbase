@@ -31,9 +31,9 @@
     line-height: var(--leading-normal);
 
     /* ── Surface (driven by variant variables) ── */
-    background-color: var(--alert-bg, var(--color-neutral-subtle));
-    color: var(--alert-fg, var(--color-text));
-    border: var(--border-width) solid var(--alert-border, var(--color-border));
+    background-color: var(--alert-bg, var(--bg-subtle));
+    color: var(--alert-fg, var(--text-default));
+    border: var(--border-width) solid var(--alert-border, var(--border-default));
     border-radius: var(--radius-lg);
 
     /* ── Title ── */
@@ -81,8 +81,8 @@
 
     &.outline {
       --alert-bg:     transparent;
-      --alert-fg:     var(--color-text);
-      --alert-border: var(--color-border);
+      --alert-fg:     var(--text-default);
+      --alert-border: var(--border-default);
     }
   }
 }

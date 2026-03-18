@@ -26,7 +26,7 @@
 
     /* ── Placeholder ── */
     &::placeholder {
-      color: var(--color-text-muted);
+      color: var(--text-muted);
       opacity: 1;
     }
 
@@ -39,19 +39,19 @@
 
     /* ── Hover ── */
     &:hover:not(:focus-visible):not([disabled]):not([readonly]) {
-      border-color: color-mix(in oklch, var(--color-border) 70%, var(--color-text));
+      border-color: color-mix(in oklch, var(--border-default) 70%, var(--text-default));
     }
 
     /* ── Disabled ── */
     &[disabled] {
       opacity: 0.5;
       cursor: not-allowed;
-      background-color: var(--color-neutral-subtle);
+      background-color: var(--bg-subtle);
     }
 
     /* ── Read-only ── */
     &[readonly] {
-      background-color: var(--color-neutral-subtle);
+      background-color: var(--bg-subtle);
       cursor: default;
     }
 
