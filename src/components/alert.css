@@ -56,32 +56,32 @@
      * ═══════════════════════════════ */
 
     &.primary {
-      --alert-bg: var(--color-primary-subtle);
-      --alert-fg: var(--color-primary-hover);
-      --alert-border: color-mix(in oklch, var(--color-primary) 30%, transparent);
+      --alert-bg:     var(--color-primary-subtle);
+      --alert-fg:     var(--color-primary-emphasis);
+      --alert-border: var(--color-primary-muted);
     }
 
     &.danger {
-      --alert-bg: var(--color-danger-subtle);
-      --alert-fg: var(--color-danger-hover);
-      --alert-border: color-mix(in oklch, var(--color-danger) 30%, transparent);
+      --alert-bg:     var(--color-danger-subtle);
+      --alert-fg:     var(--color-danger-emphasis);
+      --alert-border: var(--color-danger-muted);
     }
 
     &.success {
-      --alert-bg: color-mix(in oklch, var(--color-success) 12%, var(--color-surface));
-      --alert-fg: color-mix(in oklch, var(--color-success) 85%, black);
-      --alert-border: color-mix(in oklch, var(--color-success) 30%, transparent);
+      --alert-bg:     var(--color-success-subtle);
+      --alert-fg:     var(--color-success-emphasis);
+      --alert-border: var(--color-success-muted);
     }
 
     &.warning {
-      --alert-bg: color-mix(in oklch, var(--color-warning) 15%, var(--color-surface));
-      --alert-fg: color-mix(in oklch, var(--color-warning) 75%, black);
-      --alert-border: color-mix(in oklch, var(--color-warning) 30%, transparent);
+      --alert-bg:     var(--color-warning-subtle);
+      --alert-fg:     var(--color-warning-emphasis);
+      --alert-border: var(--color-warning-muted);
     }
 
     &.outline {
-      --alert-bg: transparent;
-      --alert-fg: var(--color-text);
+      --alert-bg:     transparent;
+      --alert-fg:     var(--color-text);
       --alert-border: var(--color-border);
     }
   }

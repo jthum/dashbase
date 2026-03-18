@@ -58,7 +58,7 @@
 
     &.primary-subtle {
       --badge-bg: var(--color-primary-subtle);
-      --badge-fg: var(--color-primary-hover);
+      --badge-fg: var(--color-primary-emphasis);
       --badge-border: transparent;
     }
 
@@ -70,7 +70,7 @@
     
     &.danger-subtle {
       --badge-bg: var(--color-danger-subtle);
-      --badge-fg: var(--color-danger-hover);
+      --badge-fg: var(--color-danger-emphasis);
       --badge-border: transparent;
     }
 
@@ -82,7 +82,7 @@
     
     &.success-subtle {
       --badge-bg: var(--color-success-subtle);
-      --badge-fg: var(--color-success-hover);
+      --badge-fg: var(--color-success-emphasis);
       --badge-border: transparent;
     }
 

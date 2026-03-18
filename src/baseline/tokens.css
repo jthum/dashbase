@@ -30,16 +30,37 @@
     --color-text: light-dark(oklch(20% 0 0), oklch(93% 0 0));
     --color-text-muted: light-dark(oklch(45% 0.01 270), oklch(65% 0.01 270));
 
-    /* ── Derived States (color-mix) ── */
-    --color-primary-hover: color-mix(in oklch, var(--color-primary) 85%, black);
-    --color-primary-active: color-mix(in oklch, var(--color-primary) 75%, black);
-    --color-primary-subtle: color-mix(in oklch, var(--color-primary) 12%, var(--color-surface));
-    --color-danger-hover: color-mix(in oklch, var(--color-danger) 85%, black);
-    --color-danger-active: color-mix(in oklch, var(--color-danger) 75%, black);
-    --color-danger-subtle: color-mix(in oklch, var(--color-danger) 12%, var(--color-surface));
-    --color-neutral-hover: color-mix(in oklch, var(--color-neutral) 85%, black);
+    /* ── Derived Semantic Tokens ── */
+    /* Pattern: subtle = tinted background, muted = tinted border, emphasis = readable text on subtle bg */
+
+    --color-primary-subtle:   oklch(from var(--color-primary) 95% 0.04 h);
+    --color-primary-muted:    oklch(from var(--color-primary) 85% 0.08 h);
+    --color-primary-emphasis: oklch(from var(--color-primary) 35% 0.18 h);
+    --color-primary-hover:    color-mix(in oklch, var(--color-primary) 85%, black);
+    --color-primary-active:   color-mix(in oklch, var(--color-primary) 75%, black);
+
+    --color-danger-subtle:   oklch(from var(--color-danger) 95% 0.05 h);
+    --color-danger-muted:    oklch(from var(--color-danger) 85% 0.10 h);
+    --color-danger-emphasis: oklch(from var(--color-danger) 35% 0.20 h);
+    --color-danger-hover:    color-mix(in oklch, var(--color-danger) 85%, black);
+    --color-danger-active:   color-mix(in oklch, var(--color-danger) 75%, black);
+
+    --color-success-subtle:   oklch(from var(--color-success) 95% 0.04 h);
+    --color-success-muted:    oklch(from var(--color-success) 85% 0.09 h);
+    --color-success-emphasis: oklch(from var(--color-success) 35% 0.17 h);
+    --color-success-hover:    color-mix(in oklch, var(--color-success) 85%, black);
+    --color-success-active:   color-mix(in oklch, var(--color-success) 75%, black);
+
+    /* Note: warning-emphasis uses dark text — warning bases are inherently high-lightness */
+    --color-warning-subtle:   oklch(from var(--color-warning) 95% 0.05 h);
+    --color-warning-muted:    oklch(from var(--color-warning) 85% 0.10 h);
+    --color-warning-emphasis: oklch(from var(--color-warning) 30% 0.18 h);
+    --color-warning-hover:    color-mix(in oklch, var(--color-warning) 85%, black);
+    --color-warning-active:   color-mix(in oklch, var(--color-warning) 75%, black);
+
+    --color-neutral-subtle: oklch(from var(--color-neutral) 95% 0.01 h);
+    --color-neutral-hover:  color-mix(in oklch, var(--color-neutral) 85%, black);
     --color-neutral-active: color-mix(in oklch, var(--color-neutral) 75%, black);
-    --color-neutral-subtle: color-mix(in oklch, var(--color-neutral) 12%, var(--color-surface));
 
     /* ── Typography ── */
     --font-sans: system-ui, -apple-system, sans-serif;
