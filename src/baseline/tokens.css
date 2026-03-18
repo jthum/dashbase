@@ -38,6 +38,22 @@
     --color-text:           light-dark(oklch(20% 0 0),          oklch(93% 0 0));
     --color-text-muted:     light-dark(oklch(45% 0.01 270),     oklch(65% 0.01 270));
 
+    /* ── Role Tokens ── */
+    /* Layer abstraction so components express layout intent, not specific palette values */
+    --bg-default:  var(--color-surface);
+    --bg-raised:   var(--color-surface-raised);
+    --bg-subtle:   var(--color-neutral-subtle);
+
+    --text-default:  var(--color-text);
+    --text-muted:    var(--color-text-muted);
+
+    --border-default: var(--color-border);
+    --border-strong:  light-dark(oklch(70% 0.01 270), oklch(50% 0.01 270));
+
+    /* ── Interaction State Intensity ── */
+    --state-hover-mix:  85%;
+    --state-active-mix: 75%;
+
     /* ── Derived Semantic Tokens ── */
     /* Pattern: subtle = tinted bg, muted = tinted border, emphasis = readable text on subtle bg */
     /* light-dark() inverts the lightness axis for dark mode automatically */
@@ -45,33 +61,33 @@
     --color-primary-subtle:   oklch(from var(--color-primary) light-dark(95%, 15%) 0.04 h);
     --color-primary-muted:    oklch(from var(--color-primary) light-dark(85%, 25%) 0.08 h);
     --color-primary-emphasis: oklch(from var(--color-primary) light-dark(35%, 85%) 0.18 h);
-    --color-primary-hover:    color-mix(in oklch, var(--color-primary) 85%, black);
-    --color-primary-active:   color-mix(in oklch, var(--color-primary) 75%, black);
+    --color-primary-hover:    color-mix(in oklch, var(--color-primary) var(--state-hover-mix), light-dark(black, white));
+    --color-primary-active:   color-mix(in oklch, var(--color-primary) var(--state-active-mix), light-dark(black, white));
 
     --color-danger-subtle:   oklch(from var(--color-danger) light-dark(95%, 15%) 0.05 h);
     --color-danger-muted:    oklch(from var(--color-danger) light-dark(85%, 25%) 0.10 h);
     --color-danger-emphasis: oklch(from var(--color-danger) light-dark(35%, 85%) 0.20 h);
-    --color-danger-hover:    color-mix(in oklch, var(--color-danger) 85%, black);
-    --color-danger-active:   color-mix(in oklch, var(--color-danger) 75%, black);
+    --color-danger-hover:    color-mix(in oklch, var(--color-danger) var(--state-hover-mix), light-dark(black, white));
+    --color-danger-active:   color-mix(in oklch, var(--color-danger) var(--state-active-mix), light-dark(black, white));
 
     --color-success-subtle:   oklch(from var(--color-success) light-dark(95%, 15%) 0.04 h);
     --color-success-muted:    oklch(from var(--color-success) light-dark(85%, 25%) 0.09 h);
     --color-success-emphasis: oklch(from var(--color-success) light-dark(35%, 85%) 0.17 h);
-    --color-success-hover:    color-mix(in oklch, var(--color-success) 85%, black);
-    --color-success-active:   color-mix(in oklch, var(--color-success) 75%, black);
+    --color-success-hover:    color-mix(in oklch, var(--color-success) var(--state-hover-mix), light-dark(black, white));
+    --color-success-active:   color-mix(in oklch, var(--color-success) var(--state-active-mix), light-dark(black, white));
 
     /* Note: warning-subtle/-muted stay light even in dark mode — keep readable contrast with dark warning-fg */
     --color-warning-subtle:   oklch(from var(--color-warning) light-dark(95%, 20%) 0.05 h);
     --color-warning-muted:    oklch(from var(--color-warning) light-dark(85%, 30%) 0.10 h);
     --color-warning-emphasis: oklch(from var(--color-warning) light-dark(30%, 85%) 0.18 h);
-    --color-warning-hover:    color-mix(in oklch, var(--color-warning) 85%, black);
-    --color-warning-active:   color-mix(in oklch, var(--color-warning) 75%, black);
+    --color-warning-hover:    color-mix(in oklch, var(--color-warning) var(--state-hover-mix), light-dark(black, white));
+    --color-warning-active:   color-mix(in oklch, var(--color-warning) var(--state-active-mix), light-dark(black, white));
 
     --color-neutral-subtle:   oklch(from var(--color-neutral) light-dark(95%, 15%) 0.01 h);
     --color-neutral-muted:    oklch(from var(--color-neutral) light-dark(85%, 25%) 0.02 h);
     --color-neutral-emphasis: oklch(from var(--color-neutral) light-dark(35%, 85%) 0.02 h);
-    --color-neutral-hover:    color-mix(in oklch, var(--color-neutral) 85%, black);
-    --color-neutral-active:   color-mix(in oklch, var(--color-neutral) 75%, black);
+    --color-neutral-hover:    color-mix(in oklch, var(--color-neutral) var(--state-hover-mix), light-dark(black, white));
+    --color-neutral-active:   color-mix(in oklch, var(--color-neutral) var(--state-active-mix), light-dark(black, white));
 
     /* ── Typography ── */
     --font-sans: system-ui, -apple-system, sans-serif;
@@ -87,7 +103,7 @@
     --leading-normal: 1.5;
     --leading-relaxed: 1.75;
 
-    /* ── Spacing (t-shirt scale, adjustable via --space-unit) ── */
+    /* ── Spacing (t-shirt scale) ── */
     --space-unit: 0.25rem;
     --space-xs:  calc(var(--space-unit) * 1);
     --space-sm:  calc(var(--space-unit) * 2);
@@ -97,6 +113,15 @@
     --space-2xl: calc(var(--space-unit) * 8);
     --space-3xl: calc(var(--space-unit) * 12);
     --space-4xl: calc(var(--space-unit) * 16);
+
+    /* ── Spacing Roles ── */
+    --control-gap:            var(--space-sm);
+    --control-padding-inline: var(--space-lg);
+    --control-padding-block:  var(--space-sm);
+    --stack-gap:              var(--space-md);
+    --inline-gap:             var(--space-sm);
+    --cluster-gap:            var(--space-xs);
+    --section-gap:            var(--space-xl);
 
     /* ── Border ── */
     --border-width: 1px;
@@ -143,8 +168,6 @@
     --z-toast: 500;
 
     /* ── Control Tokens (shared geometry for button/input/select/textarea) ── */
-    --control-padding-inline: var(--space-lg);
-    --control-padding-block: var(--space-sm);
     --control-radius: var(--radius-md);
     --control-font-size: var(--text-sm);
   }
