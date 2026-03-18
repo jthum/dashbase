@@ -5,17 +5,17 @@
  * (icons, text, decorators) inside the input visually.
  *
  * Structure:
- *   <div class="input-group">
+ *   <input-group>
  *     <svg class="icon prefix">...</svg>
  *     <input type="text">
  *     <span class="suffix">.com</span>
- *   </div>
+ *   </input-group>
  *
  * Primitives handle: nothing (structural wrapper).
  */
 
 @layer components {
-  .input-group {
+  input-group {
     position: relative;
     display: flex;
     align-items: center;
