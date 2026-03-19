@@ -8,6 +8,7 @@
     "dist/"
   ],
   "scripts": {
+    "validate:contracts": "bun run scripts/validate-examples.js",
     "validate:examples": "bun run scripts/validate-examples.js",
     "build": "bun run scripts/build.js",
     "dev": "bun run scripts/build.js --watch"

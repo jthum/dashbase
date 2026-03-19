@@ -64,6 +64,8 @@ This generates:
 - `dist/components/*.css` for modular component imports
 - `dist/dashbase.css` for the full bundle
 
+The generated CSS stays readable on purpose. Dashbase ships formatted source with comments intact, and the build reports both raw and gzip sizes so transfer cost stays visible without sacrificing view-source friendliness.
+
 To use Dashbase in your project, include the base stylesheet followed by the components you need.
 
 ```html
@@ -87,6 +89,18 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 
 <button class="primary">Sign Up</button>
 ```
+
+---
+
+## 🌐 Browser Support
+
+Dashbase targets modern evergreen browsers and uses the platform directly rather than transpiling modern CSS away.
+
+- **Functional first**: semantic HTML remains the foundation. If a browser misses part of the styling surface, the markup should still behave like normal native HTML.
+- **Modern CSS baseline**: Dashbase relies on CSS custom properties, `@layer`, logical properties, `color-mix()`, `oklch()`, `light-dark()`, and native nesting.
+- **Enhanced states where available**: `:has()` powers parent-aware styling such as `<form-field>` reacting to invalid controls, `:user-invalid` delays error styling until user interaction, and `field-sizing: content` enables textarea auto-growth without JS.
+- **Graceful degradation over polyfills**: when a feature is unsupported, Dashbase prefers losing polish over breaking behavior. The browser should fall back to simpler native presentation rather than requiring a heavy compatibility layer.
+- **Project-specific compatibility**: if your product has stricter browser requirements, test the specific components you use and add targeted fallbacks in your app layer.
 
 ---
 

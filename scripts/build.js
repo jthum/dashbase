@@ -1,7 +1,7 @@
 /**
  * Dashbase Build Script
  *
- * 0. Validates example HTML against component-supported classes
+ * 0. Validates example HTML and current docs snippets against component contracts
  * 1. Resolves @import in baseline.css (inline the imports)
  * 2. Copies individual component files to dist/components/
  * 3. Creates bundled dist/dashbase.css (baseline + all components)
@@ -11,13 +11,30 @@
 
 import { readdir, mkdir, copyFile, rm } from "node:fs/promises";
 import { join } from "node:path";
-import { validateExamples } from "./validate-examples.js";
+import { gzipSync } from "node:zlib";
+import { validateContracts } from "./validate-examples.js";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const BASELINE_DIR = join(ROOT, "src/baseline");
 const COMPONENTS_DIR = join(ROOT, "src/components");
 const DIST = join(ROOT, "dist");
 const DIST_COMPONENTS = join(DIST, "components");
+const SIZE_BUDGETS = {
+  baselineGzip: 3 * 1024,
+  componentGzip: 1.5 * 1024,
+  bundleGzip: 10 * 1024,
+};
+
+function getSizeMetrics(content) {
+  return {
+    raw: new Blob([content]).size,
+    gzip: gzipSync(content).length,
+  };
+}
+
+function formatSize(bytes) {
+  return `${(bytes / 1024).toFixed(2)} KB`;
+}
 
 /**
  * Resolve @import statements in a CSS file by inlining the imported content.
@@ -47,8 +64,8 @@ async function resolveImports(filePath) {
 async function build() {
   const startTime = performance.now();
 
-  await validateExamples({ log: false });
-  console.log("  ✓ examples");
+  await validateContracts({ log: false });
+  console.log("  ✓ examples + docs");
 
   // Clean and create dist
   await rm(DIST, { recursive: true, force: true });
@@ -76,7 +93,7 @@ async function build() {
 
       const content = await Bun.file(src).text();
       componentContents.push(content);
-      componentSizes.push({ name: file, size: new Blob([content]).size });
+      componentSizes.push({ name: file, ...getSizeMetrics(content) });
     }
   } catch {
     console.log("  ℹ No components found (yet)");
@@ -96,27 +113,29 @@ async function build() {
   console.log("  ✓ dist/dashbase.css (bundle)");
 
   // 4. Report sizes
-  const baselineSize = new Blob([baselineContent]).size;
-  const bundleSize = new Blob([bundle]).size;
+  const baselineSize = getSizeMetrics(baselineContent);
+  const bundleSize = getSizeMetrics(bundle);
   const elapsed = (performance.now() - startTime).toFixed(1);
 
   console.log("");
-  console.log(`  baseline.css:  ${(baselineSize / 1024).toFixed(2)} KB`);
-  for (const { name, size } of componentSizes) {
-    const kb = (size / 1024).toFixed(2);
-    const warn = size > 4096 ? " ⚠ >4KB" : "";
-    console.log(`  ${name.padEnd(16)} ${kb} KB${warn}`);
+  console.log(`  baseline.css:  ${formatSize(baselineSize.raw)} raw / ${formatSize(baselineSize.gzip)} gzip`);
+  for (const { name, raw, gzip } of componentSizes) {
+    const warn = gzip > SIZE_BUDGETS.componentGzip ? " ⚠ gzip budget" : "";
+    console.log(`  ${name.padEnd(16)} ${formatSize(raw)} raw / ${formatSize(gzip)} gzip${warn}`);
   }
-  console.log(`  dashbase.css:  ${(bundleSize / 1024).toFixed(2)} KB (${componentSizes.length} components)`);
+  console.log(`  dashbase.css:  ${formatSize(bundleSize.raw)} raw / ${formatSize(bundleSize.gzip)} gzip (${componentSizes.length} components)`);
   console.log(`  Built in ${elapsed}ms`);
 
-  if (baselineSize > 8192) {
-    console.warn(`  ⚠ baseline.css exceeds 8KB target`);
+  if (baselineSize.gzip > SIZE_BUDGETS.baselineGzip) {
+    console.warn(`  ⚠ baseline.css exceeds gzip budget (${formatSize(baselineSize.gzip)})`);
   }
-  for (const { name, size } of componentSizes) {
-    if (size > 4096) {
-      console.warn(`  ⚠ ${name} exceeds 4KB component target (${(size / 1024).toFixed(2)} KB)`);
+  for (const { name, gzip } of componentSizes) {
+    if (gzip > SIZE_BUDGETS.componentGzip) {
+      console.warn(`  ⚠ ${name} exceeds component gzip budget (${formatSize(gzip)})`);
     }
+  }
+  if (bundleSize.gzip > SIZE_BUDGETS.bundleGzip) {
+    console.warn(`  ⚠ dashbase.css exceeds bundle gzip budget (${formatSize(bundleSize.gzip)})`);
   }
 }
 

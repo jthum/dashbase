@@ -1,10 +1,14 @@
 import { readdir, readFile } from "node:fs/promises";
-import { basename, join } from "node:path";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const COMPONENTS_DIR = join(ROOT, "src/components");
 const EXAMPLES_DIR = join(ROOT, "src/examples");
+const VALIDATED_MARKDOWN_FILES = [
+  join(ROOT, "README.md"),
+  join(ROOT, "docs/dashbase-implementation-guidance.md"),
+];
 
 function stripComments(source) {
   return source.replace(/\/\*[\s\S]*?\*\//g, "");
@@ -133,6 +137,10 @@ function getLineNumber(source, index) {
   return source.slice(0, index).split("\n").length;
 }
 
+function getLineOffset(source, index) {
+  return getLineNumber(source, index) - 1;
+}
+
 function extractElementsWithClasses(htmlSource) {
   const elements = [];
   const tagPattern = /<([A-Za-z][A-Za-z0-9-]*)(\s[^>]*?)?>/g;
@@ -180,6 +188,24 @@ function extractLoadedComponentFiles(htmlSource) {
   return files;
 }
 
+function extractHtmlCodeBlocks(markdownSource) {
+  const blocks = [];
+  const codeFencePattern = /```html\s*\n([\s\S]*?)```/g;
+
+  for (const match of markdownSource.matchAll(codeFencePattern)) {
+    const fullMatch = match[0];
+    const html = match[1];
+    const contentIndex = (match.index ?? 0) + fullMatch.indexOf(html);
+
+    blocks.push({
+      html,
+      lineOffset: getLineOffset(markdownSource, contentIndex),
+    });
+  }
+
+  return blocks;
+}
+
 async function buildComponentCatalog() {
   const componentFiles = (await readdir(COMPONENTS_DIR))
     .filter((file) => file.endsWith(".css"))
@@ -217,13 +243,65 @@ function formatClasses(classes) {
   return classes.size === 0 ? "none" : [...classes].sort().join(", ");
 }
 
-export async function validateExamples({ log = true } = {}) {
+function collectAllowedClasses(localClasses, components) {
+  const allowedClasses = new Set(localClasses);
+
+  for (const component of components) {
+    for (const className of component.supportedClasses) {
+      allowedClasses.add(className);
+    }
+  }
+
+  return allowedClasses;
+}
+
+function appendValidationErrors({
+  errors,
+  sourcePath,
+  html,
+  components,
+  localClasses = new Set(),
+  lineOffset = 0,
+}) {
+  const allowedClasses = collectAllowedClasses(localClasses, components);
+
+  for (const element of extractElementsWithClasses(html)) {
+    const matchingComponents = components.filter((component) =>
+      component.selectors.some((selector) => selectorMatchesElement(selector, element)),
+    );
+
+    if (matchingComponents.length === 0) continue;
+
+    const allowedClasses = collectAllowedClasses(localClasses, matchingComponents);
+
+    const unsupportedClasses = [...element.classes]
+      .filter((className) => !allowedClasses.has(className))
+      .sort();
+
+    if (unsupportedClasses.length === 0) continue;
+
+    errors.push({
+      sourcePath,
+      line: lineOffset + getLineNumber(html, element.index),
+      snippet: element.snippet,
+      unsupportedClasses,
+      matchingComponents: matchingComponents.map((component) => component.file).sort(),
+      supportedClasses: new Set(
+        matchingComponents.flatMap((component) => [...component.supportedClasses]),
+      ),
+    });
+  }
+}
+
+export async function validateContracts({ log = true } = {}) {
   const componentCatalog = await buildComponentCatalog();
+  const allComponents = [...componentCatalog.values()];
   const exampleFiles = (await readdir(EXAMPLES_DIR))
     .filter((file) => file.endsWith(".html"))
     .sort();
 
   const errors = [];
+  let documentationSnippetCount = 0;
 
   for (const exampleFile of exampleFiles) {
     const examplePath = join(EXAMPLES_DIR, exampleFile);
@@ -233,36 +311,28 @@ export async function validateExamples({ log = true } = {}) {
       .map((file) => componentCatalog.get(file))
       .filter(Boolean);
 
-    for (const element of extractElementsWithClasses(html)) {
-      const matchingComponents = loadedComponents.filter((component) =>
-        component.selectors.some((selector) => selectorMatchesElement(selector, element)),
-      );
+    appendValidationErrors({
+      errors,
+      sourcePath: join("src/examples", exampleFile),
+      html,
+      components: loadedComponents,
+      localClasses,
+    });
+  }
 
-      if (matchingComponents.length === 0) continue;
+  for (const markdownPath of VALIDATED_MARKDOWN_FILES) {
+    const markdownSource = await readFile(markdownPath, "utf8");
+    const sourcePath = markdownPath.replace(`${ROOT}/`, "");
 
-      const allowedClasses = new Set(localClasses);
+    for (const block of extractHtmlCodeBlocks(markdownSource)) {
+      documentationSnippetCount += 1;
 
-      for (const component of matchingComponents) {
-        for (const className of component.supportedClasses) {
-          allowedClasses.add(className);
-        }
-      }
-
-      const unsupportedClasses = [...element.classes]
-        .filter((className) => !allowedClasses.has(className))
-        .sort();
-
-      if (unsupportedClasses.length === 0) continue;
-
-      errors.push({
-        exampleFile,
-        line: getLineNumber(html, element.index),
-        snippet: element.snippet,
-        unsupportedClasses,
-        matchingComponents: matchingComponents.map((component) => component.file).sort(),
-        supportedClasses: new Set(
-          matchingComponents.flatMap((component) => [...component.supportedClasses]),
-        ),
+      appendValidationErrors({
+        errors,
+        sourcePath,
+        html: block.html,
+        components: allComponents,
+        lineOffset: block.lineOffset,
       });
     }
   }
@@ -274,7 +344,7 @@ export async function validateExamples({ log = true } = {}) {
       const components = error.matchingComponents.join(", ");
 
       return [
-        `${join("src/examples", error.exampleFile)}:${error.line}`,
+        `${error.sourcePath}:${error.line}`,
         `  unsupported classes: ${unsupported}`,
         `  matching components: ${components}`,
         `  supported classes: ${supported}`,
@@ -282,18 +352,22 @@ export async function validateExamples({ log = true } = {}) {
       ].join("\n");
     }).join("\n\n");
 
-    throw new Error(`Example validation failed:\n\n${formatted}`);
+    throw new Error(`Contract validation failed:\n\n${formatted}`);
   }
 
   if (log) {
-    console.log(`Validated ${exampleFiles.length} example files against component CSS.`);
+    console.log(
+      `Validated ${exampleFiles.length} example files and ${documentationSnippetCount} documentation snippets against component CSS.`,
+    );
   }
 }
+
+export const validateExamples = validateContracts;
 
 const isEntrypoint = process.argv[1] === fileURLToPath(import.meta.url);
 
 if (isEntrypoint) {
-  validateExamples().catch((error) => {
+  validateContracts().catch((error) => {
     console.error(error.message);
     process.exit(1);
   });
