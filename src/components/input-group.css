@@ -53,9 +53,14 @@
     & > .prefix svg,
     & > .suffix svg,
     & > .prefix img,
-    & > .suffix img {
+    & > .suffix img,
+    & > svg.prefix,
+    & > svg.suffix,
+    & > img.prefix,
+    & > img.suffix {
       width: 1.125em;
       height: 1.125em;
+      flex-shrink: 0;
     }
 
     /* ── Input padding adjustments ── */

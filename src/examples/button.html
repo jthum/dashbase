@@ -6,6 +6,7 @@
   <title>Dashbase — Button Component</title>
   <link rel="stylesheet" href="../baseline/baseline.css">
   <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="../components/button-group.css">
 
   <style>
     main {
@@ -149,6 +150,34 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
           Delete
         </button>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- ── Button Groups ── -->
+    <section>
+      <h2>Button Groups</h2>
+      <p>Use <code>&lt;button-group&gt;</code> to attach buttons seamlessly.</p>
+      <div class="row">
+        <button-group>
+          <button class="outline">Left</button>
+          <button class="outline">Middle</button>
+          <button class="outline">Right</button>
+        </button-group>
+      </div>
+      <div class="row">
+        <button-group>
+          <button class="primary icon" aria-label="Reply">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+          </button>
+          <button class="primary icon" aria-label="Reply All">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 17 2 12 7 7"/><polyline points="12 17 7 12 12 7"/><path d="M22 18v-2a4 4 0 0 0-4-4H7"/></svg>
+          </button>
+          <button class="primary icon" aria-label="Forward">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 17 20 12 15 7"/><path d="M4 18v-2a4 4 0 0 1 4-4h12"/></svg>
+          </button>
+        </button-group>
       </div>
     </section>
 

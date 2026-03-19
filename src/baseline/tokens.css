@@ -24,12 +24,12 @@
 
     /* ── Foreground Colors (derived) ── */
     /* Near-white in light mode, near-black in dark mode — always readable on their base */
-    --color-primary-fg: oklch(from var(--color-primary) light-dark(98%, 10%) 0.01 h);
-    --color-danger-fg:  oklch(from var(--color-danger)  light-dark(98%, 10%) 0.01 h);
-    --color-success-fg: oklch(from var(--color-success) light-dark(98%, 10%) 0.01 h);
-    --color-neutral-fg: oklch(from var(--color-neutral) light-dark(98%, 10%) 0.01 h);
+    --color-primary-fg: light-dark(oklch(from var(--color-primary) 98% 0.01 h), oklch(from var(--color-primary) 10% 0.01 h));
+    --color-danger-fg:  light-dark(oklch(from var(--color-danger)  98% 0.01 h), oklch(from var(--color-danger)  10% 0.01 h));
+    --color-success-fg: light-dark(oklch(from var(--color-success) 98% 0.01 h), oklch(from var(--color-success) 10% 0.01 h));
+    --color-neutral-fg: light-dark(oklch(from var(--color-neutral) 98% 0.01 h), oklch(from var(--color-neutral) 10% 0.01 h));
     /* Warning fg is intentionally dark even in light mode — warning bases are high-lightness */
-    --color-warning-fg: oklch(from var(--color-warning) light-dark(15%, 92%) 0.05 h);
+    --color-warning-fg: light-dark(oklch(from var(--color-warning) 15% 0.05 h), oklch(from var(--color-warning) 92% 0.05 h));
 
     /* ── Surface & Border ── */
     --color-surface:        light-dark(oklch(99% 0 0),          oklch(15% 0.005 270));
