@@ -11,7 +11,8 @@
  * Architecture: variants set --badge-* variables, base rule uses them.
  * No hover/active/focus logic since it is purely presentational.
  *
- * Variants: .primary, .danger, .success, .neutral, .outline
+ * Variants: .primary, .danger, .success, .warning, .neutral, .outline
+ *           plus .*-subtle companions for semantic tones
  * Sizes: .small, (default), .large
  */
 
@@ -83,6 +84,30 @@
     &.success-subtle {
       --badge-bg: var(--color-success-subtle);
       --badge-fg: var(--color-success-emphasis);
+      --badge-border: transparent;
+    }
+
+    &.warning {
+      --badge-bg: var(--color-warning);
+      --badge-fg: var(--color-warning-fg);
+      --badge-border: var(--color-warning);
+    }
+
+    &.warning-subtle {
+      --badge-bg: var(--color-warning-subtle);
+      --badge-fg: var(--color-warning-emphasis);
+      --badge-border: transparent;
+    }
+
+    &.neutral {
+      --badge-bg: var(--color-neutral);
+      --badge-fg: var(--color-neutral-fg);
+      --badge-border: var(--color-neutral);
+    }
+
+    &.neutral-subtle {
+      --badge-bg: var(--color-neutral-subtle);
+      --badge-fg: var(--color-neutral-emphasis);
       --badge-border: transparent;
     }
 

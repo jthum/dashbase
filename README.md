@@ -41,25 +41,39 @@ Dashbase uses a layered architecture to ensure style consistency and easy overri
 
 ## 📂 Project Structure
 
-- **`/baseline`**: The foundational design system (tokens, primitives, reset).
-- **`/dashbase`**: The semantic component library and patterns.
-- **`/tools`**: Development tools including generators and DSL contracts.
+- **`/src/baseline`**: The foundational design system (reset, tokens, primitives, base).
+- **`/src/components`**: Semantic component styles.
+- **`/themes`**: Token overrides for alternate visual systems.
+- **`/scripts`**: Build tooling.
+- **`/dist`**: Generated output after running the build.
 - **`/docs`**: Comprehensive documentation, implementation guidance, and PRDs.
 
 ---
 
 ## 🚀 Getting Started
 
+Build the distributable CSS first:
+
+```bash
+bun run build
+```
+
+This generates:
+
+- `dist/baseline.css` for the reset/tokens/primitives/base layers
+- `dist/components/*.css` for modular component imports
+- `dist/dashbase.css` for the full bundle
+
 To use Dashbase in your project, include the base stylesheet followed by the components you need.
 
 ```html
 <!-- Load the foundational design system -->
-<link rel="stylesheet" href="baseline/baseline.css">
+<link rel="stylesheet" href="dist/baseline.css">
 
 <!-- Load only the components you need -->
-<link rel="stylesheet" href="dashbase/components/button.css">
-<link rel="stylesheet" href="dashbase/components/input.css">
-<link rel="stylesheet" href="dashbase/components/form-field.css">
+<link rel="stylesheet" href="dist/components/button.css">
+<link rel="stylesheet" href="dist/components/input.css">
+<link rel="stylesheet" href="dist/components/form-field.css">
 ```
 
 ### Example Usage

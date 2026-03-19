@@ -15,6 +15,8 @@
     --color-danger-fg: oklch(100% 0 0);
     --color-success: oklch(35% 0.15 150);
     --color-success-fg: oklch(100% 0 0);
+    --color-warning: oklch(82% 0.17 90);
+    --color-warning-fg: oklch(0% 0 0);
     --color-neutral: oklch(10% 0 0);
     --color-neutral-fg: oklch(100% 0 0);
 

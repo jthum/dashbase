@@ -85,6 +85,5 @@
     &:user-invalid {
       --radio-border: var(--color-danger);
     }
-
   }
 }

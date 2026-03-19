@@ -1,6 +1,7 @@
 /**
  * Dashbase Build Script
  *
+ * 0. Validates example HTML against component-supported classes
  * 1. Resolves @import in baseline.css (inline the imports)
  * 2. Copies individual component files to dist/components/
  * 3. Creates bundled dist/dashbase.css (baseline + all components)
@@ -10,6 +11,7 @@
 
 import { readdir, mkdir, copyFile, rm } from "node:fs/promises";
 import { join } from "node:path";
+import { validateExamples } from "./validate-examples.js";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const BASELINE_DIR = join(ROOT, "src/baseline");
@@ -44,6 +46,9 @@ async function resolveImports(filePath) {
 
 async function build() {
   const startTime = performance.now();
+
+  await validateExamples({ log: false });
+  console.log("  ✓ examples");
 
   // Clean and create dist
   await rm(DIST, { recursive: true, force: true });

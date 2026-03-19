@@ -1,0 +1,300 @@
+import { readdir, readFile } from "node:fs/promises";
+import { basename, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
+const COMPONENTS_DIR = join(ROOT, "src/components");
+const EXAMPLES_DIR = join(ROOT, "src/examples");
+
+function stripComments(source) {
+  return source.replace(/\/\*[\s\S]*?\*\//g, "");
+}
+
+function splitTopLevel(input, separator = ",") {
+  const parts = [];
+  let current = "";
+  let parenDepth = 0;
+  let bracketDepth = 0;
+
+  for (const char of input) {
+    if (char === "(") parenDepth += 1;
+    if (char === ")") parenDepth = Math.max(0, parenDepth - 1);
+    if (char === "[") bracketDepth += 1;
+    if (char === "]") bracketDepth = Math.max(0, bracketDepth - 1);
+
+    if (char === separator && parenDepth === 0 && bracketDepth === 0) {
+      if (current.trim()) parts.push(current.trim());
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+
+function extractFirstRuleSelectors(cssSource) {
+  const css = stripComments(cssSource);
+  const layerIndex = css.indexOf("@layer components");
+
+  if (layerIndex === -1) return [];
+
+  const layerOpen = css.indexOf("{", layerIndex);
+  if (layerOpen === -1) return [];
+
+  let cursor = layerOpen + 1;
+  while (cursor < css.length && /\s/.test(css[cursor])) {
+    cursor += 1;
+  }
+
+  const selectorStart = cursor;
+  let parenDepth = 0;
+  let bracketDepth = 0;
+
+  while (cursor < css.length) {
+    const char = css[cursor];
+
+    if (char === "(") parenDepth += 1;
+    if (char === ")") parenDepth = Math.max(0, parenDepth - 1);
+    if (char === "[") bracketDepth += 1;
+    if (char === "]") bracketDepth = Math.max(0, bracketDepth - 1);
+
+    if (char === "{" && parenDepth === 0 && bracketDepth === 0) {
+      break;
+    }
+
+    cursor += 1;
+  }
+
+  const selectorBlock = css.slice(selectorStart, cursor).trim();
+  return splitTopLevel(selectorBlock);
+}
+
+function extractRequiredClasses(selector) {
+  const selectorWithoutNegation = selector.replace(/:not\([^)]*\)/g, "");
+  const classes = new Set();
+
+  for (const match of selectorWithoutNegation.matchAll(/\.([A-Za-z_][A-Za-z0-9_-]*)/g)) {
+    classes.add(match[1]);
+  }
+
+  return classes;
+}
+
+function getTagName(selector) {
+  const tagMatch = selector.match(/^[A-Za-z][A-Za-z0-9-]*/);
+  return tagMatch ? tagMatch[0].toLowerCase() : null;
+}
+
+function selectorMatchesElement(selector, element) {
+  const baseSelector = selector.includes(":where(")
+    ? selector.slice(0, selector.indexOf(":where("))
+    : selector;
+
+  const tagName = getTagName(baseSelector);
+  if (!tagName || tagName !== element.tag) return false;
+
+  for (const match of baseSelector.matchAll(/\[type=["']([^"']+)["']\]/g)) {
+    if ((element.attrs.type ?? "").toLowerCase() !== match[1].toLowerCase()) {
+      return false;
+    }
+  }
+
+  for (const match of baseSelector.matchAll(/:not\(\.([A-Za-z_][A-Za-z0-9_-]*)\)/g)) {
+    if (element.classes.has(match[1])) {
+      return false;
+    }
+  }
+
+  for (const className of extractRequiredClasses(baseSelector)) {
+    if (!element.classes.has(className)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function parseAttributes(attributeSource) {
+  const attrs = {};
+  const attrPattern = /([:@A-Za-z0-9_-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
+
+  for (const match of attributeSource.matchAll(attrPattern)) {
+    const [, name, doubleQuoted, singleQuoted, bare] = match;
+    attrs[name.toLowerCase()] = doubleQuoted ?? singleQuoted ?? bare ?? "";
+  }
+
+  return attrs;
+}
+
+function getLineNumber(source, index) {
+  return source.slice(0, index).split("\n").length;
+}
+
+function extractElementsWithClasses(htmlSource) {
+  const elements = [];
+  const tagPattern = /<([A-Za-z][A-Za-z0-9-]*)(\s[^>]*?)?>/g;
+
+  for (const match of htmlSource.matchAll(tagPattern)) {
+    const [, tagName, attrSource = ""] = match;
+    const attrs = parseAttributes(attrSource);
+    const classValue = attrs.class;
+
+    if (!classValue) continue;
+
+    elements.push({
+      tag: tagName.toLowerCase(),
+      attrs,
+      classes: new Set(classValue.split(/\s+/).filter(Boolean)),
+      index: match.index ?? 0,
+      snippet: match[0],
+    });
+  }
+
+  return elements;
+}
+
+function extractInlineStyleClasses(htmlSource) {
+  const localClasses = new Set();
+
+  for (const match of htmlSource.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)) {
+    const styleContent = stripComments(match[1]);
+
+    for (const classMatch of styleContent.matchAll(/\.([A-Za-z_][A-Za-z0-9_-]*)/g)) {
+      localClasses.add(classMatch[1]);
+    }
+  }
+
+  return localClasses;
+}
+
+function extractLoadedComponentFiles(htmlSource) {
+  const files = [];
+
+  for (const match of htmlSource.matchAll(/<link\b[^>]+href=["']\.\.\/components\/([^"']+\.css)["']/gi)) {
+    files.push(match[1]);
+  }
+
+  return files;
+}
+
+async function buildComponentCatalog() {
+  const componentFiles = (await readdir(COMPONENTS_DIR))
+    .filter((file) => file.endsWith(".css"))
+    .sort();
+
+  const catalog = new Map();
+
+  for (const file of componentFiles) {
+    const fullPath = join(COMPONENTS_DIR, file);
+    const source = await readFile(fullPath, "utf8");
+    const selectors = extractFirstRuleSelectors(source);
+    const supportedClasses = new Set();
+
+    for (const selector of selectors) {
+      for (const className of extractRequiredClasses(selector)) {
+        supportedClasses.add(className);
+      }
+    }
+
+    for (const match of source.matchAll(/&\.([A-Za-z_][A-Za-z0-9_-]*)/g)) {
+      supportedClasses.add(match[1]);
+    }
+
+    catalog.set(file, {
+      file,
+      selectors,
+      supportedClasses,
+    });
+  }
+
+  return catalog;
+}
+
+function formatClasses(classes) {
+  return classes.size === 0 ? "none" : [...classes].sort().join(", ");
+}
+
+export async function validateExamples({ log = true } = {}) {
+  const componentCatalog = await buildComponentCatalog();
+  const exampleFiles = (await readdir(EXAMPLES_DIR))
+    .filter((file) => file.endsWith(".html"))
+    .sort();
+
+  const errors = [];
+
+  for (const exampleFile of exampleFiles) {
+    const examplePath = join(EXAMPLES_DIR, exampleFile);
+    const html = await readFile(examplePath, "utf8");
+    const localClasses = extractInlineStyleClasses(html);
+    const loadedComponents = extractLoadedComponentFiles(html)
+      .map((file) => componentCatalog.get(file))
+      .filter(Boolean);
+
+    for (const element of extractElementsWithClasses(html)) {
+      const matchingComponents = loadedComponents.filter((component) =>
+        component.selectors.some((selector) => selectorMatchesElement(selector, element)),
+      );
+
+      if (matchingComponents.length === 0) continue;
+
+      const allowedClasses = new Set(localClasses);
+
+      for (const component of matchingComponents) {
+        for (const className of component.supportedClasses) {
+          allowedClasses.add(className);
+        }
+      }
+
+      const unsupportedClasses = [...element.classes]
+        .filter((className) => !allowedClasses.has(className))
+        .sort();
+
+      if (unsupportedClasses.length === 0) continue;
+
+      errors.push({
+        exampleFile,
+        line: getLineNumber(html, element.index),
+        snippet: element.snippet,
+        unsupportedClasses,
+        matchingComponents: matchingComponents.map((component) => component.file).sort(),
+        supportedClasses: new Set(
+          matchingComponents.flatMap((component) => [...component.supportedClasses]),
+        ),
+      });
+    }
+  }
+
+  if (errors.length > 0) {
+    const formatted = errors.map((error) => {
+      const supported = formatClasses(error.supportedClasses);
+      const unsupported = error.unsupportedClasses.join(", ");
+      const components = error.matchingComponents.join(", ");
+
+      return [
+        `${join("src/examples", error.exampleFile)}:${error.line}`,
+        `  unsupported classes: ${unsupported}`,
+        `  matching components: ${components}`,
+        `  supported classes: ${supported}`,
+        `  element: ${error.snippet}`,
+      ].join("\n");
+    }).join("\n\n");
+
+    throw new Error(`Example validation failed:\n\n${formatted}`);
+  }
+
+  if (log) {
+    console.log(`Validated ${exampleFiles.length} example files against component CSS.`);
+  }
+}
+
+const isEntrypoint = process.argv[1] === fileURLToPath(import.meta.url);
+
+if (isEntrypoint) {
+  validateExamples().catch((error) => {
+    console.error(error.message);
+    process.exit(1);
+  });
+}
