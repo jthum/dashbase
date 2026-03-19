@@ -89,4 +89,4 @@ Dashbase components are authored with a focus on simplicity and platform compati
 
 ## 📄 License
 
-[Insert License Information Here]
+This project is released under the [MIT License](LICENSE).
