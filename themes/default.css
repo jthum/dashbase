@@ -24,11 +24,15 @@
     --color-surface: light-dark(oklch(98.5% 0.002 270), oklch(14% 0.005 270));
     --color-surface-raised: light-dark(oklch(100% 0 0), oklch(18% 0.005 270));
     --color-border: light-dark(oklch(88% 0.01 270), oklch(28% 0.01 270));
+    --border-control: light-dark(oklch(84% 0.01 270), oklch(36% 0.01 270));
     --color-text: light-dark(oklch(15% 0.005 270), oklch(95% 0 0));
     --color-text-muted: light-dark(oklch(42% 0.01 270), oklch(62% 0.01 270));
 
     /* ── Typography ── */
     --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+    --tracking-tight: -0.015em;
+    --tracking-wide: 0.04em;
+    --tracking-widest: 0.08em;
 
     /* ── Radius ── */
     --radius-sm: 0.25rem;

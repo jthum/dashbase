@@ -30,7 +30,7 @@
 
     /* ── Hover ── */
     &:hover:not(:focus-visible):not([disabled]):not([readonly]) {
-      border-color: color-mix(in oklch, var(--border-default) 70%, var(--text-default));
+      border-color: color-mix(in oklch, var(--border-control) 70%, var(--text-default));
     }
 
     /* ── Disabled ── */

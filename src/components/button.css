@@ -34,13 +34,13 @@
     /* ── Surface (driven by variant variables) ── */
     background-color: var(--btn-bg, var(--bg-raised));
     color: var(--btn-fg, var(--text-default));
-    border-color: var(--btn-border, var(--border-default));
+    border-color: var(--btn-border, var(--border-control));
 
     /* ── Hover ── */
     &:hover:not([disabled]) {
       background-color: var(--btn-bg-hover, color-mix(in oklch, var(--btn-bg, var(--bg-raised)) var(--state-hover-mix), light-dark(black, white)));
       color: var(--btn-fg-hover, var(--btn-fg, var(--text-default)));
-      border-color: var(--btn-border-hover, var(--btn-border, var(--border-default)));
+      border-color: var(--btn-border-hover, var(--btn-border, var(--border-control)));
     }
 
     /* ── Active ── */

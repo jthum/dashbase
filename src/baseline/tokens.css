@@ -48,6 +48,7 @@
     --text-muted:    var(--color-text-muted);
 
     --border-default: var(--color-border);
+    --border-control: var(--border-default);
     --border-strong:  light-dark(oklch(70% 0.01 270), oklch(50% 0.01 270));
 
     /* ── Interaction State Intensity ── */
@@ -102,6 +103,10 @@
     --leading-tight: 1.25;
     --leading-normal: 1.5;
     --leading-relaxed: 1.75;
+    --tracking-tight: -0.01em;
+    --tracking-normal: 0em;
+    --tracking-wide: 0.05em;
+    --tracking-widest: 0.1em;
 
     /* ── Spacing (t-shirt scale) ── */
     --space-unit: 0.25rem;

@@ -158,6 +158,10 @@ Example:
 --text-base
 --text-lg
 --text-xl
+--leading-tight
+--leading-normal
+--tracking-tight
+--tracking-wide
 ```
 
 Fluid sizing using `clamp()` is recommended.
@@ -267,6 +271,7 @@ Example:
 --control-padding-block
 --control-radius
 --control-height
+--border-control
 ```
 
 These apply to:

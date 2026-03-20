@@ -34,7 +34,7 @@
     font-weight: 500;
     line-height: var(--leading-tight);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: var(--tracking-wide);
 
     /* ── Surface (driven by variant variables) ── */
     background-color: var(--badge-bg, var(--bg-raised));

@@ -13,7 +13,7 @@
     padding-block: var(--control-padding-block);
     color: var(--color-text);
     background-color: var(--color-surface-raised);
-    border: var(--border-width) solid var(--color-border);
+    border: var(--border-width) solid var(--border-control);
     border-radius: var(--control-radius);
     transition-property: background-color, color, border-color, box-shadow, outline;
     transition-duration: var(--duration-fast);

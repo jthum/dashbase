@@ -40,7 +40,7 @@
 
     /* ── Hover ── */
     &:hover:not(:focus-visible):not([disabled]):not([readonly]) {
-      border-color: color-mix(in oklch, var(--border-default) 70%, var(--text-default));
+      border-color: color-mix(in oklch, var(--border-control) 70%, var(--text-default));
     }
 
     /* ── Disabled ── */
@@ -100,7 +100,7 @@
         background-color: var(--bg-raised);
         color: var(--text-default);
         border: none;
-        border-inline-end: var(--border-width) solid var(--border-default);
+        border-inline-end: var(--border-width) solid var(--border-control);
         /* Pull button flush with the input's primitive boundaries */
         margin-block: calc(var(--control-padding-block) * -1);
         margin-inline-start: calc(var(--control-padding-inline) * -1);

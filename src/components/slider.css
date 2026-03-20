@@ -27,7 +27,7 @@
     &::-webkit-slider-runnable-track {
       height: 0.25rem;
       border-radius: var(--radius-full);
-      background: var(--slider-track, var(--border-default));
+      background: var(--slider-track, var(--border-control));
     }
 
     /* ── WebKit Thumb ── */
@@ -48,7 +48,7 @@
     &::-moz-range-track {
       height: 0.25rem;
       border-radius: var(--radius-full);
-      background: var(--slider-track, var(--border-default));
+      background: var(--slider-track, var(--border-control));
       border: none;
     }
 

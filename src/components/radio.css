@@ -31,7 +31,7 @@
 
     /* ── Surface ── */
     background-color: var(--radio-bg, var(--bg-raised));
-    border: var(--border-width) solid var(--radio-border, var(--border-default));
+    border: var(--border-width) solid var(--radio-border, var(--border-control));
     border-radius: var(--radius-full);
 
     /* ── Inner dot (hidden by default) ── */
@@ -60,7 +60,7 @@
 
     /* ── Hover ── */
     &:hover:not([disabled]) {
-      border-color: color-mix(in oklch, var(--radio-border, var(--border-default)) 70%, var(--text-default));
+      border-color: color-mix(in oklch, var(--radio-border, var(--border-control)) 70%, var(--text-default));
     }
 
     &:checked:hover:not([disabled]) {
