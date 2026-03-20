@@ -73,10 +73,12 @@
     }
 
     &.danger {
-      --btn-bg: var(--color-danger);
-      --btn-fg: var(--color-danger-fg);
-      --btn-border: var(--color-danger);
-      --btn-border-hover: var(--color-danger-hover);
+      --btn-bg: var(--color-danger-subtle);
+      --btn-fg: var(--color-danger-emphasis);
+      --btn-border: var(--color-danger-muted);
+      --btn-bg-hover: var(--color-danger-muted);
+      --btn-bg-active: color-mix(in oklch, var(--color-danger-muted) 70%, var(--color-danger));
+      --btn-border-hover: var(--color-danger-muted);
     }
 
     &.ghost {

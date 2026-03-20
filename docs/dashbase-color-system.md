@@ -213,6 +213,8 @@ Same five-token pattern for each role:
 
 Dark mode redefines only the semantic mappings — not the base colors. The derivation logic remains identical; only which end of the lightness axis is "subtle" and which is "emphasis" inverts.
 
+When collapsing light and dark derivations into a single shipped token, `light-dark()` must wrap two complete color values. It cannot be used in place of an individual OKLCH channel inside `oklch(from ...)`.
+
 ```css
 @media (prefers-color-scheme: dark) {
   :root {
