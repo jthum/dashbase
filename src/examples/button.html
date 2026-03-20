@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashbase — Button Component</title>
   <link rel="stylesheet" href="../baseline/baseline.css">
-  <link rel="stylesheet" href="../../themes/default.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
   <link rel="stylesheet" href="../components/button.css">
   <link rel="stylesheet" href="../components/button-group.css">
+  <link rel="stylesheet" href="../components/select.css">
+  <link rel="stylesheet" href="./theme-controls.css">
 
   <style>
     main {
@@ -33,16 +35,9 @@
       border-top: var(--border-width) solid var(--border-default);
       margin-block: var(--space-xl);
     }
-    .theme-toggle {
-      position: fixed;
-      top: var(--space-lg);
-      right: var(--space-lg);
-    }
   </style>
 </head>
 <body>
-  <button class="ghost theme-toggle" onclick="toggleTheme()">🌗 Toggle Theme</button>
-
   <main>
     <h1>Button Component</h1>
     <p>All buttons are native <code>&lt;button&gt;</code> elements styled directly. Shared geometry (padding, border, radius) comes from Baseline primitives.</p>
@@ -198,12 +193,6 @@
     </section>
   </main>
 
-  <script>
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute("data-theme");
-      html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
-    }
-  </script>
+  <script src="./theme-controls.js"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashbase — Indicators & Status Components</title>
   <link rel="stylesheet" href="../baseline/baseline.css">
-  <link rel="stylesheet" href="../../themes/default.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
   <link rel="stylesheet" href="../components/button.css">
   <link rel="stylesheet" href="../components/badge.css">
   <link rel="stylesheet" href="../components/alert.css">
@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="../components/progress.css">
   <link rel="stylesheet" href="../components/skeleton.css">
   <link rel="stylesheet" href="../components/spinner.css">
+  <link rel="stylesheet" href="../components/select.css">
+  <link rel="stylesheet" href="./theme-controls.css">
 
   <style>
     main {
@@ -27,11 +29,6 @@
       border: none;
       border-top: var(--border-width) solid var(--border-default);
       margin-block: var(--space-xl);
-    }
-    .theme-toggle {
-      position: fixed;
-      top: var(--space-lg);
-      right: var(--space-lg);
     }
     .stack {
       display: flex;
@@ -59,8 +56,6 @@
   </style>
 </head>
 <body>
-  <button class="ghost theme-toggle" onclick="toggleTheme()">🌗 Toggle Theme</button>
-
   <main>
     <h1>Indicators & Status</h1>
     <p>Non-interactive feedback components: alerts, progress bars, loading skeletons, and spinners.</p>
@@ -258,12 +253,6 @@
     </section>
   </main>
 
-  <script>
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute("data-theme");
-      html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
-    }
-  </script>
+  <script src="./theme-controls.js"></script>
 </body>
 </html>

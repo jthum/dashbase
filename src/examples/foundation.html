@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashbase — Foundation Test</title>
   <link rel="stylesheet" href="../baseline/baseline.css">
-  <link rel="stylesheet" href="../../themes/default.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/select.css">
+  <link rel="stylesheet" href="./theme-controls.css">
 
   <style>
     /* Test-page-only styles */
@@ -28,17 +30,6 @@
       font-size: var(--text-sm);
       font-family: var(--font-mono);
     }
-    .theme-toggle {
-      position: fixed;
-      top: var(--space-lg);
-      right: var(--space-lg);
-      padding: var(--space-sm) var(--space-lg);
-      background: var(--bg-raised);
-      border: var(--border-width) solid var(--border-default);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      font-size: var(--text-sm);
-    }
     hr {
       border: none;
       border-top: var(--border-width) solid var(--border-default);
@@ -47,8 +38,6 @@
   </style>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark/Light</button>
-
   <main>
     <h1>Dashbase Foundation</h1>
     <p>This page verifies the token system, layer architecture, and base styles. All elements below use browser defaults refined by Baseline CSS tokens.</p>
@@ -194,16 +183,6 @@
     </section>
   </main>
 
-  <script>
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute("data-theme");
-      if (current === "dark") {
-        html.removeAttribute("data-theme");
-      } else {
-        html.setAttribute("data-theme", "dark");
-      }
-    }
-  </script>
+  <script src="./theme-controls.js"></script>
 </body>
 </html>

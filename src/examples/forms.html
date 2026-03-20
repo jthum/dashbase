@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashbase — Forms & Inputs Components</title>
   <link rel="stylesheet" href="../baseline/baseline.css">
-  <link rel="stylesheet" href="../../themes/default.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
   <link rel="stylesheet" href="../components/button.css">
   <link rel="stylesheet" href="../components/input.css">
   <link rel="stylesheet" href="../components/textarea.css">
@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="../components/form-field.css">
   <link rel="stylesheet" href="../components/input-group.css">
   <link rel="stylesheet" href="../components/button-group.css">
+  <link rel="stylesheet" href="./theme-controls.css">
 
   <style>
     main {
@@ -32,11 +33,6 @@
       border: none;
       border-top: var(--border-width) solid var(--border-default);
       margin-block: var(--space-xl);
-    }
-    .theme-toggle {
-      position: fixed;
-      top: var(--space-lg);
-      right: var(--space-lg);
     }
     /* Layout helpers for inline groups (checkbox/radio rows) */
     .inline-group {
@@ -55,8 +51,6 @@
   </style>
 </head>
 <body>
-  <button class="ghost theme-toggle" onclick="toggleTheme()">🌗 Toggle Theme</button>
-
   <main>
     <h1>Forms & Inputs</h1>
     <p>Comprehensive showcase of all form components. Every element uses native HTML styled by Dashbase CSS. Validation uses <code>:user-invalid</code> — interact then blur to see states.</p>
@@ -452,13 +446,8 @@
     </section>
   </main>
 
+  <script src="./theme-controls.js"></script>
   <script>
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute("data-theme");
-      html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
-    }
-
     // Set one checkbox to indeterminate for demo
     document.getElementById("chk-indet").indeterminate = true;
   </script>
