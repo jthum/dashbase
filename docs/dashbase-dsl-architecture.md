@@ -160,6 +160,8 @@ The components that need JS in Dashbase are: `dialog` (invoker shim), `tabs` (ar
 
 This toolchain is **planned, not yet built**. The Dashbase CSS source (documented in the PRD) is built first and acts as the specification. The DSL format and transpiler are designed once the component surface is stable and the behavioral patterns are well understood from the vanilla JS implementations.
 
+Contract validation between CSS and DSL should also wait until that stage. Once Dashbase reaches broad component parity and the public surface has settled, strict drift checks become worthwhile and durable.
+
 ---
 
 *Read alongside the Dashbase PRD for full context on the source library this toolchain operates on.*

@@ -403,3 +403,52 @@ Dashbase follows a simple rule:
 
 > Use the web platform as far as it can go. Introduce abstractions only where the platform genuinely falls short.
 
+---
+
+# 20. State Must Be Expressed Semantically
+
+Dashbase styles state from the platform outward.
+
+State hooks follow this order:
+
+- native selectors first: `:checked`, `[disabled]`, `[open]`, `:user-invalid`, `:focus-visible`
+- ARIA attributes second when HTML lacks a native state hook: `[aria-expanded="true"]`, `[aria-selected="true"]`, `[aria-pressed="true"]`, `[aria-current]`
+- `data-*` attributes only as a last resort for implementation details with no semantic equivalent
+
+This keeps visual state and accessibility state aligned. If a control looks expanded, selected, or pressed, assistive technology should be able to observe the same truth.
+
+---
+
+# 21. Inline Custom Properties Are the Escape Hatch
+
+Dashbase should not grow a new variant for every edge case.
+
+The preferred one-off override mechanism is an inline or local custom property assignment that targets the component's existing variable surface.
+
+Example:
+
+```html
+<button class="primary" style="--btn-bg: var(--color-danger)">
+  Delete
+</button>
+```
+
+This preserves readability, keeps overrides local, and avoids ad hoc selector battles.
+
+---
+
+# 22. Respect the Cascade Before Reaching for `@scope`
+
+Dashbase does not treat local scoping as the default model. The normal cascade, semantic structure, and explicit child selectors remain the first tools.
+
+`@scope` is an advanced containment tool for specific composite components that style generic descendants and need clear stop points at nested component boundaries. It belongs inside component files, not in Baseline.
+
+Likely future use cases include content-bearing composites such as cards, dialogs, tabs, menus, and accordions. It should not be used merely to recreate framework-style local scoping everywhere.
+
+---
+
+# 23. CSS ↔ DSL Validation Comes After Component Parity
+
+Strict validation between component CSS and the future DSL is desirable, but it should arrive after the component surface is broad enough to be worth locking down.
+
+The current priority is reaching stable component parity and letting the CSS and vanilla behavior patterns settle. Once that surface is mature, Dashbase can add automated checks to ensure DSL contracts and CSS modifiers never drift apart.

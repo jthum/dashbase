@@ -109,7 +109,9 @@ Dashbase targets modern evergreen browsers and uses the platform directly rather
 Dashbase components are authored with a focus on simplicity and platform compatibility.
 
 - **Style the Element**: Prefer `button { }` over `.button { }`.
-- **Native State**: Use attributes like `[disabled]`, `:checked`, and `:invalid` for styling.
+- **Semantic State Hooks**: Prefer native state selectors like `[disabled]`, `:checked`, `:user-invalid`, and use ARIA attributes when HTML has no native equivalent.
+- **Escape Hatches via Variables**: Prefer inline custom properties like `style="--btn-bg: ..."` over one-off variants or `!important`.
+- **Use `@scope` Sparingly**: Respect the cascade first. Reach for `@scope` only in composite components that truly need descendant containment.
 - **No `!important`**: If you need it, the layer architecture is likely being bypassed.
 - **Logical Properties**: Use `padding-inline`, `margin-block`, etc., for RTL-ready layouts.
 

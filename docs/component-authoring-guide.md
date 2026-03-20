@@ -112,7 +112,13 @@ Not every component needs all 5. Define only what's useful.
 Variants are chosen by the developer: `<button class="primary">`.
 States are reactions to user interaction: `:user-invalid`, `[disabled]`, `[readonly]`.
 
-States use native CSS selectors and attribute selectors.
+State hooks follow this priority order:
+
+1. Native selectors first: `:checked`, `[disabled]`, `[open]`, `:user-invalid`, `:focus-visible`
+2. ARIA attributes second when HTML has no native equivalent: `[aria-expanded="true"]`, `[aria-selected="true"]`, `[aria-pressed="true"]`, `[aria-current]`
+3. `data-*` attributes only as a last resort for implementation details that have no semantic platform hook
+
+If a component looks open, selected, or pressed, it should report that state semantically as well.
 States do NOT use classes (no `.is-invalid`, `.is-disabled`).
 
 ### 9. Naming Custom Elements
@@ -145,6 +151,27 @@ All rules must be inside `@layer components { }`.
 - Never hardcode border width — use `--border-width`
 - Never hardcode radii — use `--radius-*` tokens
 - Derived colors use `color-mix(in oklch, ...)` rather than new tokens
+
+### 12. Inline custom properties are the official escape hatch
+
+When a product team needs a one-off adjustment, prefer component-scoped custom properties over new variants, global overrides, or `!important`.
+
+```html
+<button class="primary" style="--btn-bg: var(--color-danger)">
+  Delete
+</button>
+```
+
+This keeps the override local, legible, and aligned with the variable-driven architecture.
+
+### 13. Use `@scope` sparingly
+
+Dashbase respects the cascade. Prefer semantic wrappers, direct-child selectors, and explicit structure first.
+
+Use `@scope` only when a composite component needs to style generic descendants while stopping at nested component boundaries.
+Good candidates are future content-bearing composites like cards, dialogs, tabs, menus, or accordions.
+
+Do not use `@scope` as a default replacement for normal component selectors, and do not put it in Baseline.
 
 ---
 
