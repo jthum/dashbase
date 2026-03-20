@@ -34,6 +34,10 @@
     --tracking-wide: 0.04em;
     --tracking-widest: 0.08em;
 
+    /* ── Buttons ── */
+    --btn-padding-block: calc(var(--control-padding-block) - 1px);
+    --btn-padding-inline: calc(var(--control-padding-inline) - 2px);
+
     /* ── Radius ── */
     --radius-sm: 0.25rem;
     --radius-md: 0.5rem;
