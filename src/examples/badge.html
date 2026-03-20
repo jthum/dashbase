@@ -44,8 +44,8 @@
 <body>
     <div class="kitchen-sink">
       <section>
-        <h2>Count Badges (<ui-badge>)</h2>
-        <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: var(--text-sm)">Used strictly for numerical indicators like notifications or cart items.</p>
+        <h2>Count Badges (&lt;ui-badge&gt;)</h2>
+        <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: var(--text-sm)">Used strictly for numerical indicators like notifications or cart items. Tonal by default; use <code>.solid</code> only when the count needs stronger emphasis.</p>
         <div class="row">
           <ui-badge class="danger">4</ui-badge>
           <ui-badge class="primary">12</ui-badge>
@@ -54,7 +54,7 @@
       </section>
 
       <section>
-        <h2>Status Badges (<ui-status>)</h2>
+        <h2>Status Badges (&lt;ui-status&gt;)</h2>
         <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: var(--text-sm)">Used for application state that changes at runtime. (e.g., Online, Error, Pending)</p>
         <div class="row">
           <ui-status class="success">Online</ui-status>
@@ -65,13 +65,24 @@
       </section>
 
       <section>
-        <h2>Taxonomy Tags (<ui-tag>)</h2>
+        <h2>Taxonomy Tags (&lt;ui-tag&gt;)</h2>
         <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: var(--text-sm)">Used for static categorization, keywords, and metadata.</p>
         <div class="row">
           <ui-tag class="outline">JavaScript</ui-tag>
           <ui-tag class="outline">Design System</ui-tag>
-          <ui-tag class="primary-subtle">Frontend</ui-tag>
-          <ui-tag class="success-subtle">Open Source</ui-tag>
+          <ui-tag class="primary">Frontend</ui-tag>
+          <ui-tag class="success">Open Source</ui-tag>
+        </div>
+      </section>
+
+      <section>
+        <h2>Solid Emphasis</h2>
+        <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: var(--text-sm)">Use <code>.solid</code> when a badge should draw more attention than the tonal default.</p>
+        <div class="row">
+          <ui-status class="solid primary">New</ui-status>
+          <ui-status class="solid danger">Critical</ui-status>
+          <ui-status class="solid success">Shipped</ui-status>
+          <ui-status class="solid warning">Blocked</ui-status>
         </div>
       </section>
 

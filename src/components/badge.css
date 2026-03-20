@@ -12,7 +12,7 @@
  * No hover/active/focus logic since it is purely presentational.
  *
  * Variants: .primary, .danger, .success, .warning, .neutral, .outline
- *           plus .*-subtle companions for semantic tones
+ *           semantic variants are tonal by default; add .solid for emphasis
  * Sizes: .small, (default), .large
  */
 
@@ -34,7 +34,7 @@
     font-weight: 500;
     line-height: var(--leading-tight);
     text-transform: uppercase;
-    letter-spacing: var(--tracking-wide);
+    letter-spacing: var(--tracking-normal);
 
     /* ── Surface (driven by variant variables) ── */
     background-color: var(--badge-bg, var(--bg-raised));
@@ -44,7 +44,7 @@
     
     /* ── Default spacing (can be overridden by size classes) ── */
     padding-block: var(--space-xs);
-    padding-inline: var(--space-md);
+    padding-inline: calc(var(--space-sm) + (var(--space-xs) / 2));
     font-size: var(--text-xs);
 
     /* ═══════════════════════════════
@@ -52,63 +52,63 @@
      * ═══════════════════════════════ */
 
     &.primary {
+      --badge-bg: var(--color-primary-subtle);
+      --badge-fg: var(--color-primary-emphasis);
+      --badge-border: var(--color-primary-muted);
+    }
+
+    &.danger {
+      --badge-bg: var(--color-danger-subtle);
+      --badge-fg: var(--color-danger-emphasis);
+      --badge-border: var(--color-danger-muted);
+    }
+
+    &.success {
+      --badge-bg: var(--color-success-subtle);
+      --badge-fg: var(--color-success-emphasis);
+      --badge-border: var(--color-success-muted);
+    }
+
+    &.warning {
+      --badge-bg: var(--color-warning-subtle);
+      --badge-fg: var(--color-warning-emphasis);
+      --badge-border: var(--color-warning-muted);
+    }
+
+    &.neutral {
+      --badge-bg: var(--color-neutral-subtle);
+      --badge-fg: var(--color-neutral-emphasis);
+      --badge-border: var(--color-neutral-muted);
+    }
+
+    &.solid.primary {
       --badge-bg: var(--color-primary);
       --badge-fg: var(--color-primary-fg);
       --badge-border: var(--color-primary);
     }
 
-    &.primary-subtle {
-      --badge-bg: var(--color-primary-subtle);
-      --badge-fg: var(--color-primary-emphasis);
-      --badge-border: transparent;
-    }
-
-    &.danger {
+    &.solid.danger {
       --badge-bg: var(--color-danger);
       --badge-fg: var(--color-danger-fg);
       --badge-border: var(--color-danger);
     }
-    
-    &.danger-subtle {
-      --badge-bg: var(--color-danger-subtle);
-      --badge-fg: var(--color-danger-emphasis);
-      --badge-border: transparent;
-    }
 
-    &.success {
+    &.solid.success {
       --badge-bg: var(--color-success);
       --badge-fg: var(--color-success-fg);
       --badge-border: var(--color-success);
     }
-    
-    &.success-subtle {
-      --badge-bg: var(--color-success-subtle);
-      --badge-fg: var(--color-success-emphasis);
-      --badge-border: transparent;
-    }
 
-    &.warning {
+    &.solid.warning {
       --badge-bg: var(--color-warning);
       --badge-fg: var(--color-warning-fg);
       --badge-border: var(--color-warning);
     }
 
-    &.warning-subtle {
-      --badge-bg: var(--color-warning-subtle);
-      --badge-fg: var(--color-warning-emphasis);
-      --badge-border: transparent;
-    }
-
-    &.neutral {
+    &.solid.neutral {
       --badge-bg: var(--color-neutral);
       --badge-fg: var(--color-neutral-fg);
       --badge-border: var(--color-neutral);
-    }
-
-    &.neutral-subtle {
-      --badge-bg: var(--color-neutral-subtle);
-      --badge-fg: var(--color-neutral-emphasis);
-      --badge-border: transparent;
     }
 
     &.outline {
@@ -131,7 +131,7 @@
 
     &.large {
       padding-block: var(--space-sm);
-      padding-inline: var(--space-lg);
+      padding-inline: calc(var(--space-md) + (var(--space-xs) / 2));
       font-size: var(--text-sm);
     }
   }
