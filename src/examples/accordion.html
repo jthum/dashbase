@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Accordion Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/accordion.css">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="../components/select.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 52rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Accordion Component</h1>
+    <p>Dashbase styles the native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code> disclosure pattern directly, keeping the built-in semantics and interaction model intact.</p>
+
+    <hr>
+
+    <section>
+      <h2>Basic Accordions</h2>
+
+      <details open>
+        <summary>How does Dashbase approach interaction?</summary>
+        <p>Dashbase prefers native HTML and CSS first, then adds the smallest possible amount of vanilla JavaScript only when the platform has a real behavior gap.</p>
+      </details>
+
+      <details>
+        <summary>Does this require any JavaScript?</summary>
+        <p>No. The accordion itself is the browser's native disclosure widget. Dashbase is only styling <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code>.</p>
+      </details>
+
+      <details>
+        <summary>Can the content be richer than plain text?</summary>
+        <p>Yes. Content can be text, lists, form fields, or action rows. The native disclosure behavior still works the same way.</p>
+      </details>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Richer Content</h2>
+
+      <details open>
+        <summary>Deployment checklist</summary>
+        <p>Use accordions for optional detail, not for hiding critical content users must discover immediately.</p>
+        <ul>
+          <li>Verify examples against component contracts</li>
+          <li>Check light and dark mode</li>
+          <li>Confirm keyboard and focus behavior</li>
+        </ul>
+        <div class="actions">
+          <button class="primary">Review checklist</button>
+          <button class="ghost">Dismiss</button>
+        </div>
+      </details>
+
+      <details>
+        <summary>Support policy</summary>
+        <p>Dashbase targets modern evergreen browsers and chooses graceful degradation over heavy compatibility layers.</p>
+      </details>
+    </section>
+  </main>
+
+  <script src="./theme-controls.js"></script>
+</body>
+</html>

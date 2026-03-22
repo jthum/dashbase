@@ -1,0 +1,126 @@
+/*
+ * Dashbase — Accordion
+ *
+ * Styles the native <details> / <summary> pattern as an accordion/disclosure.
+ * Uses the browser's built-in semantics and open/close behavior directly.
+ *
+ * Structure:
+ *   <details>
+ *     <summary>Section title</summary>
+ *     <p>Content here</p>
+ *   </details>
+ *
+ * Variants: none
+ */
+
+@layer components {
+  details {
+    --accordion-bg: var(--bg-raised);
+    --accordion-fg: var(--text-default);
+    --accordion-border: var(--border-default);
+    --accordion-radius: var(--radius-lg);
+    --accordion-padding-inline: var(--space-lg);
+    --accordion-padding-block: var(--space-lg);
+    --accordion-content-gap: var(--stack-gap);
+
+    color: var(--accordion-fg);
+    background-color: var(--accordion-bg);
+    border: var(--border-width) solid var(--accordion-border);
+    border-radius: var(--accordion-radius);
+    box-shadow: var(--shadow-xs);
+    overflow: clip;
+
+    & + details {
+      margin-block-start: var(--space-md);
+    }
+
+    & > summary {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding-inline: var(--accordion-padding-inline);
+      padding-block: var(--accordion-padding-block);
+      cursor: pointer;
+      list-style: none;
+      font-weight: 600;
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-tight);
+      transition:
+        background-color var(--duration-fast) var(--easing-default),
+        color var(--duration-fast) var(--easing-default);
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::after {
+        content: "";
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        margin-inline-start: auto;
+        border-inline-end: 2px solid currentColor;
+        border-block-end: 2px solid currentColor;
+        rotate: 45deg;
+        transition: rotate var(--duration-fast) var(--easing-default);
+        flex-shrink: 0;
+      }
+
+      &:hover {
+        background-color: var(--bg-subtle);
+      }
+
+      &:focus-visible {
+        outline: var(--focus-ring-width) solid var(--focus-ring-color);
+        outline-offset: calc(var(--focus-ring-offset) * -1);
+      }
+    }
+
+    &[open] > summary {
+      border-block-end: var(--border-width) solid color-mix(in oklch, var(--accordion-border) 80%, transparent);
+
+      &::after {
+        rotate: 225deg;
+      }
+    }
+
+    & > :not(summary) {
+      margin: 0;
+      padding-inline: var(--accordion-padding-inline);
+    }
+
+    &[open] > summary + :not(summary) {
+      padding-block-start: var(--space-lg);
+    }
+
+    & > :not(summary) + :not(summary) {
+      margin-block-start: var(--accordion-content-gap);
+    }
+
+    & > :last-child:not(summary) {
+      padding-block-end: var(--space-lg);
+    }
+
+    &[open] > :not(summary) {
+      animation: accordion-content-in var(--duration-base) var(--easing-default);
+    }
+  }
+
+  @keyframes accordion-content-in {
+    from {
+      opacity: 0;
+      translate: 0 calc(var(--space-xs) * -1);
+    }
+
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @starting-style {
+    details[open] > :not(summary) {
+      opacity: 0;
+      translate: 0 calc(var(--space-xs) * -1);
+    }
+  }
+}
