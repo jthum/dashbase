@@ -1,0 +1,98 @@
+/*
+ * Dashbase — Card
+ *
+ * Styles semantic <article> / <section> roots that use Dashbase card regions:
+ * <card-header>, <card-body>, and <card-footer>.
+ *
+ * Structure:
+ *   <article>
+ *     <card-header>
+ *       <h2>Card title</h2>
+ *       <p>Supporting copy</p>
+ *     </card-header>
+ *     <card-body>...</card-body>
+ *     <card-footer>...</card-footer>
+ *   </article>
+ *
+ * Semantics:
+ *   Use <article> for self-contained compositions that can stand on their own.
+ *   Use <section> when article semantics are inappropriate for the surrounding page.
+ *
+ * Variants: none
+ */
+
+@layer components {
+  :where(article, section):has(> :is(card-header, card-body, card-footer)) {
+    --card-bg: var(--bg-raised);
+    --card-fg: var(--text-default);
+    --card-border: var(--border-default);
+    --card-radius: var(--radius-xl);
+    --card-padding: var(--space-xl);
+    --card-gap: var(--space-lg);
+    --card-header-gap: var(--space-xs);
+    --card-body-gap: var(--stack-gap);
+    --card-footer-gap: var(--inline-gap);
+
+    display: grid;
+    gap: var(--card-gap);
+    min-inline-size: 0;
+    padding: var(--card-padding);
+    color: var(--card-fg);
+    background-color: var(--card-bg);
+    border: var(--border-width) solid var(--card-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-xs);
+    overflow: clip;
+
+    & > :is(card-header, card-body, card-footer) {
+      min-inline-size: 0;
+    }
+
+    & > :is(card-header, card-body, card-footer):empty {
+      display: none;
+    }
+
+    & > card-header {
+      display: grid;
+      gap: var(--card-header-gap);
+    }
+
+    & > card-body {
+      display: grid;
+      gap: var(--card-body-gap);
+    }
+
+    & > card-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--card-footer-gap);
+    }
+
+    & > card-header > :where(h1, h2, h3, h4, h5, h6, p, small),
+    & > card-body > :where(h1, h2, h3, h4, h5, h6, p, small, blockquote, dl, ul, ol),
+    & > card-footer > :where(p, small) {
+      margin: 0;
+    }
+
+    & > card-header > :where(h1, h2, h3, h4, h5, h6) {
+      font-size: var(--text-lg);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-tight);
+    }
+
+    & > card-header > :where(p, small),
+    & > card-footer > :where(p, small) {
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-normal);
+    }
+
+    & > card-body > :where(img, picture > img, video, canvas, svg) {
+      display: block;
+      max-inline-size: 100%;
+      block-size: auto;
+      border-radius: calc(var(--card-radius) - var(--space-xs));
+    }
+  }
+}

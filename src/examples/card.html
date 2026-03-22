@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Card Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/card.css">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="../components/badge.css">
+  <link rel="stylesheet" href="../components/select.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 72rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .card-grid {
+      display: grid;
+      gap: var(--space-lg);
+      grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    }
+
+    .card-grid article,
+    .card-grid section[aria-labelledby] {
+      block-size: 100%;
+    }
+
+    .metric {
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    .metric strong {
+      font-size: var(--text-2xl);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-tight);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .list {
+      display: grid;
+      gap: var(--space-sm);
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-md);
+      color: var(--text-muted);
+    }
+
+    .list strong {
+      color: var(--text-default);
+      font-weight: 600;
+    }
+
+    .media {
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at 20% 20%, color-mix(in oklch, var(--color-primary) 28%, transparent), transparent 34%),
+        linear-gradient(135deg, color-mix(in oklch, var(--color-primary) 12%, var(--bg-subtle)), var(--bg-subtle));
+      border: var(--border-width) solid color-mix(in oklch, var(--border-default) 70%, transparent);
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Card Component</h1>
+    <p>Dashbase cards use semantic <code>&lt;article&gt;</code> or <code>&lt;section&gt;</code> roots with readable structural regions: <code>&lt;card-header&gt;</code>, <code>&lt;card-body&gt;</code>, and <code>&lt;card-footer&gt;</code>.</p>
+
+    <hr>
+
+    <section>
+      <h2>Article Cards</h2>
+      <p>Use <code>&lt;article&gt;</code> when the card is a self-contained piece of content that could stand on its own.</p>
+
+      <div class="card-grid">
+        <article aria-labelledby="report-card-title">
+          <card-header>
+            <ui-badge class="primary">Weekly Report</ui-badge>
+            <h3 id="report-card-title">Product health is trending up</h3>
+            <p>Activation rose 12% week-over-week, with the sharpest gains coming from onboarding changes.</p>
+          </card-header>
+          <card-body>
+            <div class="metric">
+              <small>Active teams</small>
+              <strong>1,284</strong>
+            </div>
+            <ul class="list">
+              <li><span>New signups</span> <strong>+342</strong></li>
+              <li><span>Trial conversion</span> <strong>8.4%</strong></li>
+              <li><span>Churn</span> <strong>1.9%</strong></li>
+            </ul>
+          </card-body>
+          <card-footer>
+            <button class="primary">Open report</button>
+            <button class="ghost">Share</button>
+          </card-footer>
+        </article>
+
+        <article aria-labelledby="media-card-title">
+          <card-header>
+            <h3 id="media-card-title">Release preview</h3>
+            <p>A simple content card can mix media, prose, and actions without extra wrapper classes.</p>
+          </card-header>
+          <card-body>
+            <div class="media" aria-hidden="true"></div>
+            <p>Design polish, faster forms, and a new billing flow are all landing in the next release candidate.</p>
+          </card-body>
+          <card-footer>
+            <button>Read notes</button>
+          </card-footer>
+        </article>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Section Cards</h2>
+      <p>Use <code>&lt;section&gt;</code> when the content belongs to the current page rather than standing alone like an article.</p>
+
+      <div class="card-grid">
+        <section aria-labelledby="profile-settings-title">
+          <card-header>
+            <h3 id="profile-settings-title">Profile Settings</h3>
+            <p>Review the information other teammates see when they collaborate with you.</p>
+          </card-header>
+          <card-body>
+            <ul class="list">
+              <li><span>Name</span> <strong>Jayadeep Thum</strong></li>
+              <li><span>Role</span> <strong>Design Engineer</strong></li>
+              <li><span>Timezone</span> <strong>Asia/Kolkata</strong></li>
+            </ul>
+          </card-body>
+          <card-footer>
+            <button class="outline">Edit profile</button>
+            <button class="ghost">View public page</button>
+          </card-footer>
+        </section>
+
+        <section aria-labelledby="minimal-card-title">
+          <card-header>
+            <ui-badge class="neutral">Minimal</ui-badge>
+            <h3 id="minimal-card-title">Cards can be mostly text</h3>
+            <p>The component stays readable even when it is just structured copy and one action.</p>
+          </card-header>
+          <card-footer>
+            <button class="link">Learn more</button>
+          </card-footer>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="./theme-controls.js"></script>
+</body>
+</html>
