@@ -17,8 +17,10 @@ import { validateContracts } from "./validate-examples.js";
 const ROOT = new URL("..", import.meta.url).pathname;
 const BASELINE_DIR = join(ROOT, "src/baseline");
 const COMPONENTS_DIR = join(ROOT, "src/components");
+const BEHAVIORS_DIR = join(ROOT, "src/behaviors");
 const DIST = join(ROOT, "dist");
 const DIST_COMPONENTS = join(DIST, "components");
+const DIST_BEHAVIORS = join(DIST, "behaviors");
 const SIZE_BUDGETS = {
   baselineGzip: 3 * 1024,
   componentGzip: 1.5 * 1024,
@@ -71,6 +73,7 @@ async function build() {
   await rm(DIST, { recursive: true, force: true });
   await mkdir(DIST, { recursive: true });
   await mkdir(DIST_COMPONENTS, { recursive: true });
+  await mkdir(DIST_BEHAVIORS, { recursive: true });
 
   // 1. Build baseline.css with resolved imports
   const baselineContent = await resolveImports(join(BASELINE_DIR, "baseline.css"));
@@ -97,6 +100,21 @@ async function build() {
     }
   } catch {
     console.log("  ℹ No components found (yet)");
+  }
+
+  // 2b. Copy optional behavior shims
+  try {
+    const behaviorFiles = await readdir(BEHAVIORS_DIR);
+    const jsFiles = behaviorFiles.filter((f) => f.endsWith(".js")).sort();
+
+    for (const file of jsFiles) {
+      const src = join(BEHAVIORS_DIR, file);
+      const dest = join(DIST_BEHAVIORS, file);
+      await copyFile(src, dest);
+      console.log(`  ✓ dist/behaviors/${file}`);
+    }
+  } catch {
+    console.log("  ℹ No behaviors found (yet)");
   }
 
   // 3. Create bundled dashbase.css

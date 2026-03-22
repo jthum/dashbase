@@ -1,0 +1,131 @@
+/*
+ * Dashbase — Dialog
+ *
+ * Styles the native <dialog> element for both modal dialogs and popover panels.
+ * Uses browser semantics first. A tiny behavior shim can bridge invoketarget /
+ * invokeaction in browsers that do not support those commands natively.
+ *
+ * Structure:
+ *   <dialog>
+ *     <header>
+ *       <h2>Title</h2>
+ *       <p>Supporting copy</p>
+ *     </header>
+ *     <div>Content</div>
+ *     <footer>Actions</footer>
+ *   </dialog>
+ *
+ * Variants: none
+ */
+
+@layer components {
+  dialog {
+    --dialog-bg: var(--bg-raised);
+    --dialog-fg: var(--text-default);
+    --dialog-border: var(--border-default);
+    --dialog-radius: var(--radius-xl);
+    --dialog-padding: var(--space-xl);
+    --dialog-gap: var(--space-lg);
+    --dialog-width: min(32rem, calc(100vi - (var(--space-lg) * 2)));
+    --dialog-shadow: var(--shadow-lg);
+
+    inline-size: var(--dialog-width);
+    max-inline-size: calc(100vi - (var(--space-lg) * 2));
+    max-block-size: calc(100vb - (var(--space-lg) * 2));
+    min-inline-size: min(18rem, calc(100vi - (var(--space-lg) * 2)));
+    padding: var(--dialog-padding);
+    color: var(--dialog-fg);
+    background-color: var(--dialog-bg);
+    border: var(--border-width) solid var(--dialog-border);
+    border-radius: var(--dialog-radius);
+    box-shadow: var(--dialog-shadow);
+    overflow: auto;
+
+    & > :where(header, footer, form, section, div) {
+      min-inline-size: 0;
+    }
+
+    & > :where(header, footer):empty {
+      display: none;
+    }
+
+    & > header {
+      display: grid;
+      gap: var(--space-xs);
+      margin-block-end: var(--dialog-gap);
+    }
+
+    & > header > :where(h1, h2, h3, h4, h5, h6, p, small) {
+      margin: 0;
+    }
+
+    & > header > :where(h1, h2, h3, h4, h5, h6) {
+      font-size: var(--text-xl);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-tight);
+    }
+
+    & > header > :where(p, small) {
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-normal);
+    }
+
+    & > :where(p, ul, ol, dl, form, section, div):not(header):not(footer) {
+      margin: 0;
+    }
+
+    & > :where(p, ul, ol, dl, form, section, div):not(header):not(footer) + :where(p, ul, ol, dl, form, section, div):not(header):not(footer) {
+      margin-block-start: var(--dialog-gap);
+    }
+
+    & > footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-block-start: var(--dialog-gap);
+    }
+
+    &:not([popover])::backdrop {
+      background: color-mix(in oklch, var(--text-default) 28%, transparent);
+      backdrop-filter: blur(4px);
+    }
+
+    &[popover] {
+      position: fixed;
+      inset-block-start: var(--dialog-inset-block-start, var(--space-lg));
+      inset-inline-end: var(--dialog-inset-inline-end, var(--space-lg));
+      inset-block-end: auto;
+      inset-inline-start: auto;
+      margin: 0;
+    }
+
+    &:is([open], :popover-open) {
+      animation: dialog-in var(--duration-base) var(--easing-default);
+    }
+  }
+
+  @keyframes dialog-in {
+    from {
+      opacity: 0;
+      translate: 0 calc(var(--space-sm) * -1);
+      scale: 0.98;
+    }
+
+    to {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+    }
+  }
+
+  @starting-style {
+    dialog:is([open], :popover-open) {
+      opacity: 0;
+      translate: 0 calc(var(--space-sm) * -1);
+      scale: 0.98;
+    }
+  }
+}

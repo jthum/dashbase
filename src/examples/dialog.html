@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Dialog Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/dialog.css">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="../components/input.css">
+  <link rel="stylesheet" href="../components/select.css">
+  <link rel="stylesheet" href="../components/form-field.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 56rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Dialog Component</h1>
+    <p>Dashbase styles the native <code>&lt;dialog&gt;</code> element directly. Use modal dialogs when blocking confirmation is needed, and popover dialogs for lightweight settings panels or utility surfaces.</p>
+
+    <hr>
+
+    <section>
+      <h2>Popover Panel</h2>
+      <p>This uses the Popover API on a <code>&lt;dialog&gt;</code> element with no extra JavaScript required.</p>
+
+      <div class="row">
+        <button popovertarget="settings-panel">Open settings panel</button>
+      </div>
+
+      <dialog id="settings-panel" popover>
+        <header>
+          <h2>Workspace Settings</h2>
+          <p>Quick preferences that do not need a blocking modal.</p>
+        </header>
+
+        <form class="stack">
+          <form-field>
+            <label for="timezone">Timezone</label>
+            <select id="timezone">
+              <option>Asia/Kolkata</option>
+              <option>UTC</option>
+              <option>America/New_York</option>
+            </select>
+          </form-field>
+
+          <form-field>
+            <label for="name">Workspace Name</label>
+            <input id="name" type="text" value="Dashbase" />
+          </form-field>
+        </form>
+
+        <footer>
+          <button popovertarget="settings-panel" popovertargetaction="hide" class="ghost">Close</button>
+          <button class="primary">Save changes</button>
+        </footer>
+      </dialog>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Modal Dialog</h2>
+      <p>This uses native <code>showModal()</code> behavior. The example trigger uses <code>invoketarget</code> and the tiny Dashbase shim so the authoring story stays declarative.</p>
+
+      <div class="row">
+        <button invoketarget="confirm-delete" invokeaction="showModal" class="danger">Delete project</button>
+      </div>
+
+      <dialog id="confirm-delete">
+        <header>
+          <h2>Delete project?</h2>
+          <p>This action is permanent. Existing deployments, tokens, and logs cannot be recovered once the project is removed.</p>
+        </header>
+
+        <div class="stack">
+          <p><strong>Project:</strong> Dashbase</p>
+          <p><strong>Owner:</strong> Jayadeep Thum</p>
+        </div>
+
+        <footer>
+          <button invoketarget="confirm-delete" invokeaction="close" class="ghost">Cancel</button>
+          <button class="danger">Delete permanently</button>
+        </footer>
+      </dialog>
+    </section>
+  </main>
+
+  <script src="../behaviors/dialog.js"></script>
+  <script src="./theme-controls.js"></script>
+</body>
+</html>

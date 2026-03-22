@@ -62,6 +62,7 @@ This generates:
 
 - `dist/baseline.css` for the reset/tokens/primitives/base layers
 - `dist/components/*.css` for modular component imports
+- `dist/behaviors/*.js` for optional progressive-enhancement shims
 - `dist/dashbase.css` for the full bundle
 
 The generated CSS stays readable on purpose. Dashbase ships formatted source with comments intact, and the build reports both raw and gzip sizes so transfer cost stays visible without sacrificing view-source friendliness.
