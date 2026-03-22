@@ -76,6 +76,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/button.css">
 <link rel="stylesheet" href="dist/components/input.css">
 <link rel="stylesheet" href="dist/components/form-field.css">
+<link rel="stylesheet" href="dist/components/card.css">
 ```
 
 ### Example Usage
@@ -88,6 +89,24 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 </form-field>
 
 <button class="primary">Sign Up</button>
+```
+
+```html
+<article>
+  <card-header>
+    <h2>Weekly Report</h2>
+    <p>Activation rose 12% week-over-week.</p>
+  </card-header>
+
+  <card-body>
+    <p>Review the latest product and growth metrics in one place.</p>
+  </card-body>
+
+  <card-footer>
+    <button class="primary">Open report</button>
+    <button class="ghost">Share</button>
+  </card-footer>
+</article>
 ```
 
 ---
