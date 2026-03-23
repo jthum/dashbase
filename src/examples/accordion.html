@@ -28,6 +28,38 @@
       gap: var(--space-sm);
     }
 
+    .mini-grid {
+      display: grid;
+      gap: var(--space-sm);
+      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    }
+
+    .mini-grid div {
+      padding: var(--space-md);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-subtle);
+    }
+
+    table {
+      inline-size: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+
+    th,
+    td {
+      padding-block: var(--space-sm);
+      padding-inline: var(--space-sm);
+      border-block-end: var(--border-width) solid var(--border-default);
+      text-align: start;
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
     hr {
       border: none;
       border-top: var(--border-width) solid var(--border-default);
@@ -38,7 +70,7 @@
 <body>
   <main>
     <h1>Accordion Component</h1>
-    <p>Dashbase styles the native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code> disclosure pattern directly, keeping the built-in semantics and interaction model intact.</p>
+    <p>Dashbase styles the native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code> disclosure pattern directly, keeping the built-in semantics and interaction model intact. For richer content, use an optional <code>&lt;accordion-panel&gt;</code> wrapper.</p>
 
     <hr>
 
@@ -68,21 +100,47 @@
 
       <details open>
         <summary>Deployment checklist</summary>
-        <p>Use accordions for optional detail, not for hiding critical content users must discover immediately.</p>
-        <ul>
-          <li>Verify examples against component contracts</li>
-          <li>Check light and dark mode</li>
-          <li>Confirm keyboard and focus behavior</li>
-        </ul>
-        <div class="actions">
-          <button class="primary">Review checklist</button>
-          <button class="ghost">Dismiss</button>
-        </div>
+        <accordion-panel>
+          <p>Use accordions for optional detail, not for hiding critical content users must discover immediately.</p>
+          <ul>
+            <li>Verify examples against component contracts</li>
+            <li>Check light and dark mode</li>
+            <li>Confirm keyboard and focus behavior</li>
+          </ul>
+          <div class="actions">
+            <button class="primary">Review checklist</button>
+            <button class="ghost">Dismiss</button>
+          </div>
+        </accordion-panel>
       </details>
 
       <details>
-        <summary>Support policy</summary>
-        <p>Dashbase targets modern evergreen browsers and chooses graceful degradation over heavy compatibility layers.</p>
+        <summary>Structured content example</summary>
+        <accordion-panel>
+          <table>
+            <thead>
+              <tr>
+                <th>Area</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Examples</td>
+                <td>Validated</td>
+              </tr>
+              <tr>
+                <td>Dark mode</td>
+                <td>Reviewed</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="mini-grid">
+            <div><strong>19</strong><br>components shipped</div>
+            <div><strong>11.22 KB</strong><br>bundle gzip</div>
+          </div>
+        </accordion-panel>
       </details>
     </section>
   </main>

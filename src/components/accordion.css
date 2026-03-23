@@ -10,6 +10,15 @@
  *     <p>Content here</p>
  *   </details>
  *
+ * Rich content can optionally be grouped in an <accordion-panel> wrapper:
+ *   <details>
+ *     <summary>Shipping information</summary>
+ *     <accordion-panel>
+ *       <table>...</table>
+ *       <p>Additional notes</p>
+ *     </accordion-panel>
+ *   </details>
+ *
  * Variants: none
  */
 
@@ -23,6 +32,10 @@
     --accordion-padding-block: var(--space-lg);
     --accordion-content-gap: var(--stack-gap);
 
+    display: block;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    min-inline-size: 0;
     color: var(--accordion-fg);
     background-color: var(--accordion-bg);
     border: var(--border-width) solid var(--accordion-border);
@@ -83,20 +96,55 @@
       }
     }
 
-    & > :not(summary) {
+    & > :not(summary, accordion-panel) {
       margin: 0;
       padding-inline: var(--accordion-padding-inline);
     }
 
-    &[open] > summary + :not(summary) {
+    &[open] > summary + :not(summary, accordion-panel) {
       padding-block-start: var(--space-lg);
     }
 
-    & > :not(summary) + :not(summary) {
+    & > :not(summary, accordion-panel) + :not(summary, accordion-panel) {
       margin-block-start: var(--accordion-content-gap);
     }
 
-    & > :last-child:not(summary) {
+    & > :last-child:not(summary, accordion-panel) {
+      padding-block-end: var(--space-lg);
+    }
+
+    & > accordion-panel {
+      display: grid;
+      gap: var(--accordion-content-gap);
+      min-inline-size: 0;
+      padding-inline: var(--accordion-padding-inline);
+
+      & > * {
+        min-inline-size: 0;
+      }
+
+      & > :where(h1, h2, h3, h4, h5, h6, p, small, ul, ol, dl, blockquote, figure, table, form) {
+        margin: 0;
+      }
+
+      & > :where(table, iframe, video, img, canvas, svg) {
+        max-inline-size: 100%;
+      }
+
+      & > iframe {
+        border: 0;
+      }
+
+      & > table {
+        inline-size: 100%;
+      }
+    }
+
+    &[open] > summary + accordion-panel {
+      padding-block-start: var(--space-lg);
+    }
+
+    & > accordion-panel:last-child {
       padding-block-end: var(--space-lg);
     }
 
