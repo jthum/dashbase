@@ -398,7 +398,7 @@ Dashbase targets the **Baseline: Widely Available** tier or better for most feat
 | Separator | `<hr>` or `[role="separator"]` | Horizontal by default; vertical with `aria-orientation="vertical"` or `.vertical` |
 | Badge | `<mark>` or `<span>` with role | Inline, no wrapper needed |
 | Alert | `<output>` or `<aside>` with `role="alert"` | Variants: info, success, warning, danger |
-| Avatar | `<img>` or `<abbr>` (initials fallback) | With `<avatar-group>` for stacks |
+| Avatar | `<ui-avatar>` | Inline initials or child `<img>`. Use `<avatar-group>` for stacks. |
 | Table | `<table>` | Full semantic table with `<thead>`, `<tbody>`, etc. |
 
 ### Phase 3 — Interactive (JS progressive enhancement)
@@ -435,6 +435,7 @@ Combobox, Date Picker, Command Palette, Toast/Notification, Data Grid. These are
 <card-header>      <!-- heading area of a presentational card -->
 <card-content>     <!-- content area of a card -->
 <card-footer>      <!-- action area of a presentational card -->
+<ui-avatar>        <!-- presentational avatar shell -->
 <tab-list>         <!-- container for tab triggers -->
 <tab-panel>        <!-- content panel for a tab -->
 <avatar-group>     <!-- stacked avatar container -->

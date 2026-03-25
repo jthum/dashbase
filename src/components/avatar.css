@@ -1,0 +1,99 @@
+/*
+ * Dashbase — Avatar
+ *
+ * Styles a presentational <ui-avatar> shell and optional <avatar-group>.
+ * Use inline text for initials fallback or place an <img> inside for media.
+ *
+ * Structure:
+ *   <ui-avatar><img src="..." alt="Taylor Nguyen"></ui-avatar>
+ *   <ui-avatar aria-label="Taylor Nguyen">TN</ui-avatar>
+ *
+ * Optional group:
+ *   <avatar-group>
+ *     <ui-avatar>TN</ui-avatar>
+ *     <ui-avatar>JD</ui-avatar>
+ *   </avatar-group>
+ *
+ * Variants: .small, .large, .square, .subtle, .outline
+ */
+
+@layer components {
+  ui-avatar {
+    --avatar-size: 2.5rem;
+    --avatar-radius: var(--radius-full);
+    --avatar-bg: var(--bg-subtle);
+    --avatar-fg: var(--text-default);
+    --avatar-border: var(--border-default);
+    --avatar-shadow: none;
+
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--avatar-size);
+    block-size: var(--avatar-size);
+    min-inline-size: var(--avatar-size);
+    overflow: clip;
+    flex-shrink: 0;
+    vertical-align: middle;
+    color: var(--avatar-fg);
+    background-color: var(--avatar-bg);
+    border: var(--border-width) solid var(--avatar-border);
+    border-radius: var(--avatar-radius);
+    box-shadow: var(--avatar-shadow);
+    font-size: calc(var(--avatar-size) * 0.38);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: var(--tracking-tight);
+    text-transform: uppercase;
+    user-select: none;
+
+    & > img,
+    & > svg {
+      display: block;
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+      background: var(--avatar-bg);
+      color: inherit;
+    }
+
+    &.small {
+      --avatar-size: 2rem;
+    }
+
+    &.large {
+      --avatar-size: 3.25rem;
+    }
+
+    &.square {
+      --avatar-radius: var(--radius-lg);
+    }
+
+    &.subtle {
+      --avatar-bg: var(--bg-default);
+      --avatar-fg: var(--text-muted);
+    }
+
+    &.outline {
+      --avatar-bg: transparent;
+      --avatar-fg: var(--text-default);
+    }
+  }
+
+  avatar-group {
+    --avatar-group-overlap: var(--space-sm);
+
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  avatar-group > ui-avatar {
+    margin-inline-start: calc(var(--avatar-group-overlap) * -1);
+    box-shadow: 0 0 0 var(--border-width) var(--bg-default);
+  }
+
+  avatar-group > ui-avatar:first-child {
+    margin-inline-start: 0;
+  }
+}

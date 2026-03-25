@@ -78,6 +78,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/input.css">
 <link rel="stylesheet" href="dist/components/form-field.css">
 <link rel="stylesheet" href="dist/components/card.css">
+<link rel="stylesheet" href="dist/components/avatar.css">
 ```
 
 ### Example Usage
@@ -115,6 +116,14 @@ To use Dashbase in your project, include the base stylesheet followed by the com
   <h3>System Status</h3>
   <p>All services are healthy.</p>
 </ui-card>
+```
+
+```html
+<avatar-group aria-label="Project collaborators">
+  <ui-avatar aria-label="Taylor Nguyen">TN</ui-avatar>
+  <ui-avatar aria-label="Jordan Brooks">JB</ui-avatar>
+  <ui-avatar class="subtle" aria-label="Two more collaborators">+2</ui-avatar>
+</avatar-group>
 ```
 
 ```html
