@@ -80,6 +80,9 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/card.css">
 <link rel="stylesheet" href="dist/components/avatar.css">
 <link rel="stylesheet" href="dist/components/tooltip.css">
+
+<!-- Load optional behavior shims only when you use them -->
+<script src="dist/behaviors/tooltip.js"></script>
 ```
 
 ### Example Usage
@@ -140,12 +143,13 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 ```
 
 ```html
-<tooltip-anchor>
-  <button type="button" aria-describedby="tip-save">Save draft</button>
-  <ui-tooltip id="tip-save" role="tooltip">
-    Create a reusable checkpoint without publishing it yet.
-  </ui-tooltip>
-</tooltip-anchor>
+<button type="button" title="Create a reusable checkpoint without publishing it yet.">
+  Save draft
+</button>
+```
+
+```html
+<abbr data-tooltip="HyperText Markup Language">HTML</abbr>
 ```
 
 ---

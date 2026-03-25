@@ -47,56 +47,72 @@
       align-items: center;
       gap: var(--space-md);
     }
+
+    .token {
+      display: inline-flex;
+      align-items: center;
+      min-block-size: 2.5rem;
+      padding-inline: var(--space-md);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-full);
+      background: var(--bg-default);
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
   <main>
     <h1>Tooltip Component</h1>
-    <p>Dashbase keeps tooltips intentionally lightweight: use <code>&lt;tooltip-anchor&gt;</code> as the positioned wrapper, connect the trigger with <code>aria-describedby</code>, and place a <code>&lt;ui-tooltip&gt;</code> beside it. Tooltips appear on hover and keyboard focus.</p>
+    <p>Dashbase treats tooltips as progressive enhancement. Use the platform default first: add <code>title</code> or <code>data-tooltip</code>, load the tooltip behavior once, and let Dashbase handle the visible bubble plus the accessibility wiring.</p>
 
     <section>
-      <h2>Default and Side Placements</h2>
+      <h2>Default API</h2>
 
       <div class="panel row">
-        <tooltip-anchor>
-          <button type="button" aria-describedby="tip-save">Save draft</button>
-          <ui-tooltip id="tip-save" role="tooltip">Create a reusable checkpoint without publishing it yet.</ui-tooltip>
-        </tooltip-anchor>
+        <button type="button" title="Create a reusable checkpoint without publishing it yet.">Save draft</button>
 
-        <tooltip-anchor>
-          <button type="button" class="ghost" aria-describedby="tip-right">Share</button>
-          <ui-tooltip id="tip-right" role="tooltip" class="right">Invite teammates and generate a shareable workspace link.</ui-tooltip>
-        </tooltip-anchor>
+        <button type="button" class="ghost" title="Invite teammates and generate a shareable workspace link." data-tooltip-position="right">Share</button>
 
-        <tooltip-anchor>
-          <button type="button" class="primary" aria-describedby="tip-bottom">Archive</button>
-          <ui-tooltip id="tip-bottom" role="tooltip" class="bottom">Move this project out of the active navigation without deleting it.</ui-tooltip>
-        </tooltip-anchor>
+        <button type="button" class="primary" data-tooltip="Move this project out of the active navigation without deleting it." data-tooltip-position="bottom">Archive</button>
 
-        <tooltip-anchor>
-          <button type="button" class="outline" aria-describedby="tip-left">Delete</button>
-          <ui-tooltip id="tip-left" role="tooltip" class="left">This action permanently removes the current draft.</ui-tooltip>
-        </tooltip-anchor>
+        <button type="button" class="outline" data-tooltip="This action permanently removes the current draft." data-tooltip-position="left">Delete</button>
       </div>
     </section>
 
     <section>
-      <h2>Input Hints</h2>
+      <h2>Inline Copy and Icon Hints</h2>
 
       <div class="panel">
+        <p>Use <abbr data-tooltip="HyperText Markup Language">HTML</abbr> when the text should stay untouched but still needs a readable definition.</p>
+
         <div class="field-row">
           <label for="api-key">API key</label>
-          <tooltip-anchor>
-            <button type="button" class="ghost" aria-describedby="tip-api" aria-label="Explain API key requirements">?</button>
-            <ui-tooltip id="tip-api" role="tooltip" class="right">Use a scoped token with read-only access for local preview environments.</ui-tooltip>
-          </tooltip-anchor>
+          <button
+            type="button"
+            class="ghost"
+            aria-label="Explain API key requirements"
+            data-tooltip="Use a scoped token with read-only access for local preview environments."
+            data-tooltip-position="right"
+          >
+            ?
+          </button>
         </div>
 
         <input id="api-key" type="text" placeholder="sk_live_..." />
       </div>
     </section>
+
+    <section>
+      <h2>Title Upgrade</h2>
+
+      <div class="panel row">
+        <span class="token" data-tooltip="This token is created automatically from a native title attribute." title="This token is created automatically from a native title attribute.">Auto-upgraded title</span>
+        <span class="token" data-tooltip="Use tooltips for supplementary context, not instructions the user must read to complete the task.">Supplementary only</span>
+      </div>
+    </section>
   </main>
 
+  <script src="../behaviors/tooltip.js"></script>
   <script src="./theme-controls.js"></script>
 </body>
 </html>

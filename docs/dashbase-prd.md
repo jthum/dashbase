@@ -409,7 +409,7 @@ Dashbase targets the **Baseline: Widely Available** tier or better for most feat
 | Accordion / Disclosure | `<details>` / `<summary>` | Zero JS — native open/close. Plain disclosures by default; add `<accordion-panel>` for the richer accordion shell. |
 | Tabs | `<tab-list>`, `<tab-panel>` custom elements | Small JS for `aria-selected` + keyboard nav (arrow keys, Home, End) |
 | Dropdown | `<details>` or Popover API | Pure CSS/HTML for simple cases. JS for complex menus. |
-| Tooltip | `<tooltip-anchor>` + `<ui-tooltip>` | CSS-only hover/focus tooltips today; anchor-positioning can be a future upgrade. |
+| Tooltip | `title` / `data-tooltip` | CSS bubble with a tiny JS shim for `title` enhancement and accessibility wiring. |
 
 ### Phase 4 — Ecosystem Reach (post-MVP)
 
@@ -436,8 +436,6 @@ Combobox, Date Picker, Command Palette, Toast/Notification, Data Grid. These are
 <card-content>     <!-- content area of a card -->
 <card-footer>      <!-- action area of a presentational card -->
 <ui-avatar>        <!-- presentational avatar shell -->
-<tooltip-anchor>   <!-- positioned tooltip wrapper -->
-<ui-tooltip>       <!-- tooltip bubble -->
 <tab-list>         <!-- container for tab triggers -->
 <tab-panel>        <!-- content panel for a tab -->
 <avatar-group>     <!-- stacked avatar container -->

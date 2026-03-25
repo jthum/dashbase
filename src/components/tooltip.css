@@ -1,36 +1,17 @@
 /*
  * Dashbase — Tooltip
  *
- * Styles a lightweight hover/focus tooltip using <tooltip-anchor> and
- * <ui-tooltip>. This keeps the authoring model explicit and JS-free for the
- * common case.
+ * Default API:
+ *   <button title="Create a checkpoint">Save draft</button>
+ *   <abbr data-tooltip="HyperText Markup Language">HTML</abbr>
  *
- * Structure:
- *   <tooltip-anchor>
- *     <button aria-describedby="tip-save">Save</button>
- *     <ui-tooltip id="tip-save" role="tooltip">Create a checkpoint</ui-tooltip>
- *   </tooltip-anchor>
- *
- * Placement: default top, or add .right, .bottom, .left on <ui-tooltip>.
+ * Optional placement:
+ *   <button data-tooltip="Invite teammates" data-tooltip-position="right">Share</button>
  */
 
 @layer components {
-  tooltip-anchor {
+  [data-tooltip] {
     --tooltip-offset: var(--space-sm);
-
-    position: relative;
-    display: inline-grid;
-    inline-size: max-content;
-    max-inline-size: 100%;
-    vertical-align: middle;
-    isolation: isolate;
-
-    & > :not(ui-tooltip) {
-      min-inline-size: 0;
-    }
-  }
-
-  tooltip-anchor > ui-tooltip {
     --tooltip-bg: color-mix(in oklch, var(--text-default) 92%, transparent);
     --tooltip-fg: var(--bg-default);
     --tooltip-border: color-mix(in oklch, var(--text-default) 16%, transparent);
@@ -41,6 +22,11 @@
     --tooltip-open-x: -50%;
     --tooltip-open-y: 0;
 
+    position: relative;
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
     position: absolute;
     z-index: 20;
     inset-inline-start: 50%;
@@ -57,49 +43,72 @@
     font-size: var(--text-xs);
     line-height: var(--leading-tight);
     text-wrap: pretty;
+    white-space: pre-line;
     text-align: center;
+    pointer-events: none;
     opacity: 0;
     visibility: hidden;
-    pointer-events: none;
     translate: var(--tooltip-closed-x) var(--tooltip-closed-y);
     transition:
       opacity var(--duration-fast) var(--easing-default),
       translate var(--duration-fast) var(--easing-default),
       visibility 0s linear var(--duration-fast);
-
-    &.bottom {
-      inset-block-start: calc(100% + var(--tooltip-offset));
-      inset-block-end: auto;
-      --tooltip-closed-y: calc(var(--space-xs) * -1);
-      --tooltip-open-y: 0;
-    }
-
-    &.left {
-      inset-inline-start: auto;
-      inset-inline-end: calc(100% + var(--tooltip-offset));
-      inset-block-start: 50%;
-      inset-block-end: auto;
-      --tooltip-closed-x: var(--space-xs);
-      --tooltip-closed-y: -50%;
-      --tooltip-open-x: 0;
-      --tooltip-open-y: -50%;
-    }
-
-    &.right {
-      inset-inline-start: calc(100% + var(--tooltip-offset));
-      inset-block-start: 50%;
-      inset-block-end: auto;
-      --tooltip-closed-x: calc(var(--space-xs) * -1);
-      --tooltip-closed-y: -50%;
-      --tooltip-open-x: 0;
-      --tooltip-open-y: -50%;
-    }
   }
 
-  tooltip-anchor:is(:hover, :focus-within) > ui-tooltip {
+  [data-tooltip]:is(:hover, :focus-visible)::after {
     opacity: 1;
     visibility: visible;
     translate: var(--tooltip-open-x) var(--tooltip-open-y);
     transition-delay: 0s;
+  }
+
+  [data-tooltip][data-tooltip-position="bottom"] {
+    --tooltip-closed-y: calc(var(--space-xs) * -1);
+    --tooltip-open-y: 0;
+  }
+
+  [data-tooltip][data-tooltip-position="bottom"]::after {
+    inset-block-start: calc(100% + var(--tooltip-offset));
+    inset-block-end: auto;
+  }
+
+  [data-tooltip][data-tooltip-position="left"] {
+    --tooltip-closed-x: var(--space-xs);
+    --tooltip-closed-y: -50%;
+    --tooltip-open-x: 0;
+    --tooltip-open-y: -50%;
+  }
+
+  [data-tooltip][data-tooltip-position="left"]::after {
+    inset-inline-start: auto;
+    inset-inline-end: calc(100% + var(--tooltip-offset));
+    inset-block-start: 50%;
+    inset-block-end: auto;
+  }
+
+  [data-tooltip][data-tooltip-position="right"] {
+    --tooltip-closed-x: calc(var(--space-xs) * -1);
+    --tooltip-closed-y: -50%;
+    --tooltip-open-x: 0;
+    --tooltip-open-y: -50%;
+  }
+
+  [data-tooltip][data-tooltip-position="right"]::after {
+    inset-inline-start: calc(100% + var(--tooltip-offset));
+    inset-block-start: 50%;
+    inset-block-end: auto;
+  }
+
+  [data-tooltip-content] {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
 }
