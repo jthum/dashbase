@@ -395,6 +395,7 @@ Dashbase targets the **Baseline: Widely Available** tier or better for most feat
 | Component | HTML Element | Notes |
 |---|---|---|
 | Card | `<ui-card>` or any `.card` host | Flush shell by default; padding lives in `card-content` / header / footer regions. `.simple` adds anatomy-free shell padding |
+| Separator | `<hr>` or `[role="separator"]` | Horizontal by default; vertical with `aria-orientation="vertical"` or `.vertical` |
 | Badge | `<mark>` or `<span>` with role | Inline, no wrapper needed |
 | Alert | `<output>` or `<aside>` with `role="alert"` | Variants: info, success, warning, danger |
 | Avatar | `<img>` or `<abbr>` (initials fallback) | With `<avatar-group>` for stacks |

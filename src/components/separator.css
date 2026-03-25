@@ -1,0 +1,45 @@
+/*
+ * Dashbase — Separator
+ *
+ * Styles semantic <hr> and any presentational element with role="separator".
+ *
+ * Structure:
+ *   <hr>
+ *   <div role="separator"></div>
+ *   <div role="separator" aria-orientation="vertical"></div>
+ *
+ * Semantics:
+ *   Use <hr> for thematic breaks.
+ *   Use role="separator" when the divider is purely presentational.
+ *
+ * Variants:
+ *   .vertical — forces a vertical separator without ARIA
+ *   .strong — increases contrast
+ */
+
+@layer components {
+  :where(hr, [role="separator"]) {
+    --separator-color: var(--border-default);
+    --separator-thickness: var(--border-width);
+
+    display: block;
+    inline-size: 100%;
+    block-size: var(--separator-thickness);
+    flex-shrink: 0;
+    margin: 0;
+    background-color: var(--separator-color);
+    border: 0;
+
+    &[aria-orientation="vertical"],
+    &.vertical {
+      inline-size: var(--separator-thickness);
+      block-size: auto;
+      min-block-size: 1em;
+      align-self: stretch;
+    }
+
+    &.strong {
+      --separator-color: color-mix(in oklch, var(--border-default) 35%, var(--text-default));
+    }
+  }
+}
