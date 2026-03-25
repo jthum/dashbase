@@ -81,8 +81,11 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/avatar.css">
 <link rel="stylesheet" href="dist/components/tooltip.css">
 
-<!-- Load optional behavior shims only when you use them -->
+<!-- Load only the behavior shims you use -->
+<script src="dist/behaviors/dialog.js"></script>
 <script src="dist/behaviors/tooltip.js"></script>
+<script src="dist/behaviors/tabs.js"></script>
+<script src="dist/behaviors/dropdown-menu.js"></script>
 ```
 
 ### Example Usage
@@ -150,6 +153,32 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 
 ```html
 <abbr data-tooltip="HyperText Markup Language">HTML</abbr>
+```
+
+```html
+<table class="striped interactive">
+  <thead>
+    <tr>
+      <th scope="col">Environment</th>
+      <th scope="col">Requests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Production</th>
+      <td>1.2M</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+```html
+<tab-list role="tablist" aria-label="Project sections">
+  <button type="button" role="tab" aria-controls="overview-panel" aria-selected="true">Overview</button>
+  <button type="button" role="tab" aria-controls="activity-panel">Activity</button>
+</tab-list>
+<tab-panel id="overview-panel">...</tab-panel>
+<tab-panel id="activity-panel" hidden>...</tab-panel>
 ```
 
 ---

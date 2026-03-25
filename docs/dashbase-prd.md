@@ -400,12 +400,19 @@ Dashbase targets the **Baseline: Widely Available** tier or better for most feat
 | Alert | `<output>` or `<aside>` with `role="alert"` | Variants: info, success, warning, danger |
 | Avatar | `<ui-avatar>` | Inline initials or child `<img>`. Use `<avatar-group>` for stacks. |
 | Table | `<table>` | Full semantic table with `<thead>`, `<tbody>`, etc. |
+| Breadcrumb | `<nav aria-label="Breadcrumb">` | Ordered or unordered list; current item uses `aria-current="page"`. |
+| Pagination | `<nav aria-label="Pagination">` | Link or button list; active item uses `aria-current="page"`. |
+| Collapsible | `<details class="collapsible">` | Lightweight hide-and-show section, simpler than the accordion shell. |
+| Aspect Ratio | `<aspect-ratio>` | Media frame controlled with `--aspect-ratio`. |
 
 ### Phase 3 — Interactive (JS progressive enhancement)
 
 | Component | HTML Basis | JS Requirement |
 |---|---|---|
 | Dialog / Modal | `<dialog>` | Popover API for panels; Invoker Commands for `.showModal()`. Shim for gap. |
+| Popover | `section[popover]`, `aside[popover]`, etc. | Lightweight non-modal surfaces via the Popover API. |
+| Alert Dialog | `<dialog class="alert-dialog">` | Dialog variant for urgent confirmation; use `role="alertdialog"`. |
+| Drawer / Sheet | `<dialog class="drawer">` | Dialog variant for edge-attached flows and slide-over panels. |
 | Accordion / Disclosure | `<details>` / `<summary>` | Zero JS — native open/close. Plain disclosures by default; add `<accordion-panel>` for the richer accordion shell. |
 | Tabs | `<tab-list>`, `<tab-panel>` custom elements | Small JS for `aria-selected` + keyboard nav (arrow keys, Home, End) |
 | Dropdown | `<details>` or Popover API | Pure CSS/HTML for simple cases. JS for complex menus. |
@@ -436,6 +443,7 @@ Combobox, Date Picker, Command Palette, Toast/Notification, Data Grid. These are
 <card-content>     <!-- content area of a card -->
 <card-footer>      <!-- action area of a presentational card -->
 <ui-avatar>        <!-- presentational avatar shell -->
+<aspect-ratio>     <!-- proportional media frame -->
 <tab-list>         <!-- container for tab triggers -->
 <tab-panel>        <!-- content panel for a tab -->
 <avatar-group>     <!-- stacked avatar container -->
