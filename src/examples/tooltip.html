@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Tooltip Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="../components/input.css">
+  <link rel="stylesheet" href="../components/tooltip.css">
+  <link rel="stylesheet" href="../components/select.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 56rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .panel {
+      display: grid;
+      gap: var(--space-xl);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--bg-raised);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-xl);
+      min-block-size: 12rem;
+      justify-content: center;
+    }
+
+    .field-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-md);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Tooltip Component</h1>
+    <p>Dashbase keeps tooltips intentionally lightweight: use <code>&lt;tooltip-anchor&gt;</code> as the positioned wrapper, connect the trigger with <code>aria-describedby</code>, and place a <code>&lt;ui-tooltip&gt;</code> beside it. Tooltips appear on hover and keyboard focus.</p>
+
+    <section>
+      <h2>Default and Side Placements</h2>
+
+      <div class="panel row">
+        <tooltip-anchor>
+          <button type="button" aria-describedby="tip-save">Save draft</button>
+          <ui-tooltip id="tip-save" role="tooltip">Create a reusable checkpoint without publishing it yet.</ui-tooltip>
+        </tooltip-anchor>
+
+        <tooltip-anchor>
+          <button type="button" class="ghost" aria-describedby="tip-right">Share</button>
+          <ui-tooltip id="tip-right" role="tooltip" class="right">Invite teammates and generate a shareable workspace link.</ui-tooltip>
+        </tooltip-anchor>
+
+        <tooltip-anchor>
+          <button type="button" class="primary" aria-describedby="tip-bottom">Archive</button>
+          <ui-tooltip id="tip-bottom" role="tooltip" class="bottom">Move this project out of the active navigation without deleting it.</ui-tooltip>
+        </tooltip-anchor>
+
+        <tooltip-anchor>
+          <button type="button" class="outline" aria-describedby="tip-left">Delete</button>
+          <ui-tooltip id="tip-left" role="tooltip" class="left">This action permanently removes the current draft.</ui-tooltip>
+        </tooltip-anchor>
+      </div>
+    </section>
+
+    <section>
+      <h2>Input Hints</h2>
+
+      <div class="panel">
+        <div class="field-row">
+          <label for="api-key">API key</label>
+          <tooltip-anchor>
+            <button type="button" class="ghost" aria-describedby="tip-api" aria-label="Explain API key requirements">?</button>
+            <ui-tooltip id="tip-api" role="tooltip" class="right">Use a scoped token with read-only access for local preview environments.</ui-tooltip>
+          </tooltip-anchor>
+        </div>
+
+        <input id="api-key" type="text" placeholder="sk_live_..." />
+      </div>
+    </section>
+  </main>
+
+  <script src="./theme-controls.js"></script>
+</body>
+</html>

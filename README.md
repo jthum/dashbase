@@ -79,6 +79,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/form-field.css">
 <link rel="stylesheet" href="dist/components/card.css">
 <link rel="stylesheet" href="dist/components/avatar.css">
+<link rel="stylesheet" href="dist/components/tooltip.css">
 ```
 
 ### Example Usage
@@ -138,6 +139,15 @@ To use Dashbase in your project, include the base stylesheet followed by the com
     </ul>
   </accordion-panel>
 </details>
+```
+
+```html
+<tooltip-anchor>
+  <button type="button" aria-describedby="tip-save">Save draft</button>
+  <ui-tooltip id="tip-save" role="tooltip">
+    Create a reusable checkpoint without publishing it yet.
+  </ui-tooltip>
+</tooltip-anchor>
 ```
 
 ---
