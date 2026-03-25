@@ -30,7 +30,6 @@
     --accordion-radius: var(--radius-lg);
     --accordion-padding-inline: var(--space-lg);
     --accordion-padding-block: var(--space-lg);
-    --accordion-content-gap: var(--stack-gap);
     --accordion-summary-bg: transparent;
     --accordion-summary-bg-hover: var(--bg-subtle);
     --accordion-summary-bg-open: transparent;
@@ -104,25 +103,21 @@
     }
 
     & > :not(summary, accordion-panel) {
-      margin: 0;
       padding-inline: var(--accordion-padding-inline);
     }
 
     &[open] > summary + :not(summary, accordion-panel) {
       padding-block-start: var(--space-lg);
-    }
-
-    & > :not(summary, accordion-panel) + :not(summary, accordion-panel) {
-      margin-block-start: var(--accordion-content-gap);
+      margin-block-start: 0;
     }
 
     & > :last-child:not(summary, accordion-panel) {
       padding-block-end: var(--space-lg);
+      margin-block-end: 0;
     }
 
     & > accordion-panel {
-      display: grid;
-      gap: var(--accordion-content-gap);
+      display: block;
       min-inline-size: 0;
       padding-inline: var(--accordion-padding-inline);
 
@@ -130,8 +125,12 @@
         min-inline-size: 0;
       }
 
-      & > :where(h1, h2, h3, h4, h5, h6, p, small, ul, ol, dl, blockquote, figure, table, form) {
-        margin: 0;
+      & > :first-child {
+        margin-block-start: 0;
+      }
+
+      & > :last-child {
+        margin-block-end: 0;
       }
 
       & > :where(table, iframe, video, img, canvas, svg) {
@@ -162,14 +161,12 @@
     &.small {
       --accordion-padding-inline: var(--space-md);
       --accordion-padding-block: var(--space-md);
-      --accordion-content-gap: var(--space-sm);
       --accordion-indicator-size: 0.5rem;
     }
 
     &.large {
       --accordion-padding-inline: var(--space-xl);
       --accordion-padding-block: var(--space-xl);
-      --accordion-content-gap: var(--space-lg);
       --accordion-indicator-size: 0.7rem;
     }
   }
