@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Breadcrumb Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/breadcrumb.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 56rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .panel {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--bg-raised);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Breadcrumb Component</h1>
+    <p>Dashbase styles semantic breadcrumb navigation built from a labeled <code>&lt;nav&gt;</code> plus an ordered or unordered list. The current location should use <code>aria-current="page"</code>.</p>
+
+    <section class="panel">
+      <h2>Default Breadcrumb</h2>
+
+      <nav aria-label="Breadcrumb">
+        <ol>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Dashbase</a></li>
+          <li><span aria-current="page">Tooltip cleanup</span></li>
+        </ol>
+      </nav>
+    </section>
+
+    <section class="panel">
+      <h2>Custom Separator</h2>
+
+      <nav aria-label="Breadcrumb" style="--breadcrumb-separator: '•';">
+        <ol>
+          <li><a href="#">Docs</a></li>
+          <li><a href="#">Guides</a></li>
+          <li><span aria-current="page">Component Authoring</span></li>
+        </ol>
+      </nav>
+    </section>
+
+    <section class="panel">
+      <h2>Wrapping Labels</h2>
+
+      <nav aria-label="Breadcrumb">
+        <ol>
+          <li><a href="#">Account</a></li>
+          <li><a href="#">Billing and invoices</a></li>
+          <li><span aria-current="page">March 2026 annual infrastructure renewal</span></li>
+        </ol>
+      </nav>
+    </section>
+  </main>
+
+  <script src="./theme-controls.js"></script>
+</body>
+</html>

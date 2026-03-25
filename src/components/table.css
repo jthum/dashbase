@@ -1,0 +1,97 @@
+/*
+ * Dashbase — Table
+ *
+ * Styles the native <table> element with semantic sections, captions, and row
+ * states.
+ *
+ * Structure:
+ *   <table>
+ *     <caption>Quarterly revenue</caption>
+ *     <thead>...</thead>
+ *     <tbody>...</tbody>
+ *     <tfoot>...</tfoot>
+ *   </table>
+ *
+ * Variants:
+ *   .compact — denser cell padding
+ *   .striped — alternating row fills
+ *   .interactive — row hover feedback
+ */
+
+@layer components {
+  table {
+    --table-bg: var(--bg-raised);
+    --table-fg: var(--text-default);
+    --table-border: var(--border-default);
+    --table-header-bg: var(--bg-subtle);
+    --table-header-fg: var(--text-default);
+    --table-muted: var(--text-muted);
+    --table-row-border: color-mix(in oklch, var(--table-border) 78%, transparent);
+    --table-row-hover-bg: color-mix(in oklch, var(--bg-subtle) 76%, transparent);
+    --table-row-stripe-bg: color-mix(in oklch, var(--bg-subtle) 52%, transparent);
+    --table-radius: var(--radius-lg);
+    --table-cell-padding-inline: var(--space-md);
+    --table-cell-padding-block: var(--space-sm);
+
+    inline-size: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--table-fg);
+    background-color: var(--table-bg);
+    border: var(--border-width) solid var(--table-border);
+    border-radius: var(--table-radius);
+    overflow: clip;
+    box-shadow: var(--shadow-xs);
+
+    & > caption {
+      padding-block-end: var(--space-sm);
+      color: var(--table-muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-normal);
+      text-align: start;
+      caption-side: top;
+    }
+
+    & :where(th, td) {
+      padding-block: var(--table-cell-padding-block);
+      padding-inline: var(--table-cell-padding-inline);
+      border-block-end: var(--border-width) solid var(--table-row-border);
+      text-align: start;
+      vertical-align: top;
+    }
+
+    & > thead > tr > :where(th, td) {
+      color: var(--table-header-fg);
+      background-color: var(--table-header-bg);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      line-height: var(--leading-tight);
+    }
+
+    & > tbody > tr > th[scope="row"] {
+      font-weight: 600;
+    }
+
+    & > tfoot > tr > :where(th, td) {
+      background-color: color-mix(in oklch, var(--table-header-bg) 72%, transparent);
+      font-weight: 600;
+    }
+
+    & > :where(tbody, tfoot) > tr:last-child > :where(th, td) {
+      border-block-end: 0;
+    }
+
+    &.compact {
+      --table-cell-padding-inline: var(--space-sm);
+      --table-cell-padding-block: calc(var(--space-xs) + 1px);
+    }
+
+    &.striped > tbody > tr:nth-child(even) > :where(th, td) {
+      background-color: var(--table-row-stripe-bg);
+    }
+
+    &.interactive > tbody > tr:hover > :where(th, td) {
+      background-color: var(--table-row-hover-bg);
+    }
+  }
+}

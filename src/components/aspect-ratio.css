@@ -1,0 +1,57 @@
+/*
+ * Dashbase — Aspect Ratio
+ *
+ * Styles the semantic <aspect-ratio> wrapper for media frames and proportional
+ * placeholders.
+ *
+ * Structure:
+ *   <aspect-ratio style="--aspect-ratio: 16 / 9">
+ *     <img src="..." alt="">
+ *   </aspect-ratio>
+ *
+ * Variants:
+ *   .contain — preserve padding around the child and use object-fit: contain
+ */
+
+@layer components {
+  aspect-ratio {
+    --aspect-ratio: 16 / 9;
+    --aspect-ratio-bg: var(--bg-subtle);
+    --aspect-ratio-radius: var(--radius-xl);
+    --aspect-ratio-fit: cover;
+    --aspect-ratio-border: color-mix(in oklch, var(--border-default) 80%, transparent);
+
+    display: grid;
+    inline-size: 100%;
+    min-inline-size: 0;
+    aspect-ratio: var(--aspect-ratio);
+    overflow: clip;
+    background-color: var(--aspect-ratio-bg);
+    border: var(--border-width) solid var(--aspect-ratio-border);
+    border-radius: var(--aspect-ratio-radius);
+    box-shadow: var(--shadow-xs);
+
+    & > * {
+      grid-area: 1 / 1;
+      inline-size: 100%;
+      block-size: 100%;
+      min-inline-size: 0;
+    }
+
+    & > picture {
+      display: contents;
+    }
+
+    & > :where(img, video, iframe, canvas, svg),
+    & > picture > img {
+      display: block;
+      object-fit: var(--aspect-ratio-fit);
+      border: 0;
+    }
+
+    &.contain {
+      --aspect-ratio-fit: contain;
+      --aspect-ratio-bg: var(--bg-raised);
+    }
+  }
+}

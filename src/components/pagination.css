@@ -1,0 +1,101 @@
+/*
+ * Dashbase — Pagination
+ *
+ * Styles semantic pagination navigation built from <nav> and a list of links,
+ * buttons, or static spans.
+ *
+ * Structure:
+ *   <nav aria-label="Pagination">
+ *     <ul>
+ *       <li><a href="?page=1">1</a></li>
+ *       <li><a href="?page=2" aria-current="page">2</a></li>
+ *       <li><a href="?page=3">3</a></li>
+ *     </ul>
+ *   </nav>
+ *
+ * Variants:
+ *   .small — denser pagination controls
+ */
+
+@layer components {
+  nav[aria-label="Pagination"] {
+    --pagination-gap: var(--space-xs);
+    --pagination-padding-inline: var(--space-sm);
+    --pagination-padding-block: var(--space-xs);
+    --pagination-radius: var(--radius-md);
+    --pagination-bg: var(--bg-default);
+    --pagination-fg: var(--text-default);
+    --pagination-border: var(--border-default);
+    --pagination-hover-bg: var(--bg-subtle);
+    --pagination-active-bg: var(--color-primary);
+    --pagination-active-fg: var(--color-primary-fg);
+    --pagination-active-border: var(--color-primary);
+
+    & > :where(ol, ul) {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--pagination-gap);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    & li {
+      display: inline-flex;
+    }
+
+    & :where(a, button, span) {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-inline-size: 2.5rem;
+      min-block-size: 2.5rem;
+      padding-block: var(--pagination-padding-block);
+      padding-inline: var(--pagination-padding-inline);
+      color: var(--pagination-fg);
+      background-color: var(--pagination-bg);
+      border: var(--border-width) solid var(--pagination-border);
+      border-radius: var(--pagination-radius);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      line-height: var(--leading-tight);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    & :where(a, button) {
+      cursor: pointer;
+    }
+
+    & :where(a, button):hover:not([aria-current="page"]):not([aria-disabled="true"]):not([disabled]) {
+      background-color: var(--pagination-hover-bg);
+    }
+
+    & :where(a, button):focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+    }
+
+    & [aria-current="page"] {
+      color: var(--pagination-active-fg);
+      background-color: var(--pagination-active-bg);
+      border-color: var(--pagination-active-border);
+    }
+
+    & :where([aria-disabled="true"], [disabled]) {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    &.small {
+      --pagination-padding-inline: var(--space-xs);
+      --pagination-padding-block: calc(var(--space-xs) - 1px);
+
+      & :where(a, button, span) {
+        min-inline-size: 2rem;
+        min-block-size: 2rem;
+      }
+    }
+  }
+}

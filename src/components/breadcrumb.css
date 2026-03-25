@@ -1,0 +1,79 @@
+/*
+ * Dashbase — Breadcrumb
+ *
+ * Styles semantic breadcrumb navigation built from <nav> plus an ordered or
+ * unordered list.
+ *
+ * Structure:
+ *   <nav aria-label="Breadcrumb">
+ *     <ol>
+ *       <li><a href="/">Home</a></li>
+ *       <li><a href="/projects">Projects</a></li>
+ *       <li><span aria-current="page">Dashbase</span></li>
+ *     </ol>
+ *   </nav>
+ */
+
+@layer components {
+  nav[aria-label="Breadcrumb"] {
+    --breadcrumb-gap: var(--space-sm);
+    --breadcrumb-separator-gap: var(--space-sm);
+    --breadcrumb-separator: "/";
+    --breadcrumb-fg: var(--text-muted);
+    --breadcrumb-link: var(--text-default);
+    --breadcrumb-current: var(--text-default);
+
+    color: var(--breadcrumb-fg);
+
+    & > :where(ol, ul) {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--breadcrumb-gap);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    & li {
+      display: inline-flex;
+      align-items: center;
+      min-inline-size: 0;
+      gap: var(--breadcrumb-gap);
+    }
+
+    & li + li::before {
+      content: var(--breadcrumb-separator);
+      color: var(--breadcrumb-fg);
+      margin-inline-end: var(--breadcrumb-separator-gap);
+    }
+
+    & :where(a, span) {
+      min-inline-size: 0;
+      font-size: var(--text-sm);
+      line-height: var(--leading-tight);
+      text-decoration: none;
+      text-wrap: pretty;
+    }
+
+    & a {
+      color: var(--breadcrumb-link);
+    }
+
+    & a:hover {
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+
+    & a:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: var(--focus-ring-offset);
+      border-radius: var(--radius-sm);
+    }
+
+    & [aria-current="page"] {
+      color: var(--breadcrumb-current);
+      font-weight: 600;
+    }
+  }
+}

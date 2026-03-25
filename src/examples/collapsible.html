@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Collapsible Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/collapsible.css">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 56rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--space-xl);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Collapsible Component</h1>
+    <p>Dashbase uses <code>&lt;details class="collapsible"&gt;</code> for compact hide-and-show sections. This is intentionally lighter than the richer accordion shell and works well for optional configuration or supporting context.</p>
+
+    <section class="stack">
+      <details class="collapsible" open>
+        <summary>Advanced filters</summary>
+        <div>
+          <p>Use collapsibles for optional detail that should stay in the document flow, not for destructive confirmation or required task guidance.</p>
+          <div class="actions">
+            <button class="primary">Apply filters</button>
+            <button class="ghost">Reset</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="collapsible">
+        <summary>Webhook retry policy</summary>
+        <div>
+          <p>Retries back off exponentially across five attempts. Failed deliveries remain visible in the events log for 30 days.</p>
+        </div>
+      </details>
+    </section>
+
+    <section>
+      <h2>Bare Variant</h2>
+
+      <details class="collapsible bare">
+        <summary>Why use a collapsible instead of tabs?</summary>
+        <div>
+          <p>Use a collapsible when the content is still part of the same narrative flow and should stay stacked vertically once opened.</p>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <script src="./theme-controls.js"></script>
+</body>
+</html>
