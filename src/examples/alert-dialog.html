@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Alert Dialog Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/dialog.css">
+  <link rel="stylesheet" href="../components/alert-dialog.css">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 56rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Alert Dialog Component</h1>
+    <p>Dashbase treats alert dialogs as a semantic and stylistic variant of <code>&lt;dialog&gt;</code>, not a separate primitive. Use them for destructive or urgent confirmation that needs immediate acknowledgement.</p>
+
+    <div class="actions">
+      <button invoketarget="delete-project-alert" invokeaction="showModal" class="danger">Delete project</button>
+      <button invoketarget="billing-warning-alert" invokeaction="showModal">Archive billing profile</button>
+    </div>
+
+    <dialog id="delete-project-alert" class="alert-dialog danger" role="alertdialog" aria-labelledby="delete-project-title" aria-describedby="delete-project-copy">
+      <header>
+        <h2 id="delete-project-title">Delete this project?</h2>
+        <p id="delete-project-copy">This removes deployments, environment variables, logs, and access tokens. The action cannot be undone.</p>
+      </header>
+
+      <footer>
+        <button invoketarget="delete-project-alert" invokeaction="close" class="ghost">Cancel</button>
+        <button class="danger">Delete permanently</button>
+      </footer>
+    </dialog>
+
+    <dialog id="billing-warning-alert" class="alert-dialog warning" role="alertdialog" aria-labelledby="billing-warning-title" aria-describedby="billing-warning-copy">
+      <header>
+        <h2 id="billing-warning-title">Archive billing profile?</h2>
+        <p id="billing-warning-copy">Invoices remain available, but future subscription renewals and usage-based charges will stop until a new profile is attached.</p>
+      </header>
+
+      <footer>
+        <button invoketarget="billing-warning-alert" invokeaction="close" class="ghost">Keep active</button>
+        <button class="primary">Archive</button>
+      </footer>
+    </dialog>
+  </main>
+
+  <script src="../behaviors/dialog.js"></script>
+  <script src="./theme-controls.js"></script>
+</body>
+</html>

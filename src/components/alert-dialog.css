@@ -1,0 +1,58 @@
+/*
+ * Dashbase — Alert Dialog
+ *
+ * Styles urgent confirmation flows as a dialog variant. This extends the native
+ * <dialog> element rather than introducing a separate primitive.
+ *
+ * Structure:
+ *   <dialog class="alert-dialog danger" role="alertdialog">...</dialog>
+ *
+ * Variants:
+ *   .danger — destructive confirmation
+ *   .warning — cautionary interruption
+ */
+
+@layer components {
+  dialog.alert-dialog {
+    --dialog-width: min(28rem, calc(100vi - (var(--space-lg) * 2)));
+    --dialog-gap: var(--space-md);
+    --dialog-header-gap: var(--space-sm);
+    --dialog-footer-gap: var(--space-sm);
+    --dialog-border: var(--border-default);
+    --dialog-shadow: var(--shadow-lg);
+    --alert-dialog-accent: var(--color-danger);
+    --alert-dialog-subtle: var(--color-danger-subtle);
+    --alert-dialog-muted: var(--color-danger-muted);
+
+    box-shadow:
+      inset 0 0 0 1px color-mix(in oklch, var(--alert-dialog-accent) 12%, transparent),
+      var(--dialog-shadow);
+
+    & > header {
+      padding-inline-start: calc(var(--space-md) + var(--space-xs));
+      border-inline-start: calc(var(--border-width) * 4) solid var(--alert-dialog-accent);
+    }
+
+    & > header > :where(h1, h2, h3, h4, h5, h6) {
+      font-size: var(--text-lg);
+    }
+
+    & > footer {
+      justify-content: flex-end;
+    }
+
+    &.danger {
+      --dialog-border: var(--alert-dialog-muted);
+      --alert-dialog-accent: var(--color-danger-emphasis);
+      --alert-dialog-subtle: var(--color-danger-subtle);
+      --alert-dialog-muted: var(--color-danger-muted);
+    }
+
+    &.warning {
+      --dialog-border: var(--color-warning-muted);
+      --alert-dialog-accent: var(--color-warning-emphasis);
+      --alert-dialog-subtle: var(--color-warning-subtle);
+      --alert-dialog-muted: var(--color-warning-muted);
+    }
+  }
+}

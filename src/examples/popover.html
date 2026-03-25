@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Popover Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/popover.css">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="../components/input.css">
+  <link rel="stylesheet" href="../components/form-field.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 56rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--space-md);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Popover Component</h1>
+    <p>Dashbase styles Popover API surfaces on non-dialog elements. This is best for lightweight, non-blocking utility panels. Placement is viewport-based for now; anchored trigger placement can be revisited when anchor positioning is a safer baseline.</p>
+
+    <div class="actions">
+      <button popovertarget="filters-popover">Open filters</button>
+      <button popovertarget="shortcut-popover">Open shortcuts</button>
+    </div>
+
+    <section id="filters-popover" popover class="top-right wide">
+      <header>
+        <h2>Quick filters</h2>
+        <p>Temporary controls that should not block the rest of the page.</p>
+      </header>
+
+      <div class="stack">
+        <form-field>
+          <label for="owner-filter">Owner</label>
+          <input id="owner-filter" type="text" placeholder="Search by owner" />
+        </form-field>
+
+        <form-field>
+          <label for="status-filter">Status</label>
+          <input id="status-filter" type="text" placeholder="Active, paused, archived" />
+        </form-field>
+      </div>
+
+      <footer>
+        <button popovertarget="filters-popover" popovertargetaction="hide" class="ghost">Close</button>
+        <button class="primary">Apply</button>
+      </footer>
+    </section>
+
+    <aside id="shortcut-popover" popover class="center">
+      <header>
+        <h2>Keyboard shortcuts</h2>
+        <p>Small reference content works well as a centered popover panel.</p>
+      </header>
+
+      <ul>
+        <li><strong>G then P</strong> opens the project switcher.</li>
+        <li><strong>/</strong> focuses the command search.</li>
+        <li><strong>Esc</strong> closes the current transient surface.</li>
+      </ul>
+
+      <footer>
+        <button popovertarget="shortcut-popover" popovertargetaction="hide" class="ghost">Dismiss</button>
+      </footer>
+    </aside>
+  </main>
+
+  <script src="./theme-controls.js"></script>
+</body>
+</html>
