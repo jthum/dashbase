@@ -1,7 +1,9 @@
 /*
- * Dashbase — Accordion
+ * Dashbase — Accordion / Disclosure
  *
- * Styles the native <details> / <summary> pattern as an accordion/disclosure.
+ * Styles the native <details> / <summary> pattern as a disclosure first.
+ * When content is grouped inside an <accordion-panel>, the disclosure upgrades
+ * into a richer accordion treatment with a bordered shell and padded panel.
  * Uses the browser's built-in semantics and open/close behavior directly.
  *
  * Structure:
@@ -30,6 +32,8 @@
     --accordion-radius: var(--radius-lg);
     --accordion-padding-inline: var(--space-lg);
     --accordion-padding-block: var(--space-lg);
+    --accordion-summary-padding-inline: 0;
+    --accordion-summary-padding-block: var(--space-md);
     --accordion-summary-bg: transparent;
     --accordion-summary-bg-hover: var(--bg-subtle);
     --accordion-summary-bg-open: transparent;
@@ -41,11 +45,6 @@
     max-inline-size: 100%;
     min-inline-size: 0;
     color: var(--accordion-fg);
-    background-color: var(--accordion-bg);
-    border: var(--border-width) solid var(--accordion-border);
-    border-radius: var(--accordion-radius);
-    box-shadow: var(--shadow-xs);
-    overflow: clip;
 
     & + details {
       margin-block-start: var(--space-md);
@@ -55,8 +54,8 @@
       display: flex;
       align-items: center;
       gap: var(--space-md);
-      padding-inline: var(--accordion-padding-inline);
-      padding-block: var(--accordion-padding-block);
+      padding-inline: var(--accordion-summary-padding-inline);
+      padding-block: var(--accordion-summary-padding-block);
       cursor: pointer;
       list-style: none;
       font-weight: 600;
@@ -89,37 +88,39 @@
 
       &:focus-visible {
         outline: var(--focus-ring-width) solid var(--focus-ring-color);
-        outline-offset: calc(var(--focus-ring-offset) * -1);
+        outline-offset: var(--focus-ring-offset);
       }
     }
 
     &[open] > summary {
-      background-color: var(--accordion-summary-bg-open);
-      border-block-end: var(--border-width) solid var(--accordion-summary-border-open);
-
       &::after {
         rotate: 225deg;
       }
     }
 
-    & > :not(summary, accordion-panel) {
-      padding-inline: var(--accordion-padding-inline);
-    }
-
     &[open] > summary + :not(summary, accordion-panel) {
-      padding-block-start: var(--space-lg);
       margin-block-start: 0;
     }
 
     & > :last-child:not(summary, accordion-panel) {
-      padding-block-end: var(--space-lg);
       margin-block-end: 0;
+    }
+
+    & > :where(table, iframe, video, img, canvas, svg):not(summary) {
+      max-inline-size: 100%;
+    }
+
+    & > iframe:not(summary) {
+      border: 0;
+    }
+
+    & > table:not(summary) {
+      inline-size: 100%;
     }
 
     & > accordion-panel {
       display: block;
       min-inline-size: 0;
-      padding-inline: var(--accordion-padding-inline);
 
       & > * {
         min-inline-size: 0;
@@ -146,27 +147,53 @@
       }
     }
 
-    &[open] > summary + accordion-panel {
-      padding-block-start: var(--space-lg);
-    }
-
-    & > accordion-panel:last-child {
-      padding-block-end: var(--space-lg);
-    }
-
     &[open] > :not(summary) {
       animation: accordion-content-in var(--duration-base) var(--easing-default);
+    }
+
+    &:not(:has(> accordion-panel))[open] > summary {
+      margin-block-end: var(--space-sm);
+    }
+
+    &:has(> accordion-panel) {
+      --accordion-summary-padding-inline: var(--accordion-padding-inline);
+      --accordion-summary-padding-block: var(--accordion-padding-block);
+
+      background-color: var(--accordion-bg);
+      border: var(--border-width) solid var(--accordion-border);
+      border-radius: var(--accordion-radius);
+      box-shadow: var(--shadow-xs);
+      overflow: clip;
+
+      &[open] > summary {
+        background-color: var(--accordion-summary-bg-open);
+        border-block-end: var(--border-width) solid var(--accordion-summary-border-open);
+      }
+
+      &[open] > summary + accordion-panel {
+        padding-block-start: var(--space-lg);
+      }
+
+      & > accordion-panel {
+        padding-inline: var(--accordion-padding-inline);
+      }
+
+      & > accordion-panel:last-child {
+        padding-block-end: var(--space-lg);
+      }
     }
 
     &.small {
       --accordion-padding-inline: var(--space-md);
       --accordion-padding-block: var(--space-md);
+      --accordion-summary-padding-block: var(--space-sm);
       --accordion-indicator-size: 0.5rem;
     }
 
     &.large {
       --accordion-padding-inline: var(--space-xl);
       --accordion-padding-block: var(--space-xl);
+      --accordion-summary-padding-block: var(--space-lg);
       --accordion-indicator-size: 0.7rem;
     }
   }

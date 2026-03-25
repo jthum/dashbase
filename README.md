@@ -130,14 +130,12 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 ```html
 <details>
   <summary>Deployment checklist</summary>
-  <accordion-panel>
-    <p>Review the final release checks before shipping.</p>
-    <ul>
-      <li>Validate examples and docs</li>
-      <li>Check light and dark mode</li>
-      <li>Verify keyboard and focus behavior</li>
-    </ul>
-  </accordion-panel>
+  <p>Review the final release checks before shipping.</p>
+  <ul>
+    <li>Validate examples and docs</li>
+    <li>Check light and dark mode</li>
+    <li>Verify keyboard and focus behavior</li>
+  </ul>
 </details>
 ```
 

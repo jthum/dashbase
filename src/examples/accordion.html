@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashbase — Accordion Component</title>
+  <title>Dashbase — Accordion / Disclosure Component</title>
   <link rel="stylesheet" href="../baseline/baseline.css">
   <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
   <link rel="stylesheet" href="../components/accordion.css">
@@ -69,13 +69,13 @@
 </head>
 <body>
   <main>
-    <h1>Accordion Component</h1>
-    <p>Dashbase styles the native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code> disclosure pattern directly, keeping the built-in semantics and interaction model intact. For richer content, use an optional <code>&lt;accordion-panel&gt;</code> wrapper. Density can be tuned with <code>.small</code> and <code>.large</code>.</p>
+    <h1>Accordion / Disclosure Component</h1>
+    <p>Dashbase styles the native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code> pattern as a disclosure first. Plain disclosures work well for FAQ-style content without extra wrappers. For richer content and a more card-like accordion shell, use the optional <code>&lt;accordion-panel&gt;</code> wrapper. Density can be tuned with <code>.small</code> and <code>.large</code>.</p>
 
     <hr>
 
     <section>
-      <h2>Basic Accordions</h2>
+      <h2>Plain Disclosures</h2>
 
       <details open>
         <summary>How does Dashbase approach interaction?</summary>
@@ -99,12 +99,12 @@
       <h2>Density Variants</h2>
 
       <details class="small">
-        <summary>Compact accordion</summary>
+        <summary>Compact disclosure</summary>
         <p>Use <code>.small</code> when space is tight, such as FAQ lists or dense settings pages.</p>
       </details>
 
       <details class="large" open>
-        <summary>Large accordion</summary>
+        <summary>Large disclosure</summary>
         <p>Use <code>.large</code> when the trigger should feel more spacious or match a more editorial layout.</p>
       </details>
     </section>
@@ -112,7 +112,7 @@
     <hr>
 
     <section>
-      <h2>Richer Content</h2>
+      <h2>Accordion Panels</h2>
 
       <details open>
         <summary>Deployment checklist</summary>

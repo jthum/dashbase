@@ -406,7 +406,7 @@ Dashbase targets the **Baseline: Widely Available** tier or better for most feat
 | Component | HTML Basis | JS Requirement |
 |---|---|---|
 | Dialog / Modal | `<dialog>` | Popover API for panels; Invoker Commands for `.showModal()`. Shim for gap. |
-| Accordion | `<details>` / `<summary>` | Zero JS — native open/close. Animation via `@starting-style` + `interpolate-size`. |
+| Accordion / Disclosure | `<details>` / `<summary>` | Zero JS — native open/close. Plain disclosures by default; add `<accordion-panel>` for the richer accordion shell. |
 | Tabs | `<tab-list>`, `<tab-panel>` custom elements | Small JS for `aria-selected` + keyboard nav (arrow keys, Home, End) |
 | Dropdown | `<details>` or Popover API | Pure CSS/HTML for simple cases. JS for complex menus. |
 | Tooltip | `<tooltip-anchor>` + `<ui-tooltip>` | CSS-only hover/focus tooltips today; anchor-positioning can be a future upgrade. |
