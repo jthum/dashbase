@@ -1,42 +1,56 @@
 /*
  * Dashbase — Card
  *
- * Styles semantic <article> / <section> roots that use Dashbase card regions:
- * <card-header>, <card-body>, and <card-footer>.
+ * Styles the presentational <ui-card> shell and any semantic host that opts in
+ * with .card.
  *
  * Structure:
- *   <article>
- *     <card-header>
+ *   <article class="card">
+ *     <header>
  *       <h2>Card title</h2>
  *       <p>Supporting copy</p>
- *     </card-header>
- *     <card-body>...</card-body>
- *     <card-footer>...</card-footer>
+ *     </header>
+ *     <card-content>...</card-content>
+ *     <footer>...</footer>
  *   </article>
  *
- * Semantics:
- *   Use <article> for self-contained compositions that can stand on their own.
- *   Use <section> when article semantics are inappropriate for the surrounding page.
+ *   <ui-card>
+ *     <card-header>...</card-header>
+ *     <card-content>...</card-content>
+ *     <card-footer>...</card-footer>
+ *   </ui-card>
  *
- * Variants: none
+ *   <ui-card class="simple">
+ *     <h3>Card title</h3>
+ *     <p>Basic content without structured regions.</p>
+ *   </ui-card>
+ *
+ * Semantics:
+ *   Use <ui-card> when the card is purely presentational.
+ *   Use .card on a semantic element when the host itself should carry meaning.
+ *   Semantic <header> / <footer> are supported only for .card hosts.
+ *   The card shell is flush by default; card regions own their own padding.
+ *
+ * Variants:
+ *   .simple — anatomy-free shorthand that adds shell padding only when no card
+ *             regions are present.
  */
 
 @layer components {
-  :where(article, section):has(> :is(card-header, card-body, card-footer)) {
+  :where(ui-card, .card) {
     --card-bg: var(--bg-raised);
     --card-fg: var(--text-default);
     --card-border: var(--border-default);
     --card-radius: var(--radius-xl);
     --card-padding: var(--space-xl);
-    --card-gap: var(--space-lg);
-    --card-header-gap: var(--space-xs);
-    --card-body-gap: var(--stack-gap);
     --card-footer-gap: var(--inline-gap);
+    --card-header-bg: transparent;
+    --card-header-border: transparent;
+    --card-footer-bg: transparent;
+    --card-footer-border: transparent;
 
     display: grid;
-    gap: var(--card-gap);
     min-inline-size: 0;
-    padding: var(--card-padding);
     color: var(--card-fg);
     background-color: var(--card-bg);
     border: var(--border-width) solid var(--card-border);
@@ -44,55 +58,83 @@
     box-shadow: var(--shadow-xs);
     overflow: clip;
 
-    & > :is(card-header, card-body, card-footer) {
+    & > :is(card-header, card-content, card-footer),
+    &.card > :is(header, footer) {
       min-inline-size: 0;
     }
 
-    & > :is(card-header, card-body, card-footer):empty {
+    & > :is(card-header, card-content, card-footer):empty,
+    &.card > :is(header, footer):empty {
       display: none;
     }
 
-    & > card-header {
-      display: grid;
-      gap: var(--card-header-gap);
+    & > :is(card-header, card-content, card-footer) > *,
+    &.card > :is(header, footer) > * {
+      min-inline-size: 0;
     }
 
-    & > card-body {
-      display: grid;
-      gap: var(--card-body-gap);
+    & > :is(card-header, card-content, card-footer),
+    &.card > :is(header, footer) {
+      padding: var(--card-padding);
     }
 
-    & > card-footer {
+    & > :is(card-header, card-content),
+    &.card > header,
+    &.simple:not(:has(> :is(card-header, card-content, card-footer, header, footer))) {
+      display: block;
+    }
+
+    & > :is(card-header, card-content) > :first-child,
+    &.card > header > :first-child,
+    &.simple:not(:has(> :is(card-header, card-content, card-footer, header, footer))) > :first-child {
+      margin-block-start: 0;
+    }
+
+    & > :is(card-header, card-content) > :last-child,
+    &.card > header > :last-child,
+    &.simple:not(:has(> :is(card-header, card-content, card-footer, header, footer))) > :last-child {
+      margin-block-end: 0;
+    }
+
+    & > :is(card-header),
+    &.card > header {
+      background-color: var(--card-header-bg);
+      box-shadow: inset 0 calc(var(--border-width) * -1) 0 0 var(--card-header-border);
+    }
+
+    & > :is(card-footer),
+    &.card > footer {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: var(--card-footer-gap);
+      background-color: var(--card-footer-bg);
+      box-shadow: inset 0 var(--border-width) 0 0 var(--card-footer-border);
     }
 
-    & > card-header > :where(h1, h2, h3, h4, h5, h6, p, small),
-    & > card-body > :where(h1, h2, h3, h4, h5, h6, p, small, blockquote, dl, ul, ol),
-    & > card-footer > :where(p, small) {
-      margin: 0;
-    }
-
-    & > card-header > :where(h1, h2, h3, h4, h5, h6) {
-      font-size: var(--text-lg);
-      line-height: var(--leading-tight);
-      letter-spacing: var(--tracking-tight);
-    }
-
-    & > card-header > :where(p, small),
-    & > card-footer > :where(p, small) {
+    & > :is(card-header, card-footer) > :where(p, small),
+    &.card > :is(header, footer) > :where(p, small) {
       color: var(--text-muted);
       font-size: var(--text-sm);
       line-height: var(--leading-normal);
     }
 
-    & > card-body > :where(img, picture > img, video, canvas, svg) {
+    & > :is(card-footer) > :where(p, small),
+    &.card > footer > :where(p, small) {
+      margin: 0;
+    }
+
+    & > :where(img, picture > img, video, canvas, svg),
+    & > card-content > :where(img, picture > img, video, canvas, svg),
+    &.simple:not(:has(> :is(card-header, card-content, card-footer, header, footer)))
+      > :where(img, picture > img, video, canvas, svg) {
       display: block;
       max-inline-size: 100%;
       block-size: auto;
-      border-radius: calc(var(--card-radius) - var(--space-xs));
+    }
+
+    &.simple:not(:has(> :is(card-header, card-content, card-footer, header, footer))) {
+      padding: var(--card-padding);
     }
   }
 }

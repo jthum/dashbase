@@ -394,7 +394,7 @@ Dashbase targets the **Baseline: Widely Available** tier or better for most feat
 
 | Component | HTML Element | Notes |
 |---|---|---|
-| Card | `<article>` or `<section>` | With `<card-header>`, `<card-body>`, `<card-footer>` custom children |
+| Card | `<ui-card>` or any `.card` host | Flush shell by default; padding lives in `card-content` / header / footer regions. `.simple` adds anatomy-free shell padding |
 | Badge | `<mark>` or `<span>` with role | Inline, no wrapper needed |
 | Alert | `<output>` or `<aside>` with `role="alert"` | Variants: info, success, warning, danger |
 | Avatar | `<img>` or `<abbr>` (initials fallback) | With `<avatar-group>` for stacks |
@@ -430,9 +430,10 @@ Combobox, Date Picker, Command Palette, Toast/Notification, Data Grid. These are
 ```html
 <form-field>       <!-- label + input + hint + error unit -->
 <input-group>      <!-- prefix + input + suffix -->
-<card-header>      <!-- heading area of a card -->
-<card-body>        <!-- content area of a card -->
-<card-footer>      <!-- action area of a card -->
+<ui-card>          <!-- presentational card shell -->
+<card-header>      <!-- heading area of a presentational card -->
+<card-content>     <!-- content area of a card -->
+<card-footer>      <!-- action area of a presentational card -->
 <tab-list>         <!-- container for tab triggers -->
 <tab-panel>        <!-- content panel for a tab -->
 <avatar-group>     <!-- stacked avatar container -->
@@ -672,8 +673,11 @@ For each component:
 Order: `card` → `badge` → `alert` → `avatar` → `table`
 
 Key decisions:
-- `<card>` uses `<article>` by default (semantically: a self-contained composition). Where `<article>` is inappropriate (e.g., a settings panel), `<section>` is used.
-- `<card-header>`, `<card-body>`, `<card-footer>` are custom elements — no semantic HTML equivalent for card sub-regions.
+- `<ui-card>` is the presentational card shell; semantic hosts opt in with `.card`.
+- `.card` hosts may use native `header` / `footer`; `<ui-card>` uses `card-header` / `card-footer`.
+- the card shell is flush by default; padded regions own their own spacing.
+- `<card-content>` is the canonical non-semantic content region for padded card content.
+- `.simple` is the shorthand for anatomy-free padded cards.
 - `<badge>` uses `<mark>` for inline highlighted content; `<span role="status">` for dynamic badges.
 - `<alert>` uses `<output role="alert">` for live regions; `<aside>` for static contextual alerts.
 - Avatar stack uses `<avatar-group>` with CSS `margin-inline-start: -var(--space-2)` via `:not(:first-child)`.

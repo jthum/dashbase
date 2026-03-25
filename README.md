@@ -93,21 +93,28 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 ```
 
 ```html
-<article>
-  <card-header>
+<article class="card">
+  <header>
     <h2>Weekly Report</h2>
     <p>Activation rose 12% week-over-week.</p>
-  </card-header>
+  </header>
 
-  <card-body>
+  <card-content>
     <p>Review the latest product and growth metrics in one place.</p>
-  </card-body>
+  </card-content>
 
-  <card-footer>
+  <footer>
     <button class="primary">Open report</button>
     <button class="ghost">Share</button>
-  </card-footer>
+  </footer>
 </article>
+```
+
+```html
+<ui-card class="simple">
+  <h3>System Status</h3>
+  <p>All services are healthy.</p>
+</ui-card>
 ```
 
 ```html
