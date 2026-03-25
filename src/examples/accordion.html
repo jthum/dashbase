@@ -70,7 +70,7 @@
 <body>
   <main>
     <h1>Accordion Component</h1>
-    <p>Dashbase styles the native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code> disclosure pattern directly, keeping the built-in semantics and interaction model intact. For richer content, use an optional <code>&lt;accordion-panel&gt;</code> wrapper.</p>
+    <p>Dashbase styles the native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code> disclosure pattern directly, keeping the built-in semantics and interaction model intact. For richer content, use an optional <code>&lt;accordion-panel&gt;</code> wrapper. Density can be tuned with <code>.small</code> and <code>.large</code>.</p>
 
     <hr>
 
@@ -90,6 +90,22 @@
       <details>
         <summary>Can the content be richer than plain text?</summary>
         <p>Yes. Content can be text, lists, form fields, or action rows. The native disclosure behavior still works the same way.</p>
+      </details>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Density Variants</h2>
+
+      <details class="small">
+        <summary>Compact accordion</summary>
+        <p>Use <code>.small</code> when space is tight, such as FAQ lists or dense settings pages.</p>
+      </details>
+
+      <details class="large" open>
+        <summary>Large accordion</summary>
+        <p>Use <code>.large</code> when the trigger should feel more spacious or match a more editorial layout.</p>
       </details>
     </section>
 

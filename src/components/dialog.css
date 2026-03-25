@@ -15,7 +15,7 @@
  *     <footer>Actions</footer>
  *   </dialog>
  *
- * Variants: none
+ * Variants: .small, .large
  */
 
 @layer components {
@@ -28,6 +28,10 @@
     --dialog-gap: var(--space-lg);
     --dialog-width: min(32rem, calc(100vi - (var(--space-lg) * 2)));
     --dialog-shadow: var(--shadow-lg);
+    --dialog-header-gap: var(--space-xs);
+    --dialog-footer-gap: var(--space-sm);
+    --dialog-footer-justify: flex-end;
+    --dialog-backdrop: color-mix(in oklch, var(--text-default) 28%, transparent);
 
     inline-size: var(--dialog-width);
     max-inline-size: calc(100vi - (var(--space-lg) * 2));
@@ -51,7 +55,7 @@
 
     & > header {
       display: grid;
-      gap: var(--space-xs);
+      gap: var(--dialog-header-gap);
       margin-block-end: var(--dialog-gap);
     }
 
@@ -82,14 +86,14 @@
     & > footer {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
+      justify-content: var(--dialog-footer-justify);
       align-items: center;
-      gap: var(--space-sm);
+      gap: var(--dialog-footer-gap);
       margin-block-start: var(--dialog-gap);
     }
 
     &:not([popover])::backdrop {
-      background: color-mix(in oklch, var(--text-default) 28%, transparent);
+      background: var(--dialog-backdrop);
       backdrop-filter: blur(4px);
     }
 
@@ -104,6 +108,14 @@
 
     &:is([open], :popover-open) {
       animation: dialog-in var(--duration-base) var(--easing-default);
+    }
+
+    &.small {
+      --dialog-width: min(24rem, calc(100vi - (var(--space-lg) * 2)));
+    }
+
+    &.large {
+      --dialog-width: min(42rem, calc(100vi - (var(--space-lg) * 2)));
     }
   }
 

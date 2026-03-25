@@ -46,7 +46,7 @@
 <body>
   <main>
     <h1>Dialog Component</h1>
-    <p>Dashbase styles the native <code>&lt;dialog&gt;</code> element directly. Use modal dialogs when blocking confirmation is needed, and popover dialogs for lightweight settings panels or utility surfaces.</p>
+    <p>Dashbase styles the native <code>&lt;dialog&gt;</code> element directly. Use modal dialogs when blocking confirmation is needed, and popover dialogs for lightweight settings panels or utility surfaces. Width can be tuned with <code>.small</code> and <code>.large</code>.</p>
 
     <hr>
 
@@ -58,7 +58,7 @@
         <button popovertarget="settings-panel">Open settings panel</button>
       </div>
 
-      <dialog id="settings-panel" popover>
+      <dialog id="settings-panel" popover class="small">
         <header>
           <h2>Workspace Settings</h2>
           <p>Quick preferences that do not need a blocking modal.</p>
@@ -97,7 +97,7 @@
         <button invoketarget="confirm-delete" invokeaction="showModal" class="danger">Delete project</button>
       </div>
 
-      <dialog id="confirm-delete">
+      <dialog id="confirm-delete" class="large">
         <header>
           <h2>Delete project?</h2>
           <p>This action is permanent. Existing deployments, tokens, and logs cannot be recovered once the project is removed.</p>

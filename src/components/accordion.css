@@ -19,7 +19,7 @@
  *     </accordion-panel>
  *   </details>
  *
- * Variants: none
+ * Variants: .small, .large
  */
 
 @layer components {
@@ -31,6 +31,11 @@
     --accordion-padding-inline: var(--space-lg);
     --accordion-padding-block: var(--space-lg);
     --accordion-content-gap: var(--stack-gap);
+    --accordion-summary-bg: transparent;
+    --accordion-summary-bg-hover: var(--bg-subtle);
+    --accordion-summary-bg-open: transparent;
+    --accordion-summary-border-open: color-mix(in oklch, var(--accordion-border) 80%, transparent);
+    --accordion-indicator-size: 0.6rem;
 
     display: block;
     inline-size: 100%;
@@ -58,6 +63,7 @@
       font-weight: 600;
       line-height: var(--leading-tight);
       letter-spacing: var(--tracking-tight);
+      background-color: var(--accordion-summary-bg);
       transition:
         background-color var(--duration-fast) var(--easing-default),
         color var(--duration-fast) var(--easing-default);
@@ -68,8 +74,8 @@
 
       &::after {
         content: "";
-        inline-size: 0.6rem;
-        block-size: 0.6rem;
+        inline-size: var(--accordion-indicator-size);
+        block-size: var(--accordion-indicator-size);
         margin-inline-start: auto;
         border-inline-end: 2px solid currentColor;
         border-block-end: 2px solid currentColor;
@@ -79,7 +85,7 @@
       }
 
       &:hover {
-        background-color: var(--bg-subtle);
+        background-color: var(--accordion-summary-bg-hover);
       }
 
       &:focus-visible {
@@ -89,7 +95,8 @@
     }
 
     &[open] > summary {
-      border-block-end: var(--border-width) solid color-mix(in oklch, var(--accordion-border) 80%, transparent);
+      background-color: var(--accordion-summary-bg-open);
+      border-block-end: var(--border-width) solid var(--accordion-summary-border-open);
 
       &::after {
         rotate: 225deg;
@@ -150,6 +157,20 @@
 
     &[open] > :not(summary) {
       animation: accordion-content-in var(--duration-base) var(--easing-default);
+    }
+
+    &.small {
+      --accordion-padding-inline: var(--space-md);
+      --accordion-padding-block: var(--space-md);
+      --accordion-content-gap: var(--space-sm);
+      --accordion-indicator-size: 0.5rem;
+    }
+
+    &.large {
+      --accordion-padding-inline: var(--space-xl);
+      --accordion-padding-block: var(--space-xl);
+      --accordion-content-gap: var(--space-lg);
+      --accordion-indicator-size: 0.7rem;
     }
   }
 
