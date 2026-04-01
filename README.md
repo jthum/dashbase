@@ -77,17 +77,15 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/button.css">
 <link rel="stylesheet" href="dist/components/input.css">
 <link rel="stylesheet" href="dist/components/form-field.css">
+<link rel="stylesheet" href="dist/components/accordion.css">
 <link rel="stylesheet" href="dist/components/card.css">
-<link rel="stylesheet" href="dist/components/avatar.css">
-<link rel="stylesheet" href="dist/components/tooltip.css">
+<link rel="stylesheet" href="dist/components/tabs.css">
+<link rel="stylesheet" href="dist/components/dropdown.css">
 
 <!-- Load only the behavior shims you use -->
 <script src="dist/behaviors/dialog.js"></script>
-<script src="dist/behaviors/tooltip.js"></script>
 <script src="dist/behaviors/tabs.js"></script>
-<script src="dist/behaviors/dropdown-menu.js"></script>
-<link rel="stylesheet" href="dist/components/tabs.css">
-<link rel="stylesheet" href="dist/components/dropdown.css">
+<script src="dist/behaviors/dropdown.js"></script>
 ```
 
 ### Example Usage
@@ -121,102 +119,26 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 ```
 
 ```html
-<ui-card class="simple">
-  <h3>System Status</h3>
-  <p>All services are healthy.</p>
-</ui-card>
-```
-
-```html
-<avatar-group aria-label="Project collaborators">
-  <ui-avatar aria-label="Taylor Nguyen">TN</ui-avatar>
-  <ui-avatar aria-label="Jordan Brooks">JB</ui-avatar>
-  <ui-avatar class="subtle" aria-label="Two more collaborators">+2</ui-avatar>
-</avatar-group>
-```
-
-```html
 <details>
   <summary>Deployment checklist</summary>
-  <p>Review the final release checks before shipping.</p>
-  <ul>
-    <li>Validate examples and docs</li>
-    <li>Check light and dark mode</li>
-    <li>Verify keyboard and focus behavior</li>
-  </ul>
+  <accordion-panel>
+    <p>Review the final release checks before shipping.</p>
+    <ul>
+      <li>Validate examples and docs</li>
+      <li>Check light and dark mode</li>
+      <li>Verify keyboard and focus behavior</li>
+    </ul>
+  </accordion-panel>
 </details>
-```
-
-```html
-<button type="button" title="Create a reusable checkpoint without publishing it yet.">
-  Save draft
-</button>
-```
-
-```html
-<abbr data-tooltip="HyperText Markup Language">HTML</abbr>
-```
-
-```html
-<table class="striped interactive">
-  <thead>
-    <tr>
-      <th scope="col">Environment</th>
-      <th scope="col">Requests</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">Production</th>
-      <td>1.2M</td>
-    </tr>
-  </tbody>
-</table>
-```
-
-```html
-<tab-list role="tablist" aria-label="Project sections">
-  <button type="button" role="tab" aria-controls="overview-panel" aria-selected="true">Overview</button>
-  <button type="button" role="tab" aria-controls="activity-panel">Activity</button>
-</tab-list>
-<tab-panel id="overview-panel">...</tab-panel>
-<tab-panel id="activity-panel" hidden>...</tab-panel>
-```
-
-```html
-<button type="button" title="Create a reusable checkpoint without publishing it yet.">
-  Save draft
-</button>
-```
-
-```html
-<abbr data-tooltip="HyperText Markup Language">HTML</abbr>
-```
-
-```html
-<table class="striped interactive">
-  <thead>
-    <tr>
-      <th scope="col">Environment</th>
-      <th scope="col">Requests</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">Production</th>
-      <td>1.2M</td>
-    </tr>
-  </tbody>
-</table>
 ```
 
 ```html
 <ui-tabs>
   <tab-list role="tablist" aria-label="Workspace sections">
-    <button role="tab" id="tab-account" aria-controls="panel-account" aria-selected="true">
+    <button type="button" role="tab" id="tab-account" aria-controls="panel-account" aria-selected="true">
       Account
     </button>
-    <button role="tab" id="tab-billing" aria-controls="panel-billing" aria-selected="false">
+    <button type="button" role="tab" id="tab-billing" aria-controls="panel-billing" aria-selected="false">
       Billing
     </button>
   </tab-list>
@@ -240,6 +162,13 @@ To use Dashbase in your project, include the base stylesheet followed by the com
     <small>Workspace</small>
     <button type="button" role="menuitem">Profile <kbd>⌘P</kbd></button>
     <button type="button" role="menuitem">Billing <kbd>⌘B</kbd></button>
+    <details class="dropdown submenu">
+      <summary>Theme</summary>
+      <dropdown-panel role="menu" aria-label="Theme">
+        <button type="button" role="menuitemradio" name="theme" aria-checked="true">System</button>
+        <button type="button" role="menuitemradio" name="theme" aria-checked="false">Light</button>
+      </dropdown-panel>
+    </details>
     <hr>
     <button type="button" role="menuitem" class="danger">Delete workspace</button>
   </dropdown-panel>
