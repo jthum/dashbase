@@ -409,13 +409,13 @@ Dashbase targets the **Baseline: Widely Available** tier or better for most feat
 
 | Component | HTML Basis | JS Requirement |
 |---|---|---|
-| Dialog / Modal | `<dialog>` | Popover API for panels; Invoker Commands for `.showModal()`. Shim for gap. |
-| Popover | `section[popover]`, `aside[popover]`, etc. | Lightweight non-modal surfaces via the Popover API. |
+| Dialog / Modal | `<dialog>` | Invoker Commands for `.showModal()` / `.show()`. `popover="auto"` is available for light-dismiss dialog surfaces. |
+| Popover Panel | `<popover-panel popover>` | Anchored non-dialog utility surfaces via the Popover API and CSS anchor positioning. |
+| Menu / Dropdown | `<popover-panel popover role="menu">` | Small JS for `aria-expanded` sync, roving focus, Arrow keys, Home / End, checkbox / radio items, and optional submenu coordination. |
 | Alert Dialog | `<dialog class="alert-dialog">` | Dialog variant for urgent confirmation; use `role="alertdialog"`. |
 | Drawer / Sheet | `<dialog class="drawer">` | Dialog variant for edge-attached flows and slide-over panels. |
 | Accordion / Disclosure | `<details>` / `<summary>` | Zero JS — native open/close. Plain disclosures by default; add `<accordion-panel>` for the richer accordion shell. |
 | Tabs | `<tab-list>`, `<tab-panel>` custom elements | Small JS for `aria-selected` + keyboard nav (arrow keys, Home, End) |
-| Dropdown | `<details>` or Popover API | Pure CSS/HTML for simple cases. JS for complex menus. |
 | Tooltip | `title` / `data-tooltip` | CSS bubble with a tiny JS shim for `title` enhancement and accessibility wiring. |
 
 ### Phase 4 — Ecosystem Reach (post-MVP)
@@ -442,10 +442,16 @@ Combobox, Date Picker, Command Palette, Toast/Notification, Data Grid. These are
 <card-header>      <!-- heading area of a presentational card -->
 <card-content>     <!-- content area of a card -->
 <card-footer>      <!-- action area of a presentational card -->
+<accordion-panel>  <!-- optional rich content wrapper inside <details> -->
+<ui-tabs>          <!-- tabs shell around tab-list and tab-panel -->
 <ui-avatar>        <!-- presentational avatar shell -->
 <aspect-ratio>     <!-- proportional media frame -->
 <tab-list>         <!-- container for tab triggers -->
 <tab-panel>        <!-- content panel for a tab -->
+<popover-panel>    <!-- anchored non-dialog surface using the Popover API -->
+<panel-header>     <!-- shared header anatomy for dialogs and panels -->
+<panel-content>    <!-- shared content anatomy for dialogs and panels -->
+<panel-footer>     <!-- shared footer anatomy for dialogs and panels -->
 <avatar-group>     <!-- stacked avatar container -->
 <badge-group>      <!-- inline cluster of badges -->
 <page-header>      <!-- top-level app header region -->
@@ -518,10 +524,11 @@ dist/
     alert.css
     avatar.css
     table.css
+    panel.css
     dialog.css
+    popover.css
     accordion.css
     tabs.css
-    dropdown.css
 ```
 
 ### Output Properties
@@ -562,18 +569,20 @@ dashbase/
 │       ├── alert.css
 │       ├── avatar.css
 │       ├── table.css
+│       ├── panel.css
 │       ├── dialog.css
+│       ├── popover.css
 │       ├── accordion.css
 │       ├── tabs.css
-│       └── dropdown.css
+│       └── tooltip.css
 ├── dist/                         ← compiled output (git-ignored or published)
 ├── themes/
 │   ├── minimal.css               ← ~5 variables, near-native look
 │   └── default.css               ← full token set, opinionated design
-├── js/
+├── behaviors/
 │   ├── tabs.js                   ← progressive enhancement only
 │   ├── dialog.js                 ← invoker command shim
-│   └── dropdown.js
+│   └── popover.js                ← popover trigger + menu behavior shim
 ├── docs/                         ← examples and usage docs
 ├── tailwind.config.js
 ├── package.json

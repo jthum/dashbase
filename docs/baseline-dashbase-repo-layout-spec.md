@@ -59,7 +59,7 @@ Generators produce **framework adapters**.
     /behaviors
         dialog.js
         tabs.js
-        dropdown.js
+        popover.js
     /dsl
         button.json
         dialog.json
@@ -290,7 +290,7 @@ Examples:
 ```
 dialog.js
 tabs.js
-dropdown.js
+popover.js
 ```
 
 Guidelines:
