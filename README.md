@@ -183,22 +183,51 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 ```
 
 ```html
-<tab-list role="tablist" aria-label="Workspace sections">
-  <button role="tab" id="tab-account" aria-controls="panel-account" aria-selected="true">
-    Account
-  </button>
-  <button role="tab" id="tab-billing" aria-controls="panel-billing" aria-selected="false">
-    Billing
-  </button>
-</tab-list>
+<button type="button" title="Create a reusable checkpoint without publishing it yet.">
+  Save draft
+</button>
+```
 
-<tab-panel id="panel-account" role="tabpanel" aria-labelledby="tab-account">
-  <p>Manage profile settings and notification preferences.</p>
-</tab-panel>
+```html
+<abbr data-tooltip="HyperText Markup Language">HTML</abbr>
+```
 
-<tab-panel id="panel-billing" role="tabpanel" aria-labelledby="tab-billing" hidden>
-  <p>Review invoices, seats, and payment methods.</p>
-</tab-panel>
+```html
+<table class="striped interactive">
+  <thead>
+    <tr>
+      <th scope="col">Environment</th>
+      <th scope="col">Requests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Production</th>
+      <td>1.2M</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+```html
+<ui-tabs>
+  <tab-list role="tablist" aria-label="Workspace sections">
+    <button role="tab" id="tab-account" aria-controls="panel-account" aria-selected="true">
+      Account
+    </button>
+    <button role="tab" id="tab-billing" aria-controls="panel-billing" aria-selected="false">
+      Billing
+    </button>
+  </tab-list>
+
+  <tab-panel id="panel-account" role="tabpanel" aria-labelledby="tab-account">
+    <p>Manage profile settings and notification preferences.</p>
+  </tab-panel>
+
+  <tab-panel id="panel-billing" role="tabpanel" aria-labelledby="tab-billing" hidden>
+    <p>Review invoices, seats, and payment methods.</p>
+  </tab-panel>
+</ui-tabs>
 
 <script src="dist/behaviors/tabs.js"></script>
 ```

@@ -6,25 +6,44 @@
  * keyboard navigation in sync.
  *
  * Structure:
- *   <tab-list role="tablist" aria-label="Settings sections">
- *     <button role="tab" id="tab-account" aria-controls="panel-account" aria-selected="true">
- *       Account
- *     </button>
- *     <button role="tab" id="tab-billing" aria-controls="panel-billing" aria-selected="false">
- *       Billing
- *     </button>
- *   </tab-list>
- *   <tab-panel id="panel-account" role="tabpanel" aria-labelledby="tab-account">
- *     ...
- *   </tab-panel>
- *   <tab-panel id="panel-billing" role="tabpanel" aria-labelledby="tab-billing" hidden>
- *     ...
- *   </tab-panel>
+ *   <ui-tabs>
+ *     <tab-list role="tablist" aria-label="Settings sections">
+ *       <button role="tab" id="tab-account" aria-controls="panel-account" aria-selected="true">
+ *         Account
+ *       </button>
+ *       <button role="tab" id="tab-billing" aria-controls="panel-billing" aria-selected="false">
+ *         Billing
+ *       </button>
+ *     </tab-list>
+ *     <tab-panel id="panel-account" role="tabpanel" aria-labelledby="tab-account">
+ *       ...
+ *     </tab-panel>
+ *     <tab-panel id="panel-billing" role="tabpanel" aria-labelledby="tab-billing" hidden>
+ *       ...
+ *     </tab-panel>
+ *   </ui-tabs>
  *
  * Variants: none
  */
 
 @layer components {
+  ui-tabs {
+    display: block;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+
+    & > :where(tab-list[role="tablist"], tab-panel[role="tabpanel"]) {
+      max-inline-size: 100%;
+      min-inline-size: 0;
+    }
+
+    &.vertical {
+      display: grid;
+      gap: var(--space-lg);
+      align-items: start;
+    }
+  }
+
   tab-list[role="tablist"] {
     --tabs-list-bg: var(--bg-subtle);
     --tabs-list-fg: var(--text-default);
@@ -107,6 +126,10 @@
     text-align: start;
   }
 
+  ui-tabs.vertical > tab-list[role="tablist"] {
+    inline-size: 100%;
+  }
+
   tab-panel[role="tabpanel"] {
     display: block;
     max-inline-size: 100%;
@@ -140,6 +163,26 @@
 
   tab-panel[role="tabpanel"][hidden] {
     display: none;
+  }
+
+  ui-tabs.vertical > tab-panel[role="tabpanel"] {
+    margin-block-start: 0;
+  }
+
+  @media (min-width: 48rem) {
+    ui-tabs.vertical {
+      grid-template-columns: 14rem minmax(0, 1fr);
+    }
+
+    ui-tabs.vertical > tab-list[role="tablist"] {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    ui-tabs.vertical > tab-panel[role="tabpanel"] {
+      grid-column: 2;
+      grid-row: 1;
+    }
   }
 
   @keyframes tabs-panel-in {
