@@ -12,7 +12,7 @@
 
   <style>
     main {
-      max-width: 58rem;
+      max-width: 62rem;
       margin-inline: auto;
       padding: var(--space-2xl);
     }
@@ -29,7 +29,7 @@
     }
 
     .surface {
-      min-block-size: 14rem;
+      min-block-size: 16rem;
       padding: var(--space-xl);
       border: var(--border-width) solid var(--border-default);
       border-radius: var(--radius-xl);
@@ -50,7 +50,7 @@
 <body>
   <main>
     <h1>Dropdown Component</h1>
-    <p>Dashbase styles simple action menus on native <code>&lt;details&gt;</code> disclosures. A small behavior shim adds outside-click dismissal plus menu-style keyboard navigation while the markup stays readable.</p>
+    <p>Dashbase styles action menus on native <code>&lt;details&gt;</code> disclosures. A small behavior shim adds outside-click dismissal, keyboard navigation, stateful checkbox and radio items, plus nested submenus while the markup stays readable.</p>
 
     <hr>
 
@@ -67,6 +67,64 @@
             <button type="button" role="menuitem">Invite teammate</button>
             <hr>
             <button type="button" role="menuitem" class="danger">Delete workspace</button>
+          </dropdown-panel>
+        </details>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Stateful Items</h2>
+
+      <div class="surface">
+        <details class="dropdown">
+          <summary>Preferences</summary>
+          <dropdown-panel role="menu" aria-label="Preferences">
+            <small>Notifications</small>
+            <button type="button" role="menuitemcheckbox" aria-checked="true">Email notifications</button>
+            <button type="button" role="menuitemcheckbox" aria-checked="false">Desktop alerts</button>
+            <button type="button" role="menuitemcheckbox" aria-checked="true">Weekly digest</button>
+            <hr>
+            <small>Appearance</small>
+            <button type="button" role="menuitemradio" name="appearance" aria-checked="false">Light</button>
+            <button type="button" role="menuitemradio" name="appearance" aria-checked="false">Dark</button>
+            <button type="button" role="menuitemradio" name="appearance" aria-checked="true">System</button>
+          </dropdown-panel>
+        </details>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Nested Submenu</h2>
+
+      <div class="surface">
+        <details class="dropdown">
+          <summary>Workspace menu</summary>
+          <dropdown-panel role="menu" aria-label="Workspace menu">
+            <small>Workspace</small>
+            <button type="button" role="menuitem">Members</button>
+            <button type="button" role="menuitem">Billing</button>
+            <details class="dropdown submenu">
+              <summary>Theme</summary>
+              <dropdown-panel role="menu" aria-label="Theme">
+                <button type="button" role="menuitemradio" name="theme" aria-checked="false">Light</button>
+                <button type="button" role="menuitemradio" name="theme" aria-checked="false">Dark</button>
+                <button type="button" role="menuitemradio" name="theme" aria-checked="true">System</button>
+              </dropdown-panel>
+            </details>
+            <details class="dropdown submenu">
+              <summary>Share</summary>
+              <dropdown-panel role="menu" aria-label="Share options">
+                <button type="button" role="menuitem">Copy link</button>
+                <button type="button" role="menuitem">Invite by email</button>
+                <button type="button" role="menuitem">Export PDF</button>
+              </dropdown-panel>
+            </details>
+            <hr>
+            <button type="button" role="menuitem" class="danger">Archive workspace</button>
           </dropdown-panel>
         </details>
       </div>

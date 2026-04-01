@@ -1,9 +1,10 @@
 /*
  * Dashbase — Dropdown
  *
- * Styles simple action menus using the native <details> / <summary> pattern.
- * A tiny behavior layer adds outside-click dismissal and menu-style keyboard
- * navigation for richer action lists.
+ * Styles action menus using the native <details> / <summary> pattern.
+ * A tiny behavior layer adds outside-click dismissal, menu-style keyboard
+ * navigation, stateful items, and nested submenus while keeping the markup
+ * readable.
  *
  * Structure:
  *   <details class="dropdown">
@@ -12,11 +13,19 @@
  *       <small>Workspace</small>
  *       <button type="button" role="menuitem">Profile <kbd>⌘P</kbd></button>
  *       <button type="button" role="menuitem">Billing <kbd>⌘B</kbd></button>
+ *       <details class="dropdown submenu">
+ *         <summary role="menuitem">Theme</summary>
+ *         <dropdown-panel role="menu" aria-label="Theme">
+ *           <button type="button" role="menuitemradio" name="theme" aria-checked="true">System</button>
+ *           <button type="button" role="menuitemradio" name="theme" aria-checked="false">Light</button>
+ *         </dropdown-panel>
+ *       </details>
  *     </dropdown-panel>
  *   </details>
  *
  * Variants:
  *   .align-end — align the panel to the trigger's end edge
+ *   .submenu — nested flyout menu inside another dropdown panel
  */
 
 @layer components {
@@ -33,10 +42,13 @@
     --dropdown-gap: var(--space-xs);
     --dropdown-panel-padding: var(--space-xs);
     --dropdown-item-radius: var(--radius-md);
-    --dropdown-item-padding-inline: var(--space-md);
-    --dropdown-item-padding-block: var(--space-sm);
+    --dropdown-item-padding-inline: var(--space-sm);
+    --dropdown-item-padding-block: var(--space-xs);
     --dropdown-offset: var(--space-xs);
-    --dropdown-min-inline: 13rem;
+    --dropdown-min-inline: 12rem;
+    --dropdown-font-size: var(--text-sm);
+    --dropdown-trigger-min-block-size: 2.25rem;
+    --dropdown-item-min-block-size: 2rem;
 
     position: relative;
     display: inline-block;
@@ -47,15 +59,16 @@
       display: inline-flex;
       align-items: center;
       gap: var(--space-sm);
-      min-block-size: 2.5rem;
-      padding-inline: var(--space-md);
-      padding-block: var(--space-sm);
+      min-block-size: var(--dropdown-trigger-min-block-size);
+      padding-inline: var(--dropdown-item-padding-inline);
+      padding-block: var(--dropdown-item-padding-block);
       color: var(--dropdown-trigger-fg);
       background-color: var(--dropdown-trigger-bg);
       border: var(--border-width) solid var(--dropdown-trigger-border);
       border-radius: var(--dropdown-trigger-radius);
       box-shadow: var(--shadow-xs);
       font: inherit;
+      font-size: var(--dropdown-font-size);
       font-weight: 500;
       line-height: var(--leading-tight);
       letter-spacing: var(--tracking-normal);
@@ -73,12 +86,21 @@
 
       &::after {
         content: "";
-        inline-size: 0.6rem;
-        block-size: 0.6rem;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
         margin-inline-start: auto;
-        border-inline-end: 2px solid currentColor;
-        border-block-end: 2px solid currentColor;
-        rotate: 45deg;
+        align-self: center;
+        flex-shrink: 0;
+        background-color: currentColor;
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4.5L6 8l4-3.5' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        mask-repeat: no-repeat;
+        mask-position: center;
+        mask-size: contain;
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4.5L6 8l4-3.5' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        -webkit-mask-size: contain;
+        rotate: 0deg;
         transition: rotate var(--duration-fast) var(--easing-default);
         flex-shrink: 0;
       }
@@ -93,11 +115,11 @@
       }
     }
 
-    &[open] > summary {
+    &:not(.submenu)[open] > summary {
       border-color: color-mix(in oklch, var(--dropdown-trigger-border) 85%, var(--focus-ring-color));
 
       &::after {
-        rotate: 225deg;
+        rotate: 180deg;
       }
     }
 
@@ -130,6 +152,62 @@
     &[open] > dropdown-panel {
       animation: dropdown-panel-in var(--duration-base) var(--easing-default);
     }
+
+    &.submenu {
+      position: relative;
+      display: block;
+      inline-size: 100%;
+
+      & > summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-md);
+        inline-size: 100%;
+        min-block-size: var(--dropdown-item-min-block-size);
+        padding-inline: var(--dropdown-item-padding-inline);
+        padding-block: var(--dropdown-item-padding-block);
+        color: inherit;
+        background: transparent;
+        border: 0;
+        border-radius: var(--dropdown-item-radius);
+        box-shadow: none;
+        font: inherit;
+        font-size: var(--dropdown-font-size);
+        font-weight: 400;
+        line-height: var(--leading-tight);
+        letter-spacing: var(--tracking-normal);
+        list-style: none;
+        text-align: start;
+
+        &::after {
+          inline-size: 0.7rem;
+          block-size: 0.7rem;
+          background-color: var(--text-muted);
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4.5 2L8 6l-3.5 4' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+          -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4.5 2L8 6l-3.5 4' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+          rotate: 0deg;
+        }
+
+        &:hover,
+        &:focus-visible {
+          color: var(--text-default);
+          background-color: var(--bg-subtle);
+          outline: none;
+        }
+      }
+
+      &[open] > summary {
+        color: var(--text-default);
+        background-color: var(--bg-subtle);
+      }
+
+      & > dropdown-panel {
+        inset-block-start: calc(var(--dropdown-panel-padding) * -1);
+        inset-inline-start: calc(100% + var(--dropdown-offset));
+        min-inline-size: var(--dropdown-min-inline);
+      }
+    }
   }
 
   details.dropdown > dropdown-panel > small {
@@ -150,7 +228,7 @@
     justify-content: space-between;
     gap: var(--space-md);
     inline-size: 100%;
-    min-block-size: 2.25rem;
+    min-block-size: var(--dropdown-item-min-block-size);
     padding-inline: var(--dropdown-item-padding-inline);
     padding-block: var(--dropdown-item-padding-block);
     color: inherit;
@@ -158,6 +236,7 @@
     border: 0;
     border-radius: var(--dropdown-item-radius);
     font: inherit;
+    font-size: var(--dropdown-font-size);
     line-height: var(--leading-tight);
     text-align: start;
     text-decoration: none;
@@ -186,6 +265,65 @@
         background-color: var(--color-danger-subtle);
       }
     }
+  }
+
+  details.dropdown > dropdown-panel > :where(button, a)[role="menuitemcheckbox"],
+  details.dropdown > dropdown-panel > :where(button, a)[role="menuitemradio"] {
+    padding-inline-start: calc(var(--dropdown-item-padding-inline) + var(--space-lg));
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset-inline-start: var(--dropdown-item-padding-inline);
+      inset-block-start: 50%;
+      inline-size: 0.875rem;
+      block-size: 0.875rem;
+      translate: 0 -50%;
+      border: var(--border-width) solid var(--border-control);
+      border-radius: var(--radius-sm);
+      background-color: transparent;
+    }
+  }
+
+  details.dropdown > dropdown-panel > :where(button, a)[role="menuitemradio"]::before {
+    border-radius: var(--radius-full);
+  }
+
+  details.dropdown > dropdown-panel > :where(button, a)[role="menuitemcheckbox"][aria-checked="true"]::before,
+  details.dropdown > dropdown-panel > :where(button, a)[role="menuitemradio"][aria-checked="true"]::before {
+    background-color: var(--color-primary-subtle);
+    border-color: var(--color-primary-muted);
+  }
+
+  details.dropdown > dropdown-panel > :where(button, a)[role="menuitemcheckbox"][aria-checked="true"]::after,
+  details.dropdown > dropdown-panel > :where(button, a)[role="menuitemradio"][aria-checked="true"]::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(var(--dropdown-item-padding-inline) + 0.1875rem);
+    inset-block-start: 50%;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    translate: 0 -50%;
+    background-color: var(--color-primary-emphasis);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+  }
+
+  details.dropdown > dropdown-panel > :where(button, a)[role="menuitemcheckbox"][aria-checked="true"]::after {
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.25L5 8.75L9.5 3.5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.25L5 8.75L9.5 3.5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  details.dropdown > dropdown-panel > :where(button, a)[role="menuitemradio"][aria-checked="true"]::after {
+    mask-image: none;
+    -webkit-mask-image: none;
+    background-color: var(--color-primary-emphasis);
+    border-radius: var(--radius-full);
   }
 
   details.dropdown > dropdown-panel > :where(button, a) kbd {

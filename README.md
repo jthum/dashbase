@@ -248,6 +248,8 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <script src="dist/behaviors/dropdown.js"></script>
 ```
 
+The dropdown behavior also supports `role="menuitemcheckbox"`, `role="menuitemradio"`, and nested `<details class="dropdown submenu">` flyouts for richer menu content.
+
 ---
 
 ## 🌐 Browser Support
