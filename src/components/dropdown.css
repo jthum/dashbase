@@ -1,0 +1,228 @@
+/*
+ * Dashbase — Dropdown
+ *
+ * Styles simple action menus using the native <details> / <summary> pattern.
+ * A tiny behavior layer adds outside-click dismissal and menu-style keyboard
+ * navigation for richer action lists.
+ *
+ * Structure:
+ *   <details class="dropdown">
+ *     <summary>Project actions</summary>
+ *     <dropdown-panel role="menu" aria-label="Project actions">
+ *       <small>Workspace</small>
+ *       <button type="button" role="menuitem">Profile <kbd>⌘P</kbd></button>
+ *       <button type="button" role="menuitem">Billing <kbd>⌘B</kbd></button>
+ *     </dropdown-panel>
+ *   </details>
+ *
+ * Variants:
+ *   .align-end — align the panel to the trigger's end edge
+ */
+
+@layer components {
+  details.dropdown {
+    --dropdown-trigger-bg: var(--bg-raised);
+    --dropdown-trigger-fg: var(--text-default);
+    --dropdown-trigger-border: var(--border-control);
+    --dropdown-trigger-radius: var(--control-radius);
+    --dropdown-panel-bg: var(--bg-raised);
+    --dropdown-panel-fg: var(--text-default);
+    --dropdown-panel-border: var(--border-default);
+    --dropdown-panel-radius: var(--radius-lg);
+    --dropdown-panel-shadow: var(--shadow-lg);
+    --dropdown-gap: var(--space-xs);
+    --dropdown-panel-padding: var(--space-xs);
+    --dropdown-item-radius: var(--radius-md);
+    --dropdown-item-padding-inline: var(--space-md);
+    --dropdown-item-padding-block: var(--space-sm);
+    --dropdown-offset: var(--space-xs);
+    --dropdown-min-inline: 13rem;
+
+    position: relative;
+    display: inline-block;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+
+    & > summary {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      min-block-size: 2.5rem;
+      padding-inline: var(--space-md);
+      padding-block: var(--space-sm);
+      color: var(--dropdown-trigger-fg);
+      background-color: var(--dropdown-trigger-bg);
+      border: var(--border-width) solid var(--dropdown-trigger-border);
+      border-radius: var(--dropdown-trigger-radius);
+      box-shadow: var(--shadow-xs);
+      font: inherit;
+      font-weight: 500;
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-normal);
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+      transition:
+        background-color var(--duration-fast) var(--easing-default),
+        border-color var(--duration-fast) var(--easing-default),
+        box-shadow var(--duration-fast) var(--easing-default);
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::after {
+        content: "";
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        margin-inline-start: auto;
+        border-inline-end: 2px solid currentColor;
+        border-block-end: 2px solid currentColor;
+        rotate: 45deg;
+        transition: rotate var(--duration-fast) var(--easing-default);
+        flex-shrink: 0;
+      }
+
+      &:hover {
+        background-color: var(--bg-subtle);
+      }
+
+      &:focus-visible {
+        outline: var(--focus-ring-width) solid var(--focus-ring-color);
+        outline-offset: 1px;
+      }
+    }
+
+    &[open] > summary {
+      border-color: color-mix(in oklch, var(--dropdown-trigger-border) 85%, var(--focus-ring-color));
+
+      &::after {
+        rotate: 225deg;
+      }
+    }
+
+    & > dropdown-panel {
+      position: absolute;
+      inset-block-start: calc(100% + var(--dropdown-offset));
+      inset-inline-start: 0;
+      z-index: var(--z-dropdown);
+      display: grid;
+      gap: var(--dropdown-gap);
+      min-inline-size: max(var(--dropdown-min-inline), 100%);
+      max-inline-size: min(20rem, calc(100vi - (var(--space-lg) * 2)));
+      padding: var(--dropdown-panel-padding);
+      color: var(--dropdown-panel-fg);
+      background-color: var(--dropdown-panel-bg);
+      border: var(--border-width) solid var(--dropdown-panel-border);
+      border-radius: var(--dropdown-panel-radius);
+      box-shadow: var(--dropdown-panel-shadow);
+    }
+
+    &:not([open]) > dropdown-panel {
+      display: none;
+    }
+
+    &.align-end > dropdown-panel {
+      inset-inline-start: auto;
+      inset-inline-end: 0;
+    }
+
+    &[open] > dropdown-panel {
+      animation: dropdown-panel-in var(--duration-base) var(--easing-default);
+    }
+  }
+
+  details.dropdown > dropdown-panel > small {
+    display: block;
+    padding-inline: var(--dropdown-item-padding-inline);
+    padding-block: var(--space-sm) var(--space-xs);
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+  }
+
+  details.dropdown > dropdown-panel > :where(button, a) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    inline-size: 100%;
+    min-block-size: 2.25rem;
+    padding-inline: var(--dropdown-item-padding-inline);
+    padding-block: var(--dropdown-item-padding-block);
+    color: inherit;
+    background: transparent;
+    border: 0;
+    border-radius: var(--dropdown-item-radius);
+    font: inherit;
+    line-height: var(--leading-tight);
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-default),
+      color var(--duration-fast) var(--easing-default);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--text-default);
+      background-color: var(--bg-subtle);
+      outline: none;
+    }
+
+    &:is([disabled], [aria-disabled="true"]) {
+      opacity: var(--disabled-opacity);
+      cursor: not-allowed;
+    }
+
+    &.danger {
+      color: var(--color-danger-emphasis);
+
+      &:hover,
+      &:focus-visible {
+        background-color: var(--color-danger-subtle);
+      }
+    }
+  }
+
+  details.dropdown > dropdown-panel > :where(button, a) kbd {
+    margin-inline-start: auto;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: var(--text-xs);
+    line-height: 1;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  details.dropdown > dropdown-panel > hr {
+    inline-size: calc(100% - (var(--space-xs) * 2));
+    margin: var(--space-xs);
+    border: 0;
+    border-block-start: var(--border-width) solid var(--dropdown-panel-border);
+  }
+
+  @keyframes dropdown-panel-in {
+    from {
+      opacity: 0;
+      translate: 0 calc(var(--space-xs) * -1);
+      scale: 0.98;
+    }
+
+    to {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+    }
+  }
+
+  @starting-style {
+    details.dropdown[open] > dropdown-panel {
+      opacity: 0;
+      translate: 0 calc(var(--space-xs) * -1);
+      scale: 0.98;
+    }
+  }
+}

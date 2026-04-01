@@ -87,6 +87,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <script src="dist/behaviors/tabs.js"></script>
 <script src="dist/behaviors/dropdown-menu.js"></script>
 <link rel="stylesheet" href="dist/components/tabs.css">
+<link rel="stylesheet" href="dist/components/dropdown.css">
 ```
 
 ### Example Usage
@@ -230,6 +231,21 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 </ui-tabs>
 
 <script src="dist/behaviors/tabs.js"></script>
+```
+
+```html
+<details class="dropdown">
+  <summary>Project actions</summary>
+  <dropdown-panel role="menu" aria-label="Project actions">
+    <small>Workspace</small>
+    <button type="button" role="menuitem">Profile <kbd>⌘P</kbd></button>
+    <button type="button" role="menuitem">Billing <kbd>⌘B</kbd></button>
+    <hr>
+    <button type="button" role="menuitem" class="danger">Delete workspace</button>
+  </dropdown-panel>
+</details>
+
+<script src="dist/behaviors/dropdown.js"></script>
 ```
 
 ---

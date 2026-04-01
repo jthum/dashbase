@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Dropdown Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/dropdown.css">
+  <link rel="stylesheet" href="../components/select.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 58rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+
+    .surface {
+      min-block-size: 14rem;
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 80%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 60%, transparent)
+      );
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Dropdown Component</h1>
+    <p>Dashbase styles simple action menus on native <code>&lt;details&gt;</code> disclosures. A small behavior shim adds outside-click dismissal plus menu-style keyboard navigation while the markup stays readable.</p>
+
+    <hr>
+
+    <section>
+      <h2>Action Menu</h2>
+
+      <div class="surface">
+        <details class="dropdown">
+          <summary>Project actions</summary>
+          <dropdown-panel role="menu" aria-label="Project actions">
+            <small>Workspace</small>
+            <button type="button" role="menuitem">Profile <kbd>⌘P</kbd></button>
+            <button type="button" role="menuitem">Billing <kbd>⌘B</kbd></button>
+            <button type="button" role="menuitem">Invite teammate</button>
+            <hr>
+            <button type="button" role="menuitem" class="danger">Delete workspace</button>
+          </dropdown-panel>
+        </details>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Aligned End</h2>
+
+      <div class="surface">
+        <div class="row" style="justify-content: flex-end;">
+          <details class="dropdown align-end">
+            <summary>More</summary>
+            <dropdown-panel role="menu" aria-label="More actions">
+              <small>Document</small>
+              <a href="#" role="menuitem">Rename <kbd>R</kbd></a>
+              <a href="#" role="menuitem">Duplicate <kbd>D</kbd></a>
+              <a href="#" role="menuitem">Move to folder</a>
+            </dropdown-panel>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../behaviors/dropdown.js"></script>
+  <script src="./theme-controls.js"></script>
+</body>
+</html>
