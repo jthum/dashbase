@@ -1,0 +1,74 @@
+/*
+ * Dashbase — Panel Anatomy
+ *
+ * Shared surface anatomy for overlay-like components such as <dialog> and
+ * <popover-panel>.
+ *
+ * Structure:
+ *   <panel-header>...</panel-header>
+ *   <panel-content>...</panel-content>
+ *   <panel-footer>...</panel-footer>
+ */
+
+@layer components {
+  :where(dialog, popover-panel[popover]) {
+    --panel-padding: var(--space-lg);
+    --panel-gap: var(--space-lg);
+    --panel-header-gap: var(--space-xs);
+    --panel-footer-gap: var(--space-sm);
+    --panel-footer-justify: flex-end;
+  }
+
+  :where(dialog, popover-panel[popover]) > :where(panel-header, panel-content, panel-footer) {
+    display: block;
+    min-inline-size: 0;
+  }
+
+  :where(dialog, popover-panel[popover]) > :where(panel-header, panel-footer):empty,
+  :where(dialog, popover-panel[popover]) > panel-content:empty {
+    display: none;
+  }
+
+  :where(dialog, popover-panel[popover]) > panel-header {
+    display: grid;
+    gap: var(--panel-header-gap);
+    margin-block-end: var(--panel-gap);
+  }
+
+  :where(dialog, popover-panel[popover]) > panel-header > :where(h1, h2, h3, h4, h5, h6, p, small),
+  :where(dialog, popover-panel[popover]) > panel-footer > :where(p, small) {
+    margin: 0;
+  }
+
+  :where(dialog, popover-panel[popover]) > panel-header > :where(h1, h2, h3, h4, h5, h6) {
+    font-size: var(--text-xl);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  :where(dialog, popover-panel[popover]) > panel-header > :where(p, small),
+  :where(dialog, popover-panel[popover]) > panel-footer > :where(p, small) {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+
+  :where(dialog, popover-panel[popover]) > panel-content {
+    display: grid;
+    gap: var(--panel-gap);
+  }
+
+  :where(dialog, popover-panel[popover]) > panel-content > * {
+    min-inline-size: 0;
+    margin: 0;
+  }
+
+  :where(dialog, popover-panel[popover]) > panel-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: var(--panel-footer-justify);
+    gap: var(--panel-footer-gap);
+    margin-block-start: var(--panel-gap);
+  }
+}

@@ -1,18 +1,15 @@
 /*
  * Dashbase — Dialog
  *
- * Styles the native <dialog> element for both modal dialogs and popover panels.
+ * Styles the native <dialog> element for modal and non-modal dialog surfaces.
  * Uses browser semantics first. A tiny behavior shim can bridge invoketarget /
  * invokeaction in browsers that do not support those commands natively.
  *
  * Structure:
  *   <dialog>
- *     <header>
- *       <h2>Title</h2>
- *       <p>Supporting copy</p>
- *     </header>
- *     <div>Content</div>
- *     <footer>Actions</footer>
+ *     <panel-header>...</panel-header>
+ *     <panel-content>...</panel-content>
+ *     <panel-footer>...</panel-footer>
  *   </dialog>
  *
  * Variants: .small, .large
@@ -28,10 +25,13 @@
     --dialog-gap: var(--space-lg);
     --dialog-width: min(32rem, calc(100vi - (var(--space-lg) * 2)));
     --dialog-shadow: var(--shadow-lg);
-    --dialog-header-gap: var(--space-xs);
-    --dialog-footer-gap: var(--space-sm);
-    --dialog-footer-justify: flex-end;
+    --dialog-offset: var(--space-xs);
     --dialog-backdrop: color-mix(in oklch, var(--text-default) 28%, transparent);
+    --panel-padding: var(--dialog-padding);
+    --panel-gap: var(--dialog-gap);
+    --panel-header-gap: var(--space-xs);
+    --panel-footer-gap: var(--space-sm);
+    --panel-footer-justify: flex-end;
 
     inline-size: var(--dialog-width);
     max-inline-size: calc(100vi - (var(--space-lg) * 2));
@@ -45,50 +45,15 @@
     box-shadow: var(--dialog-shadow);
     overflow: auto;
 
-    & > :where(header, footer, form, section, div) {
+    & > :where(panel-header, panel-content, panel-footer, form, section, div) {
       min-inline-size: 0;
     }
 
-    & > :where(header, footer):empty {
-      display: none;
-    }
-
-    & > header {
-      display: grid;
-      gap: var(--dialog-header-gap);
-      margin-block-end: var(--dialog-gap);
-    }
-
-    & > header > :where(h1, h2, h3, h4, h5, h6, p, small) {
+    & > :where(p, ul, ol, dl, form, section, div):not(panel-header):not(panel-content):not(panel-footer) {
       margin: 0;
     }
 
-    & > header > :where(h1, h2, h3, h4, h5, h6) {
-      font-size: var(--text-xl);
-      line-height: var(--leading-tight);
-      letter-spacing: var(--tracking-tight);
-    }
-
-    & > header > :where(p, small) {
-      color: var(--text-muted);
-      font-size: var(--text-sm);
-      line-height: var(--leading-normal);
-    }
-
-    & > :where(p, ul, ol, dl, form, section, div):not(header):not(footer) {
-      margin: 0;
-    }
-
-    & > :where(p, ul, ol, dl, form, section, div):not(header):not(footer) + :where(p, ul, ol, dl, form, section, div):not(header):not(footer) {
-      margin-block-start: var(--dialog-gap);
-    }
-
-    & > footer {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: var(--dialog-footer-justify);
-      align-items: center;
-      gap: var(--dialog-footer-gap);
+    & > :where(p, ul, ol, dl, form, section, div):not(panel-header):not(panel-content):not(panel-footer) + :where(p, ul, ol, dl, form, section, div):not(panel-header):not(panel-content):not(panel-footer) {
       margin-block-start: var(--dialog-gap);
     }
 
@@ -99,11 +64,37 @@
 
     &[popover] {
       position: fixed;
-      inset-block-start: var(--dialog-inset-block-start, var(--space-lg));
-      inset-inline-end: var(--dialog-inset-inline-end, var(--space-lg));
-      inset-block-end: auto;
-      inset-inline-start: auto;
+      inset: auto;
       margin: 0;
+    }
+
+    @supports (inset-block-start: anchor(bottom)) {
+      &[popover] {
+        inset-block-start: calc(anchor(bottom) + var(--dialog-offset));
+        inset-inline-start: anchor(left);
+      }
+
+      &[popover].align-end {
+        inset-inline-start: auto;
+        inset-inline-end: anchor(right);
+      }
+
+      &[popover].above {
+        inset-block-start: auto;
+        inset-block-end: calc(anchor(top) + var(--dialog-offset));
+      }
+    }
+
+    @supports not (inset-block-start: anchor(bottom)) {
+      &[popover] {
+        inset-block-start: var(--space-lg);
+        inset-inline-start: var(--space-lg);
+      }
+
+      &[popover].align-end {
+        inset-inline-start: auto;
+        inset-inline-end: var(--space-lg);
+      }
     }
 
     &:is([open], :popover-open) {

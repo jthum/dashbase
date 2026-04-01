@@ -6,6 +6,7 @@
   <title>Dashbase — Dialog Component</title>
   <link rel="stylesheet" href="../baseline/baseline.css">
   <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/panel.css">
   <link rel="stylesheet" href="../components/dialog.css">
   <link rel="stylesheet" href="../components/button.css">
   <link rel="stylesheet" href="../components/input.css">
@@ -31,11 +32,6 @@
       align-items: center;
     }
 
-    .stack {
-      display: grid;
-      gap: var(--space-md);
-    }
-
     hr {
       border: none;
       border-top: var(--border-width) solid var(--border-default);
@@ -46,25 +42,25 @@
 <body>
   <main>
     <h1>Dialog Component</h1>
-    <p>Dashbase styles the native <code>&lt;dialog&gt;</code> element directly. Use modal dialogs when blocking confirmation is needed, and popover dialogs for lightweight settings panels or utility surfaces. Width can be tuned with <code>.small</code> and <code>.large</code>.</p>
+    <p>Dashbase styles the native <code>&lt;dialog&gt;</code> element directly. Use dialogs when the surface is semantically a dialog, and reuse the shared panel anatomy for titles, content, and actions. Width can be tuned with <code>.small</code> and <code>.large</code>.</p>
 
     <hr>
 
     <section>
-      <h2>Popover Panel</h2>
-      <p>This uses the Popover API on a <code>&lt;dialog&gt;</code> element with no extra JavaScript required.</p>
+      <h2>Non-Modal Dialog</h2>
+      <p>This uses native <code>show()</code> behavior. The example trigger stays declarative via <code>invoketarget</code> and the tiny Dashbase dialog shim.</p>
 
       <div class="row">
-        <button popovertarget="settings-panel">Open settings panel</button>
+        <button invoketarget="settings-panel" invokeaction="show">Open settings dialog</button>
       </div>
 
-      <dialog id="settings-panel" popover class="small">
-        <header>
+      <dialog id="settings-panel" class="small">
+        <panel-header>
           <h2>Workspace Settings</h2>
           <p>Quick preferences that do not need a blocking modal.</p>
-        </header>
+        </panel-header>
 
-        <form class="stack">
+        <panel-content>
           <form-field>
             <label for="timezone">Timezone</label>
             <select id="timezone">
@@ -78,12 +74,12 @@
             <label for="name">Workspace Name</label>
             <input id="name" type="text" value="Dashbase" />
           </form-field>
-        </form>
+        </panel-content>
 
-        <footer>
-          <button popovertarget="settings-panel" popovertargetaction="hide" class="ghost">Close</button>
+        <panel-footer>
+          <button invoketarget="settings-panel" invokeaction="close" class="ghost">Close</button>
           <button class="primary">Save changes</button>
-        </footer>
+        </panel-footer>
       </dialog>
     </section>
 
@@ -98,20 +94,20 @@
       </div>
 
       <dialog id="confirm-delete" class="large">
-        <header>
+        <panel-header>
           <h2>Delete project?</h2>
           <p>This action is permanent. Existing deployments, tokens, and logs cannot be recovered once the project is removed.</p>
-        </header>
+        </panel-header>
 
-        <div class="stack">
+        <panel-content>
           <p><strong>Project:</strong> Dashbase</p>
           <p><strong>Owner:</strong> Jayadeep Thum</p>
-        </div>
+        </panel-content>
 
-        <footer>
+        <panel-footer>
           <button invoketarget="confirm-delete" invokeaction="close" class="ghost">Cancel</button>
           <button class="danger">Delete permanently</button>
-        </footer>
+        </panel-footer>
       </dialog>
     </section>
   </main>

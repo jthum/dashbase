@@ -6,6 +6,7 @@
   <title>Dashbase — Popover Component</title>
   <link rel="stylesheet" href="../baseline/baseline.css">
   <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/panel.css">
   <link rel="stylesheet" href="../components/popover.css">
   <link rel="stylesheet" href="../components/button.css">
   <link rel="stylesheet" href="../components/input.css">
@@ -26,29 +27,25 @@
       align-items: center;
     }
 
-    .stack {
-      display: grid;
-      gap: var(--space-md);
-    }
   </style>
 </head>
 <body>
   <main>
     <h1>Popover Component</h1>
-    <p>Dashbase styles Popover API surfaces on non-dialog elements. This is best for lightweight, non-blocking utility panels. Placement is viewport-based for now; anchored trigger placement can be revisited when anchor positioning is a safer baseline.</p>
+    <p>Dashbase uses <code>&lt;popover-panel popover&gt;</code> for anchored, non-dialog utility surfaces. These panels share anatomy with dialogs while the browser handles the overlay mechanics.</p>
 
     <div class="actions">
-      <button popovertarget="filters-popover">Open filters</button>
-      <button popovertarget="shortcut-popover">Open shortcuts</button>
+      <button popovertarget="filters-panel" aria-expanded="false">Open filters</button>
+      <button popovertarget="account-panel" popovertargetaction="toggle" aria-expanded="false" class="ghost">Account summary</button>
     </div>
 
-    <section id="filters-popover" popover class="top-right wide">
-      <header>
+    <popover-panel id="filters-panel" popover="auto" class="wide">
+      <panel-header>
         <h2>Quick filters</h2>
         <p>Temporary controls that should not block the rest of the page.</p>
-      </header>
+      </panel-header>
 
-      <div class="stack">
+      <panel-content>
         <form-field>
           <label for="owner-filter">Owner</label>
           <input id="owner-filter" type="text" placeholder="Search by owner" />
@@ -58,32 +55,33 @@
           <label for="status-filter">Status</label>
           <input id="status-filter" type="text" placeholder="Active, paused, archived" />
         </form-field>
-      </div>
+      </panel-content>
 
-      <footer>
-        <button popovertarget="filters-popover" popovertargetaction="hide" class="ghost">Close</button>
+      <panel-footer>
+        <button popovertarget="filters-panel" popovertargetaction="hide" class="ghost">Close</button>
         <button class="primary">Apply</button>
-      </footer>
-    </section>
+      </panel-footer>
+    </popover-panel>
 
-    <aside id="shortcut-popover" popover class="center">
-      <header>
-        <h2>Keyboard shortcuts</h2>
-        <p>Small reference content works well as a centered popover panel.</p>
-      </header>
+    <popover-panel id="account-panel" popover="auto" class="align-end">
+      <panel-header>
+        <h2>Account</h2>
+        <p>Signed in as jayadeep@example.com</p>
+      </panel-header>
 
-      <ul>
-        <li><strong>G then P</strong> opens the project switcher.</li>
-        <li><strong>/</strong> focuses the command search.</li>
-        <li><strong>Esc</strong> closes the current transient surface.</li>
-      </ul>
+      <panel-content>
+        <p>Current workspace: Dashbase</p>
+        <p>Two pending invites and one billing reminder need attention.</p>
+      </panel-content>
 
-      <footer>
-        <button popovertarget="shortcut-popover" popovertargetaction="hide" class="ghost">Dismiss</button>
-      </footer>
-    </aside>
+      <panel-footer>
+        <button popovertarget="account-panel" popovertargetaction="hide" class="ghost">Dismiss</button>
+        <button class="danger">Log out</button>
+      </panel-footer>
+    </popover-panel>
   </main>
 
+  <script src="../behaviors/popover.js"></script>
   <script src="./theme-controls.js"></script>
 </body>
 </html>

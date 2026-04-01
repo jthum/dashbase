@@ -77,15 +77,17 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/button.css">
 <link rel="stylesheet" href="dist/components/input.css">
 <link rel="stylesheet" href="dist/components/form-field.css">
+<link rel="stylesheet" href="dist/components/panel.css">
 <link rel="stylesheet" href="dist/components/accordion.css">
 <link rel="stylesheet" href="dist/components/card.css">
 <link rel="stylesheet" href="dist/components/tabs.css">
-<link rel="stylesheet" href="dist/components/dropdown.css">
+<link rel="stylesheet" href="dist/components/popover.css">
+<link rel="stylesheet" href="dist/components/dialog.css">
 
 <!-- Load only the behavior shims you use -->
 <script src="dist/behaviors/dialog.js"></script>
+<script src="dist/behaviors/popover.js"></script>
 <script src="dist/behaviors/tabs.js"></script>
-<script src="dist/behaviors/dropdown.js"></script>
 ```
 
 ### Example Usage
@@ -156,28 +158,29 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 ```
 
 ```html
-<details class="dropdown">
-  <summary>Project actions</summary>
-  <dropdown-panel role="menu" aria-label="Project actions">
-    <small>Workspace</small>
-    <button type="button" role="menuitem">Profile <kbd>⌘P</kbd></button>
-    <button type="button" role="menuitem">Billing <kbd>⌘B</kbd></button>
-    <details class="dropdown submenu">
-      <summary>Theme</summary>
-      <dropdown-panel role="menu" aria-label="Theme">
-        <button type="button" role="menuitemradio" name="theme" aria-checked="true">System</button>
-        <button type="button" role="menuitemradio" name="theme" aria-checked="false">Light</button>
-      </dropdown-panel>
-    </details>
-    <hr>
-    <button type="button" role="menuitem" class="danger">Delete workspace</button>
-  </dropdown-panel>
-</details>
+<button popovertarget="project-menu" aria-haspopup="menu" aria-expanded="false">
+  Project actions
+</button>
 
-<script src="dist/behaviors/dropdown.js"></script>
+<popover-panel id="project-menu" popover="auto" role="menu" aria-label="Project actions">
+  <small>Workspace</small>
+  <button type="button" role="menuitem">Profile <kbd>P</kbd></button>
+  <button type="button" role="menuitem">Billing <kbd>B</kbd></button>
+  <button type="button" role="menuitem" popovertarget="theme-menu" aria-haspopup="menu">
+    Theme
+  </button>
+  <popover-panel id="theme-menu" popover="auto" role="menu" class="submenu" aria-label="Theme">
+    <button type="button" role="menuitemradio" name="theme" aria-checked="true">System</button>
+    <button type="button" role="menuitemradio" name="theme" aria-checked="false">Light</button>
+  </popover-panel>
+  <hr>
+  <button type="button" role="menuitem" class="danger">Delete workspace</button>
+</popover-panel>
+
+<script src="dist/behaviors/popover.js"></script>
 ```
 
-The dropdown behavior also supports `role="menuitemcheckbox"`, `role="menuitemradio"`, and nested `<details class="dropdown submenu">` flyouts for richer menu content.
+Menus and utility popovers share the same `popover-panel` primitive. Add `role="menu"` only when the content truly behaves like a menu.
 
 ---
 

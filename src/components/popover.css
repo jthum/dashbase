@@ -1,44 +1,59 @@
 /*
- * Dashbase — Popover
+ * Dashbase — Popover Panel
  *
- * Styles non-modal popover surfaces that use the Popover API on regular
- * elements such as <section>, <aside>, or <menu>.
+ * Styles anchored utility surfaces and action menus using the Popover API and
+ * CSS Anchor Positioning.
  *
  * Structure:
- *   <button popovertarget="filters">Filters</button>
- *   <section id="filters" popover>...</section>
+ *   <button popovertarget="filters-panel">Filters</button>
+ *   <popover-panel id="filters-panel" popover>
+ *     <panel-header>...</panel-header>
+ *     <panel-content>...</panel-content>
+ *     <panel-footer>...</panel-footer>
+ *   </popover-panel>
+ *
+ *   <button popovertarget="project-menu" aria-haspopup="menu">Actions</button>
+ *   <popover-panel id="project-menu" popover role="menu">
+ *     <button type="button" role="menuitem">Rename</button>
+ *     <button type="button" role="menuitemcheckbox" aria-checked="true">Pinned</button>
+ *   </popover-panel>
  *
  * Variants:
- *   .top-left, .top-right, .bottom-left, .center — viewport placement
- *   .wide — wider surface
+ *   .align-end — align the panel to the invoker's end edge
+ *   .above — position the panel above the invoker
+ *   .submenu — position a menu panel beside its invoker
+ *   .wide — utility panel with a wider maximum inline size
  */
 
 @layer components {
-  section[popover],
-  aside[popover],
-  div[popover],
-  menu[popover],
-  ul[popover] {
+  popover-panel[popover] {
     --popover-bg: var(--bg-raised);
     --popover-fg: var(--text-default);
     --popover-border: var(--border-default);
     --popover-radius: var(--radius-xl);
     --popover-shadow: var(--shadow-lg);
     --popover-padding: var(--space-lg);
-    --popover-width: min(22rem, calc(100vi - (var(--space-lg) * 2)));
-    --popover-inset-block-start: auto;
-    --popover-inset-block-end: var(--space-lg);
-    --popover-inset-inline-start: auto;
-    --popover-inset-inline-end: var(--space-lg);
+    --popover-offset: var(--space-xs);
+    --popover-min-inline: 16rem;
+    --popover-max-inline: min(24rem, calc(100vi - (var(--space-lg) * 2)));
+    --popover-inset-block-start: var(--space-lg);
+    --popover-inset-block-end: auto;
+    --popover-inset-inline-start: var(--space-lg);
+    --popover-inset-inline-end: auto;
+    --panel-padding: var(--popover-padding);
+    --panel-gap: var(--space-lg);
+    --panel-header-gap: var(--space-xs);
+    --panel-footer-gap: var(--space-sm);
+    --panel-footer-justify: flex-end;
 
     position: fixed;
+    margin: 0;
     inset-block-start: var(--popover-inset-block-start);
     inset-block-end: var(--popover-inset-block-end);
     inset-inline-start: var(--popover-inset-inline-start);
     inset-inline-end: var(--popover-inset-inline-end);
-    margin: 0;
-    inline-size: var(--popover-width);
-    max-inline-size: calc(100vi - (var(--space-lg) * 2));
+    min-inline-size: var(--popover-min-inline);
+    max-inline-size: var(--popover-max-inline);
     max-block-size: calc(100vb - (var(--space-lg) * 2));
     padding: var(--popover-padding);
     color: var(--popover-fg);
@@ -48,68 +63,228 @@
     box-shadow: var(--popover-shadow);
     overflow: auto;
 
-    & > :where(header, footer):empty {
-      display: none;
-    }
-
-    & > header {
-      display: grid;
-      gap: var(--space-xs);
-      margin-block-end: var(--space-md);
-    }
-
-    & > header > :where(h1, h2, h3, h4, h5, h6, p, small),
-    & > footer > :where(p, small) {
-      margin: 0;
-    }
-
-    & > header > :where(p, small),
-    & > footer > :where(p, small) {
-      color: var(--text-muted);
-      font-size: var(--text-sm);
-    }
-
-    & > footer {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-end;
-      gap: var(--space-sm);
-      margin-block-start: var(--space-lg);
-    }
-
-    &:popover-open {
-      animation: popover-in var(--duration-base) var(--easing-default);
-    }
-
     &.wide {
-      --popover-width: min(32rem, calc(100vi - (var(--space-lg) * 2)));
+      --popover-max-inline: min(32rem, calc(100vi - (var(--space-lg) * 2)));
     }
 
-    &.top-left {
-      --popover-inset-block-start: var(--space-lg);
+    &.align-end {
+      --popover-inset-inline-start: auto;
+      --popover-inset-inline-end: var(--space-lg);
+    }
+
+    &.above {
+      --popover-inset-block-start: auto;
+      --popover-inset-block-end: var(--space-lg);
+    }
+
+    &.submenu {
+      --popover-inset-inline-start: auto;
+      --popover-inset-inline-end: var(--space-lg);
+    }
+  }
+
+  popover-panel[popover]:popover-open {
+    animation: popover-in var(--duration-base) var(--easing-default);
+  }
+
+  popover-panel[popover]::backdrop {
+    background: transparent;
+  }
+
+  @supports (inset-block-start: anchor(bottom)) {
+    popover-panel[popover] {
+      --popover-inset-block-start: calc(anchor(bottom) + var(--popover-offset));
       --popover-inset-block-end: auto;
-      --popover-inset-inline-start: var(--space-lg);
+      --popover-inset-inline-start: anchor(left);
       --popover-inset-inline-end: auto;
-    }
+      min-inline-size: max(var(--popover-min-inline), anchor-size(width));
 
-    &.top-right {
-      --popover-inset-block-start: var(--space-lg);
-      --popover-inset-block-end: auto;
-    }
+      &.align-end {
+        --popover-inset-inline-start: auto;
+        --popover-inset-inline-end: anchor(right);
+      }
 
-    &.bottom-left {
-      --popover-inset-inline-start: var(--space-lg);
-      --popover-inset-inline-end: auto;
-    }
+      &.above {
+        --popover-inset-block-start: auto;
+        --popover-inset-block-end: calc(anchor(top) + var(--popover-offset));
+      }
 
-    &.center {
-      inset-block-start: 50%;
-      inset-block-end: auto;
-      inset-inline-start: 50%;
-      inset-inline-end: auto;
-      translate: -50% -50%;
+      &.submenu {
+        --popover-inset-block-start: anchor(top);
+        --popover-inset-block-end: auto;
+        --popover-inset-inline-start: calc(anchor(right) + var(--popover-offset));
+        --popover-inset-inline-end: auto;
+      }
     }
+  }
+
+  @supports not (inset-block-start: anchor(bottom)) {
+    popover-panel[popover] {
+      min-inline-size: var(--popover-min-inline);
+    }
+  }
+
+  popover-panel[popover][role="menu"] {
+    --popover-radius: var(--radius-lg);
+    --popover-padding: var(--space-xs);
+    --popover-min-inline: 12rem;
+    --popover-max-inline: min(20rem, calc(100vi - (var(--space-lg) * 2)));
+    --panel-gap: var(--space-sm);
+  }
+
+  popover-panel[popover][role="menu"] > small {
+    display: block;
+    padding-inline: var(--space-sm);
+    padding-block: var(--space-sm) var(--space-xs);
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+  }
+
+  popover-panel[popover][role="menu"] > hr {
+    inline-size: calc(100% - (var(--space-xs) * 2));
+    margin: var(--space-xs);
+    border: 0;
+    border-block-start: var(--border-width) solid var(--popover-border);
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a) {
+    --menu-item-radius: var(--radius-md);
+    --menu-item-padding-inline: var(--space-sm);
+    --menu-item-padding-block: var(--space-xs);
+    --menu-item-min-block-size: 2rem;
+    --menu-item-font-size: var(--text-sm);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    inline-size: 100%;
+    min-block-size: var(--menu-item-min-block-size);
+    padding-inline: var(--menu-item-padding-inline);
+    padding-block: var(--menu-item-padding-block);
+    color: inherit;
+    background: transparent;
+    border: 0;
+    border-radius: var(--menu-item-radius);
+    font: inherit;
+    font-size: var(--menu-item-font-size);
+    line-height: var(--leading-tight);
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-default),
+      color var(--duration-fast) var(--easing-default);
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a):hover,
+  popover-panel[popover][role="menu"] > :where(button, a):focus-visible {
+    color: var(--text-default);
+    background-color: var(--bg-subtle);
+    outline: none;
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a):is([disabled], [aria-disabled="true"]) {
+    opacity: var(--disabled-opacity);
+    cursor: not-allowed;
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a).danger {
+    color: var(--color-danger-emphasis);
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a).danger:hover,
+  popover-panel[popover][role="menu"] > :where(button, a).danger:focus-visible {
+    background-color: var(--color-danger-subtle);
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a)[aria-haspopup="menu"]::after {
+    content: "";
+    inline-size: 0.7rem;
+    block-size: 0.7rem;
+    margin-inline-start: auto;
+    flex-shrink: 0;
+    background-color: var(--text-muted);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4.5 2L8 6l-3.5 4' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4.5 2L8 6l-3.5 4' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a)[role="menuitemcheckbox"],
+  popover-panel[popover][role="menu"] > :where(button, a)[role="menuitemradio"] {
+    padding-inline-start: calc(var(--space-sm) + var(--space-lg));
+    position: relative;
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a)[role="menuitemcheckbox"]::before,
+  popover-panel[popover][role="menu"] > :where(button, a)[role="menuitemradio"]::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: var(--space-sm);
+    inset-block-start: 50%;
+    inline-size: 0.875rem;
+    block-size: 0.875rem;
+    translate: 0 -50%;
+    border: var(--border-width) solid var(--border-control);
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a)[role="menuitemradio"]::before {
+    border-radius: var(--radius-full);
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a)[role="menuitemcheckbox"][aria-checked="true"]::before,
+  popover-panel[popover][role="menu"] > :where(button, a)[role="menuitemradio"][aria-checked="true"]::before {
+    background-color: var(--color-primary-subtle);
+    border-color: var(--color-primary-muted);
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a)[role="menuitemcheckbox"][aria-checked="true"]::after,
+  popover-panel[popover][role="menu"] > :where(button, a)[role="menuitemradio"][aria-checked="true"]::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(var(--space-sm) + 0.1875rem);
+    inset-block-start: 50%;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    translate: 0 -50%;
+    background-color: var(--color-primary-emphasis);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a)[role="menuitemcheckbox"][aria-checked="true"]::after {
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.25L5 8.75L9.5 3.5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.25L5 8.75L9.5 3.5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a)[role="menuitemradio"][aria-checked="true"]::after {
+    mask-image: none;
+    -webkit-mask-image: none;
+    border-radius: var(--radius-full);
+  }
+
+  popover-panel[popover][role="menu"] > :where(button, a) kbd {
+    margin-inline-start: auto;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: var(--text-xs);
+    line-height: 1;
+    letter-spacing: var(--tracking-wide);
   }
 
   @keyframes popover-in {
@@ -127,14 +302,10 @@
   }
 
   @starting-style {
-    :where(section, aside, div, menu, ul)[popover]:popover-open {
+    popover-panel[popover]:popover-open {
       opacity: 0;
       translate: 0 calc(var(--space-xs) * -1);
       scale: 0.98;
-    }
-
-    :where(section, aside, div, menu, ul)[popover].center:popover-open {
-      translate: -50% calc(-50% - var(--space-xs));
     }
   }
 }
