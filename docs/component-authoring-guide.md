@@ -173,6 +173,26 @@ Good candidates are future content-bearing composites like cards, dialogs, tabs,
 
 Do not use `@scope` as a default replacement for normal component selectors, and do not put it in Baseline.
 
+### 14. Use one overlay model
+
+Overlay-like components must follow the shared architecture:
+
+- `<dialog>` for dialog semantics
+- `<popover-panel popover>` for non-dialog anchored surfaces
+- `<popover-panel popover role="menu">` for action menus
+
+Do not create parallel dropdown, popover, and menu implementations that each solve anchoring differently.
+
+If the trigger exposes `aria-expanded`, it must be synced from actual open/close state.
+
+Prefer shared surface anatomy where needed:
+
+- `<panel-header>`
+- `<panel-content>`
+- `<panel-footer>`
+
+See `docs/dashbase-overlay-architecture.md` for the full model.
+
 ---
 
 ## Component Template
