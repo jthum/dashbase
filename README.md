@@ -86,6 +86,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <script src="dist/behaviors/tooltip.js"></script>
 <script src="dist/behaviors/tabs.js"></script>
 <script src="dist/behaviors/dropdown-menu.js"></script>
+<link rel="stylesheet" href="dist/components/tabs.css">
 ```
 
 ### Example Usage
@@ -179,6 +180,27 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 </tab-list>
 <tab-panel id="overview-panel">...</tab-panel>
 <tab-panel id="activity-panel" hidden>...</tab-panel>
+```
+
+```html
+<tab-list role="tablist" aria-label="Workspace sections">
+  <button role="tab" id="tab-account" aria-controls="panel-account" aria-selected="true">
+    Account
+  </button>
+  <button role="tab" id="tab-billing" aria-controls="panel-billing" aria-selected="false">
+    Billing
+  </button>
+</tab-list>
+
+<tab-panel id="panel-account" role="tabpanel" aria-labelledby="tab-account">
+  <p>Manage profile settings and notification preferences.</p>
+</tab-panel>
+
+<tab-panel id="panel-billing" role="tabpanel" aria-labelledby="tab-billing" hidden>
+  <p>Review invoices, seats, and payment methods.</p>
+</tab-panel>
+
+<script src="dist/behaviors/tabs.js"></script>
 ```
 
 ---

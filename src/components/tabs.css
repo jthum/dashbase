@@ -1,6 +1,169 @@
 /*
  * Dashbase — Tabs
  *
+ * Styles a lightweight tabs pattern using named structural elements plus ARIA
+ * roles. A tiny behavior shim keeps selection state, hidden panels, and
+ * keyboard navigation in sync.
+ *
+ * Structure:
+ *   <tab-list role="tablist" aria-label="Settings sections">
+ *     <button role="tab" id="tab-account" aria-controls="panel-account" aria-selected="true">
+ *       Account
+ *     </button>
+ *     <button role="tab" id="tab-billing" aria-controls="panel-billing" aria-selected="false">
+ *       Billing
+ *     </button>
+ *   </tab-list>
+ *   <tab-panel id="panel-account" role="tabpanel" aria-labelledby="tab-account">
+ *     ...
+ *   </tab-panel>
+ *   <tab-panel id="panel-billing" role="tabpanel" aria-labelledby="tab-billing" hidden>
+ *     ...
+ *   </tab-panel>
+ *
+ * Variants: none
+ */
+
+@layer components {
+  tab-list[role="tablist"] {
+    --tabs-list-bg: var(--bg-subtle);
+    --tabs-list-fg: var(--text-default);
+    --tabs-list-border: var(--border-default);
+    --tabs-trigger-fg: var(--text-muted);
+    --tabs-trigger-fg-hover: var(--text-default);
+    --tabs-trigger-bg-hover: color-mix(in oklch, var(--bg-raised) 75%, transparent);
+    --tabs-trigger-bg-active: var(--bg-raised);
+    --tabs-trigger-fg-active: var(--text-default);
+    --tabs-trigger-radius: var(--radius-md);
+    --tabs-panel-bg: var(--bg-raised);
+    --tabs-panel-border: var(--border-default);
+    --tabs-panel-shadow: var(--shadow-xs);
+    --tabs-padding: var(--space-xs);
+    --tabs-gap: var(--space-xs);
+    --tabs-panel-padding: var(--space-lg);
+
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--tabs-gap);
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    padding: var(--tabs-padding);
+    color: var(--tabs-list-fg);
+    background-color: var(--tabs-list-bg);
+    border: var(--border-width) solid var(--tabs-list-border);
+    border-radius: var(--radius-lg);
+  }
+
+  tab-list[role="tablist"][aria-orientation="vertical"] {
+    display: inline-grid;
+    justify-items: stretch;
+    align-content: start;
+  }
+
+  tab-list[role="tablist"] > [role="tab"] {
+    appearance: none;
+    min-block-size: 2.5rem;
+    padding-inline: var(--space-md);
+    padding-block: var(--space-sm);
+    color: var(--tabs-trigger-fg);
+    background-color: transparent;
+    border: 0;
+    border-radius: var(--tabs-trigger-radius);
+    font: inherit;
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-normal);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-default),
+      color var(--duration-fast) var(--easing-default),
+      box-shadow var(--duration-fast) var(--easing-default);
+
+    &:hover {
+      color: var(--tabs-trigger-fg-hover);
+      background-color: var(--tabs-trigger-bg-hover);
+    }
+
+    &:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: 1px;
+    }
+
+    &[aria-selected="true"] {
+      color: var(--tabs-trigger-fg-active);
+      background-color: var(--tabs-trigger-bg-active);
+      box-shadow: var(--shadow-xs);
+    }
+
+    &:is([disabled], [aria-disabled="true"]) {
+      cursor: not-allowed;
+      opacity: var(--disabled-opacity);
+    }
+  }
+
+  tab-list[role="tablist"][aria-orientation="vertical"] > [role="tab"] {
+    justify-self: stretch;
+    text-align: start;
+  }
+
+  tab-panel[role="tabpanel"] {
+    display: block;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    margin: 0;
+    margin-block-start: var(--space-lg);
+    padding: var(--tabs-panel-padding);
+    color: var(--text-default);
+    background-color: var(--tabs-panel-bg);
+    border: var(--border-width) solid var(--tabs-panel-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--tabs-panel-shadow);
+
+    &:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: 2px;
+    }
+
+    & > :first-child {
+      margin-block-start: 0;
+    }
+
+    & > :last-child {
+      margin-block-end: 0;
+    }
+
+    &:not([hidden]) {
+      animation: tabs-panel-in var(--duration-base) var(--easing-default);
+    }
+  }
+
+  tab-panel[role="tabpanel"][hidden] {
+    display: none;
+  }
+
+  @keyframes tabs-panel-in {
+    from {
+      opacity: 0;
+      translate: 0 calc(var(--space-xs) * -1);
+    }
+
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @starting-style {
+    tab-panel[role="tabpanel"]:not([hidden]) {
+      opacity: 0;
+      translate: 0 calc(var(--space-xs) * -1);
+    }
+  }
+}
+/*
+ * Dashbase — Tabs
+ *
  * Styles the semantic <tab-list> / <tab-panel> pattern. The small behavior shim
  * manages selected state, roving focus, and panel visibility.
  *
