@@ -1,0 +1,95 @@
+/*
+ * Dashbase — Scroll Area
+ *
+ * Provides a framed overflow region with native scrolling and optional padded
+ * content anatomy.
+ *
+ * Structure:
+ *   <scroll-area style="block-size: 18rem;">
+ *     <scroll-content>...</scroll-content>
+ *   </scroll-area>
+ *
+ * Variants:
+ *   .compact — denser interior spacing
+ *   .bare — remove the default frame and background
+ */
+
+@layer components {
+  scroll-area {
+    --scroll-area-bg: var(--bg-raised);
+    --scroll-area-fg: var(--text-default);
+    --scroll-area-border: var(--border-default);
+    --scroll-area-radius: var(--radius-xl);
+    --scroll-area-shadow: var(--shadow-xs);
+    --scroll-area-padding: var(--space-lg);
+    --scroll-area-gap: var(--space-lg);
+    --scroll-area-thumb: color-mix(in oklch, var(--border-control) 82%, transparent);
+    --scroll-area-thumb-hover: var(--border-control);
+    --scroll-area-track: color-mix(in oklch, var(--bg-subtle) 72%, transparent);
+    --scroll-area-scrollbar-size: 0.75rem;
+
+    display: block;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    color: var(--scroll-area-fg);
+    background-color: var(--scroll-area-bg);
+    border: var(--border-width) solid var(--scroll-area-border);
+    border-radius: var(--scroll-area-radius);
+    box-shadow: var(--scroll-area-shadow);
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-area-thumb) var(--scroll-area-track);
+
+    &.compact {
+      --scroll-area-padding: var(--space-md);
+      --scroll-area-gap: var(--space-md);
+    }
+
+    &.bare {
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
+    &::-webkit-scrollbar {
+      inline-size: var(--scroll-area-scrollbar-size);
+      block-size: var(--scroll-area-scrollbar-size);
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: var(--scroll-area-track);
+      border-radius: var(--radius-full);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--scroll-area-thumb);
+      border: 2px solid transparent;
+      border-radius: var(--radius-full);
+      background-clip: padding-box;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: var(--scroll-area-thumb-hover);
+    }
+
+    & > scroll-content {
+      display: grid;
+      gap: var(--scroll-area-gap);
+      min-inline-size: 100%;
+      padding: var(--scroll-area-padding);
+    }
+
+    & > scroll-content > * {
+      min-inline-size: 0;
+      margin: 0;
+    }
+
+    & > table {
+      inline-size: max-content;
+      min-inline-size: 100%;
+    }
+  }
+}

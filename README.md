@@ -85,6 +85,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/dialog.css">
 <link rel="stylesheet" href="dist/components/menubar.css">
 <link rel="stylesheet" href="dist/components/navigation-menu.css">
+<link rel="stylesheet" href="dist/components/scroll-area.css">
 
 <!-- Load only the behavior shims you use -->
 <script src="dist/behaviors/dialog.js"></script>
@@ -249,6 +250,22 @@ Menus and utility popovers share the same `popover-panel` primitive. Add `role="
 
 <script src="dist/behaviors/popover.js"></script>
 <script src="dist/behaviors/navigation-menu.js"></script>
+```
+
+```html
+<scroll-area style="block-size: 18rem;">
+  <scroll-content>
+    <article>
+      <strong>Release candidate approved</strong>
+      <p>Rina signed off on the final QA checklist.</p>
+    </article>
+
+    <article>
+      <strong>Navigation experiment published</strong>
+      <p>The new product navigation panel is now available on staging.</p>
+    </article>
+  </scroll-content>
+</scroll-area>
 ```
 
 ---

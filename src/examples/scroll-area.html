@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Scroll Area Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/scroll-area.css">
+  <link rel="stylesheet" href="../components/table.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 68rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .stack > * {
+      margin: 0;
+    }
+
+    .event-feed {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .event-card {
+      display: grid;
+      gap: var(--space-xs);
+      padding: var(--space-md);
+      background: color-mix(in oklch, var(--bg-subtle) 60%, transparent);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-lg);
+    }
+
+    .event-card > * {
+      margin: 0;
+    }
+
+    .event-card small {
+      color: var(--text-muted);
+    }
+
+    .code-strip {
+      display: inline-flex;
+      gap: var(--space-sm);
+      min-inline-size: max-content;
+      padding: var(--space-sm);
+    }
+
+    .code-strip code {
+      padding: var(--space-sm) var(--space-md);
+      color: var(--text-default);
+      background: color-mix(in oklch, var(--bg-subtle) 60%, transparent);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-md);
+      white-space: nowrap;
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Scroll Area Component</h1>
+    <p>Dashbase uses <code>&lt;scroll-area&gt;</code> for framed overflow regions that keep the browser’s native scrolling behavior. Use optional <code>&lt;scroll-content&gt;</code> when you want consistent interior padding for richer content, or place wide elements like tables directly inside.</p>
+
+    <hr>
+
+    <section>
+      <h2>Activity Feed</h2>
+
+      <scroll-area style="block-size: 22rem;">
+        <scroll-content class="event-feed">
+          <article class="event-card">
+            <strong>Release candidate approved</strong>
+            <p>Rina signed off on the final QA checklist for the April deployment window.</p>
+            <small>12 minutes ago</small>
+          </article>
+
+          <article class="event-card">
+            <strong>Navigation experiment published</strong>
+            <p>The new product navigation panel is now available to internal testers on staging.</p>
+            <small>39 minutes ago</small>
+          </article>
+
+          <article class="event-card">
+            <strong>Billing digest delivered</strong>
+            <p>Monthly invoices and seat summaries were generated for all paid workspaces.</p>
+            <small>1 hour ago</small>
+          </article>
+
+          <article class="event-card">
+            <strong>Two-factor requirement enabled</strong>
+            <p>Security policy now requires TOTP or passkey for all staff accounts.</p>
+            <small>2 hours ago</small>
+          </article>
+
+          <article class="event-card">
+            <strong>Dataset import finished</strong>
+            <p>Customer cohort records from the March warehouse sync were indexed successfully.</p>
+            <small>3 hours ago</small>
+          </article>
+
+          <article class="event-card">
+            <strong>Prototype branch archived</strong>
+            <p>The old utility-class branch was archived after the semantic migration landed.</p>
+            <small>Yesterday</small>
+          </article>
+        </scroll-content>
+      </scroll-area>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Wide Table</h2>
+
+      <scroll-area style="block-size: 20rem;">
+        <table class="compact striped">
+          <caption>Workspace usage by team and environment</caption>
+          <thead>
+            <tr>
+              <th scope="col">Team</th>
+              <th scope="col">Environment</th>
+              <th scope="col">Requests</th>
+              <th scope="col">Errors</th>
+              <th scope="col">P95 latency</th>
+              <th scope="col">Owner</th>
+              <th scope="col">Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Growth</th>
+              <td>Production</td>
+              <td>1.2M</td>
+              <td>0.08%</td>
+              <td>238ms</td>
+              <td>Sonal</td>
+              <td>5m ago</td>
+            </tr>
+            <tr>
+              <th scope="row">Platform</th>
+              <td>Staging</td>
+              <td>184K</td>
+              <td>0.31%</td>
+              <td>411ms</td>
+              <td>Ashwin</td>
+              <td>11m ago</td>
+            </tr>
+            <tr>
+              <th scope="row">Support</th>
+              <td>Preview</td>
+              <td>52K</td>
+              <td>0.11%</td>
+              <td>295ms</td>
+              <td>Priya</td>
+              <td>18m ago</td>
+            </tr>
+            <tr>
+              <th scope="row">Security</th>
+              <td>Production</td>
+              <td>67K</td>
+              <td>0.04%</td>
+              <td>221ms</td>
+              <td>Rina</td>
+              <td>24m ago</td>
+            </tr>
+            <tr>
+              <th scope="row">Finance</th>
+              <td>Production</td>
+              <td>29K</td>
+              <td>0.02%</td>
+              <td>264ms</td>
+              <td>Vikram</td>
+              <td>31m ago</td>
+            </tr>
+          </tbody>
+        </table>
+      </scroll-area>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Compact Horizontal Overflow</h2>
+
+      <scroll-area class="compact" style="inline-size: 100%; white-space: nowrap;">
+        <div class="code-strip">
+          <code>dist/baseline.css</code>
+          <code>dist/components/popover.css</code>
+          <code>dist/components/navigation-menu.css</code>
+          <code>dist/behaviors/popover.js</code>
+          <code>dist/behaviors/navigation-menu.js</code>
+          <code>dist/dashbase.css</code>
+          <code>docs/dashbase-overlay-architecture.md</code>
+        </div>
+      </scroll-area>
+    </section>
+  </main>
+
+  <script src="./theme-controls.js"></script>
+</body>
+</html>
