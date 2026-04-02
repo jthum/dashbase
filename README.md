@@ -87,6 +87,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/navigation-menu.css">
 <link rel="stylesheet" href="dist/components/scroll-area.css">
 <link rel="stylesheet" href="dist/components/resizable.css">
+<link rel="stylesheet" href="dist/components/toast.css">
 
 <!-- Load only the behavior shims you use -->
 <script src="dist/behaviors/dialog.js"></script>
@@ -95,6 +96,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <script src="dist/behaviors/popover.js"></script>
 <script src="dist/behaviors/resizable.js"></script>
 <script src="dist/behaviors/tabs.js"></script>
+<script src="dist/behaviors/toast.js"></script>
 ```
 
 ### Example Usage
@@ -287,6 +289,21 @@ Menus and utility popovers share the same `popover-panel` primitive. Add `role="
 ```
 
 Vertical groups resize along the block axis, so they need a definite block size such as `style="block-size: 32rem;"` or a parent layout that already constrains height.
+
+```html
+<toast-region id="notifications" class="top-right grouped" aria-label="Notifications"></toast-region>
+
+<script>
+  window.DashbaseToast.show({
+    region: "notifications",
+    title: "Changes published",
+    description: "Workspace settings were updated successfully.",
+    variant: "success",
+  });
+</script>
+```
+
+Use `.grouped` on the region when you want the stacked-on-hover presentation; omit it for the simpler always-expanded list.
 
 ---
 

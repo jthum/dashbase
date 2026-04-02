@@ -1,0 +1,284 @@
+/*
+ * Dashbase — Toast
+ *
+ * Provides ephemeral notification surfaces with an optional grouped stack mode.
+ *
+ * Structure:
+ *   <toast-region class="top-right grouped" aria-label="Notifications"></toast-region>
+ *
+ *   <ui-toast class="success" data-duration="5000">
+ *     <toast-content>
+ *       <strong>Changes published</strong>
+ *       <p>Workspace settings were updated.</p>
+ *     </toast-content>
+ *     <toast-actions>
+ *       <button type="button" data-toast-dismiss aria-label="Dismiss notification">×</button>
+ *     </toast-actions>
+ *   </ui-toast>
+ *
+ * Variants:
+ *   toast-region: .top-right, .top-left, .top-center, .bottom-right, .bottom-left, .bottom-center, .grouped
+ *   ui-toast: .primary, .success, .warning, .danger, .outline
+ */
+
+@layer components {
+  toast-region {
+    --toast-width: min(24rem, calc(100vi - (var(--space-lg) * 2)));
+    --toast-gap: var(--space-sm);
+    --toast-stack-overlap: 4rem;
+    --toast-inset: var(--space-lg);
+
+    position: fixed;
+    z-index: var(--z-toast);
+    display: grid;
+    gap: var(--toast-gap);
+    inline-size: var(--toast-width);
+    max-inline-size: 100%;
+    pointer-events: none;
+
+    &:not(.top-left):not(.top-center):not(.bottom-left):not(.bottom-center):not(.bottom-right) {
+      inset-block-start: var(--toast-inset);
+      inset-inline-end: var(--toast-inset);
+    }
+
+    &.top-right {
+      inset-block-start: var(--toast-inset);
+      inset-inline-end: var(--toast-inset);
+    }
+
+    &.top-left {
+      inset-block-start: var(--toast-inset);
+      inset-inline-start: var(--toast-inset);
+    }
+
+    &.top-center {
+      inset-block-start: var(--toast-inset);
+      inset-inline-start: 50%;
+      translate: -50% 0;
+    }
+
+    &.bottom-right {
+      inset-block-end: var(--toast-inset);
+      inset-inline-end: var(--toast-inset);
+    }
+
+    &.bottom-left {
+      inset-block-end: var(--toast-inset);
+      inset-inline-start: var(--toast-inset);
+    }
+
+    &.bottom-center {
+      inset-block-end: var(--toast-inset);
+      inset-inline-start: 50%;
+      translate: -50% 0;
+    }
+
+    &.grouped {
+      --toast-stack-overlap: 4rem;
+    }
+  }
+
+  toast-region > ui-toast {
+    --toast-bg: var(--bg-raised);
+    --toast-fg: var(--text-default);
+    --toast-border: var(--border-default);
+    --toast-shadow: var(--shadow-lg);
+    --toast-radius: var(--radius-xl);
+    --toast-padding-inline: var(--space-lg);
+    --toast-padding-block: var(--space-md);
+    --toast-content-gap: var(--space-xs);
+    --toast-actions-gap: var(--space-xs);
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--space-md);
+    inline-size: 100%;
+    min-inline-size: 0;
+    padding-inline: var(--toast-padding-inline);
+    padding-block: var(--toast-padding-block);
+    color: var(--toast-fg);
+    background-color: var(--toast-bg);
+    border: var(--border-width) solid var(--toast-border);
+    border-radius: var(--toast-radius);
+    box-shadow: var(--toast-shadow);
+    pointer-events: auto;
+    transition:
+      transform var(--duration-base) var(--easing-default),
+      opacity var(--duration-base) var(--easing-default),
+      scale var(--duration-base) var(--easing-default);
+
+    &[data-state="open"] {
+      animation: toast-in var(--duration-base) var(--easing-default);
+    }
+
+    &[data-state="closing"] {
+      animation: toast-out var(--duration-fast) var(--easing-default) forwards;
+      pointer-events: none;
+    }
+
+    &.primary {
+      --toast-bg: var(--color-primary-subtle);
+      --toast-fg: var(--color-primary-emphasis);
+      --toast-border: var(--color-primary-muted);
+    }
+
+    &.success {
+      --toast-bg: var(--color-success-subtle);
+      --toast-fg: var(--color-success-emphasis);
+      --toast-border: var(--color-success-muted);
+    }
+
+    &.warning {
+      --toast-bg: var(--color-warning-subtle);
+      --toast-fg: var(--color-warning-emphasis);
+      --toast-border: var(--color-warning-muted);
+    }
+
+    &.danger {
+      --toast-bg: var(--color-danger-subtle);
+      --toast-fg: var(--color-danger-emphasis);
+      --toast-border: var(--color-danger-muted);
+    }
+
+    &.outline {
+      --toast-bg: var(--bg-raised);
+      --toast-fg: var(--text-default);
+      --toast-border: var(--border-default);
+    }
+  }
+
+  toast-content {
+    display: grid;
+    gap: var(--toast-content-gap);
+    min-inline-size: 0;
+  }
+
+  toast-content > :where(strong, p, small) {
+    margin: 0;
+  }
+
+  toast-content > strong {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+  }
+
+  toast-content > p,
+  toast-content > small {
+    color: color-mix(in oklch, currentColor 78%, var(--text-muted));
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+
+  toast-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--toast-actions-gap);
+    min-inline-size: fit-content;
+  }
+
+  toast-actions > :where(button, a) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 2rem;
+    padding-inline: var(--space-sm);
+    padding-block: calc(var(--space-xs) - 1px);
+    color: inherit;
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-md);
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-default),
+      color var(--duration-fast) var(--easing-default);
+  }
+
+  toast-actions > :where(button, a):hover,
+  toast-actions > :where(button, a):focus-visible {
+    background-color: color-mix(in oklch, currentColor 10%, transparent);
+    outline: none;
+  }
+
+  toast-actions > :where(button, a)[data-toast-dismiss] {
+    inline-size: 2rem;
+    padding: 0;
+    font-size: var(--text-lg);
+    line-height: 1;
+  }
+
+  toast-region.grouped:not(:hover):not(:focus-within) > ui-toast {
+    transform-origin: top center;
+  }
+
+  toast-region.grouped:not(:hover):not(:focus-within) > ui-toast:nth-child(1) {
+    z-index: 4;
+  }
+
+  toast-region.grouped:not(:hover):not(:focus-within) > ui-toast:nth-child(2) {
+    margin-block-start: calc(var(--toast-stack-overlap) * -1);
+    translate: 0 0.4rem;
+    scale: 0.985;
+    opacity: 0.96;
+    z-index: 3;
+  }
+
+  toast-region.grouped:not(:hover):not(:focus-within) > ui-toast:nth-child(3) {
+    margin-block-start: calc(var(--toast-stack-overlap) * -1);
+    translate: 0 0.8rem;
+    scale: 0.97;
+    opacity: 0.9;
+    z-index: 2;
+  }
+
+  toast-region.grouped:not(:hover):not(:focus-within) > ui-toast:nth-child(n + 4) {
+    margin-block-start: calc(var(--toast-stack-overlap) * -1);
+    translate: 0 1rem;
+    scale: 0.955;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      translate: 0 calc(var(--space-sm) * -1);
+      scale: 0.985;
+    }
+
+    to {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+    }
+  }
+
+  @keyframes toast-out {
+    from {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+    }
+
+    to {
+      opacity: 0;
+      translate: 0 calc(var(--space-sm) * -1);
+      scale: 0.975;
+    }
+  }
+
+  @starting-style {
+    toast-region > ui-toast[data-state="open"] {
+      opacity: 0;
+      translate: 0 calc(var(--space-sm) * -1);
+      scale: 0.985;
+    }
+  }
+}
