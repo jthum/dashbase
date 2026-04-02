@@ -4,7 +4,7 @@
  * Enhances <carousel> roots with:
  * - previous / next button controls
  * - authored dot navigation
- * - active slide and control-state sync via IntersectionObserver
+ * - active snap-position and control-state sync
  */
 
 const CAROUSEL_ROOT_SELECTOR = "carousel";
@@ -27,7 +27,7 @@ function getCarouselParts(root) {
     return null;
   }
 
-  const dots = root.querySelector(":scope > carousel-dots");
+  const dots = root.querySelector(":scope > carousel-controls > carousel-dots");
   const dotButtons = dots instanceof HTMLElement
     ? [...dots.querySelectorAll(":scope > button")].filter((button) => button instanceof HTMLButtonElement)
     : [];
@@ -43,17 +43,76 @@ function getCarouselParts(root) {
 
 function getCarouselAxis(root) {
   return root.classList.contains("vertical")
-    ? { delta: "top", scroll: "scrollTop" }
-    : { delta: "left", scroll: "scrollLeft" };
+    ? {
+      delta: "top",
+      scroll: "scrollTop",
+      scrollSize: "scrollHeight",
+      clientSize: "clientHeight",
+    }
+    : {
+      delta: "left",
+      scroll: "scrollLeft",
+      scrollSize: "scrollWidth",
+      clientSize: "clientWidth",
+    };
 }
 
-function syncCarousel(parts, activeIndex) {
+function getSnapState(root, parts) {
+  const axis = getCarouselAxis(root);
+  const currentOffset = parts.track[axis.scroll];
+  const trackRect = parts.track.getBoundingClientRect();
+  const maxScroll = Math.max(0, parts.track[axis.scrollSize] - parts.track[axis.clientSize]);
+  const rawPositions = parts.slides.map((slide, index) => {
+    const slideRect = slide.getBoundingClientRect();
+    const rawPosition = currentOffset + (slideRect[axis.delta] - trackRect[axis.delta]);
+    return {
+      position: Math.min(maxScroll, Math.max(0, rawPosition)),
+      slideIndex: index,
+    };
+  });
+
+  const snapPoints = [];
+  for (const point of rawPositions) {
+    const previous = snapPoints[snapPoints.length - 1];
+    if (!previous || Math.abs(previous.position - point.position) > 1) {
+      snapPoints.push(point);
+    }
+  }
+
+  return {
+    axis,
+    snapPoints,
+  };
+}
+
+function getNearestSnapIndex(track, snapState) {
+  const currentOffset = track[snapState.axis.scroll];
+  let nearestIndex = 0;
+  let nearestDistance = Number.POSITIVE_INFINITY;
+
+  snapState.snapPoints.forEach((point, index) => {
+    const distance = Math.abs(point.position - currentOffset);
+    if (distance < nearestDistance) {
+      nearestDistance = distance;
+      nearestIndex = index;
+    }
+  });
+
+  return nearestIndex;
+}
+
+function syncCarousel(parts, snapState, activeIndex) {
+  const activeSlideIndex = snapState.snapPoints[activeIndex]?.slideIndex ?? 0;
+
   parts.slides.forEach((slide, index) => {
-    slide.toggleAttribute("data-active", index === activeIndex);
+    slide.toggleAttribute("data-active", index === activeSlideIndex);
   });
 
   parts.dotButtons.forEach((button, index) => {
-    if (index === activeIndex) {
+    const isVisible = index < snapState.snapPoints.length;
+    button.hidden = !isVisible;
+
+    if (isVisible && index === activeIndex) {
       button.setAttribute("aria-current", "true");
     } else {
       button.removeAttribute("aria-current");
@@ -65,32 +124,27 @@ function syncCarousel(parts, activeIndex) {
   }
 
   if (parts.next instanceof HTMLButtonElement) {
-    parts.next.disabled = activeIndex === parts.slides.length - 1;
+    parts.next.disabled = activeIndex === snapState.snapPoints.length - 1;
   }
 }
 
-function scrollToSlide(root, parts, index) {
-  const slide = parts.slides[index];
-  if (!slide) {
+function scrollToSnap(parts, snapState, index) {
+  const point = snapState.snapPoints[index];
+  if (!point) {
     return;
   }
 
-  const axis = getCarouselAxis(root);
-  const trackRect = parts.track.getBoundingClientRect();
-  const slideRect = slide.getBoundingClientRect();
-  const currentOffset = parts.track[axis.scroll];
-  const delta = slideRect[axis.delta] - trackRect[axis.delta];
-
   parts.track.scrollTo({
-    [axis.delta]: currentOffset + delta,
+    [snapState.axis.delta]: point.position,
   });
 }
 
-function moveCarousel(root, parts, activeIndex, direction) {
-  const nextIndex = Math.max(0, Math.min(parts.slides.length - 1, activeIndex + direction));
+function moveCarousel(parts, snapState, activeIndex, direction) {
+  const nextIndex = Math.max(0, Math.min(snapState.snapPoints.length - 1, activeIndex + direction));
 
-  syncCarousel(parts, nextIndex);
-  scrollToSlide(root, parts, nextIndex);
+  syncCarousel(parts, snapState, nextIndex);
+  scrollToSnap(parts, snapState, nextIndex);
+  return nextIndex;
 }
 
 function initializeCarousel(root) {
@@ -104,34 +158,12 @@ function initializeCarousel(root) {
   }
 
   root.dataset.carouselInitialized = "true";
-  let activeIndex = 0;
-  syncCarousel(parts, activeIndex);
+  let snapState = getSnapState(root, parts);
+  let activeIndex = getNearestSnapIndex(parts.track, snapState);
+  let pendingIndex = null;
+  let settleTimer = 0;
 
-  const ratios = new Map(parts.slides.map((slide, index) => [slide, index === 0 ? 1 : 0]));
-  const observer = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      ratios.set(entry.target, entry.intersectionRatio);
-    }
-
-    let bestIndex = activeIndex;
-    let bestRatio = -1;
-
-    parts.slides.forEach((slide, index) => {
-      const ratio = ratios.get(slide) ?? 0;
-      if (ratio > bestRatio) {
-        bestRatio = ratio;
-        bestIndex = index;
-      }
-    });
-
-    activeIndex = bestIndex;
-    syncCarousel(parts, activeIndex);
-  }, {
-    root: parts.track,
-    threshold: [0.51, 0.66, 0.82],
-  });
-
-  parts.slides.forEach((slide) => observer.observe(slide));
+  syncCarousel(parts, snapState, activeIndex);
 
   root.addEventListener("click", (event) => {
     const target = event.target instanceof Element ? event.target : null;
@@ -141,25 +173,28 @@ function initializeCarousel(root) {
 
     if (target.closest("[data-carousel-prev]")) {
       event.preventDefault();
-      moveCarousel(root, parts, activeIndex, -1);
+      pendingIndex = moveCarousel(parts, snapState, activeIndex, -1);
+      activeIndex = pendingIndex;
       return;
     }
 
     if (target.closest("[data-carousel-next]")) {
       event.preventDefault();
-      moveCarousel(root, parts, activeIndex, 1);
+      pendingIndex = moveCarousel(parts, snapState, activeIndex, 1);
+      activeIndex = pendingIndex;
       return;
     }
 
     const dotIndex = parts.dotButtons.findIndex((button) => button === target.closest("button"));
-    if (dotIndex < 0) {
+    if (dotIndex < 0 || dotIndex >= snapState.snapPoints.length) {
       return;
     }
 
     event.preventDefault();
+    pendingIndex = dotIndex;
     activeIndex = dotIndex;
-    syncCarousel(parts, activeIndex);
-    scrollToSlide(root, parts, activeIndex);
+    syncCarousel(parts, snapState, activeIndex);
+    scrollToSnap(parts, snapState, activeIndex);
   });
 
   root.addEventListener("keydown", (event) => {
@@ -180,28 +215,60 @@ function initializeCarousel(root) {
     switch (event.key) {
       case vertical ? "ArrowUp" : "ArrowLeft":
         event.preventDefault();
-        moveCarousel(root, parts, activeIndex, -1);
+        pendingIndex = moveCarousel(parts, snapState, activeIndex, -1);
+        activeIndex = pendingIndex;
         break;
       case vertical ? "ArrowDown" : "ArrowRight":
         event.preventDefault();
-        moveCarousel(root, parts, activeIndex, 1);
+        pendingIndex = moveCarousel(parts, snapState, activeIndex, 1);
+        activeIndex = pendingIndex;
         break;
       case "Home":
         event.preventDefault();
         activeIndex = 0;
-        syncCarousel(parts, activeIndex);
-        scrollToSlide(root, parts, activeIndex);
+        pendingIndex = activeIndex;
+        syncCarousel(parts, snapState, activeIndex);
+        scrollToSnap(parts, snapState, activeIndex);
         break;
       case "End":
         event.preventDefault();
-        activeIndex = parts.slides.length - 1;
-        syncCarousel(parts, activeIndex);
-        scrollToSlide(root, parts, activeIndex);
+        activeIndex = snapState.snapPoints.length - 1;
+        pendingIndex = activeIndex;
+        syncCarousel(parts, snapState, activeIndex);
+        scrollToSnap(parts, snapState, activeIndex);
         break;
       default:
         break;
     }
   });
+
+  function syncAfterScrollSettles() {
+    snapState = getSnapState(root, parts);
+    const settledIndex = getNearestSnapIndex(parts.track, snapState);
+    pendingIndex = null;
+    activeIndex = settledIndex;
+    syncCarousel(parts, snapState, activeIndex);
+  }
+
+  parts.track.addEventListener("scroll", () => {
+    if (settleTimer) {
+      window.clearTimeout(settleTimer);
+    }
+
+    if (pendingIndex !== null) {
+      activeIndex = pendingIndex;
+      syncCarousel(parts, snapState, activeIndex);
+    }
+
+    settleTimer = window.setTimeout(() => {
+      syncAfterScrollSettles();
+    }, 120);
+  }, { passive: true });
+
+  const resizeObserver = new ResizeObserver(() => {
+    syncAfterScrollSettles();
+  });
+  resizeObserver.observe(parts.track);
 }
 
 for (const root of document.querySelectorAll(CAROUSEL_ROOT_SELECTOR)) {

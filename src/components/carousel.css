@@ -24,7 +24,7 @@
   carousel {
     --carousel-gap: var(--space-lg);
     --carousel-slide-size: 100%;
-    --carousel-slide-block-size: 100%;
+    --carousel-slide-block-size: auto;
     --carousel-track-block-size: 24rem;
     --carousel-control-size: 2.5rem;
     --carousel-control-bg: var(--bg-raised);
@@ -52,6 +52,7 @@
     &.vertical > carousel-track > carousel-slide {
       flex: 0 0 var(--carousel-slide-block-size);
       block-size: var(--carousel-slide-block-size);
+      min-block-size: 0;
     }
   }
 
@@ -88,19 +89,26 @@
   }
 
   carousel-controls {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
-    justify-content: space-between;
     gap: var(--space-sm);
     min-inline-size: 0;
   }
 
   carousel-dots {
-    display: flex;
-    flex: 1 1 auto;
-    flex-wrap: wrap;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
     gap: var(--space-xs);
+    min-inline-size: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  carousel-dots::-webkit-scrollbar {
+    display: none;
   }
 
   carousel :where([data-carousel-prev], [data-carousel-next]) {
