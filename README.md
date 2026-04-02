@@ -84,10 +84,12 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/popover.css">
 <link rel="stylesheet" href="dist/components/dialog.css">
 <link rel="stylesheet" href="dist/components/menubar.css">
+<link rel="stylesheet" href="dist/components/navigation-menu.css">
 
 <!-- Load only the behavior shims you use -->
 <script src="dist/behaviors/dialog.js"></script>
 <script src="dist/behaviors/menubar.js"></script>
+<script src="dist/behaviors/navigation-menu.js"></script>
 <script src="dist/behaviors/popover.js"></script>
 <script src="dist/behaviors/tabs.js"></script>
 ```
@@ -219,6 +221,34 @@ Menus and utility popovers share the same `popover-panel` primitive. Add `role="
 
 <script src="dist/behaviors/popover.js"></script>
 <script src="dist/behaviors/menubar.js"></script>
+```
+
+```html
+<nav class="navigation-menu" aria-label="Primary">
+  <a href="#">Overview</a>
+
+  <button type="button" popovertarget="products-panel" aria-expanded="false">
+    Products
+  </button>
+
+  <popover-panel id="products-panel" popover="auto">
+    <panel-header>
+      <h3>Explore the platform</h3>
+      <p>Use richer content when the panel is navigation, not a strict menu.</p>
+    </panel-header>
+
+    <panel-content>
+      <a href="#">Analytics</a>
+      <a href="#">Collaboration</a>
+      <a href="#">Automation</a>
+    </panel-content>
+  </popover-panel>
+
+  <a href="#">Pricing</a>
+</nav>
+
+<script src="dist/behaviors/popover.js"></script>
+<script src="dist/behaviors/navigation-menu.js"></script>
 ```
 
 ---
