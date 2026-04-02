@@ -1,0 +1,134 @@
+/*
+ * Dashbase — Resizable
+ *
+ * Provides split-pane layouts with draggable, keyboard-accessible handles.
+ *
+ * Structure:
+ *   <resizable-group class="horizontal">
+ *     <resizable-pane>...</resizable-pane>
+ *     <resizable-handle aria-label="Resize sidebar and canvas"></resizable-handle>
+ *     <resizable-pane>...</resizable-pane>
+ *   </resizable-group>
+ *
+ * Variants:
+ *   .horizontal — side-by-side panes
+ *   .vertical — stacked panes
+ */
+
+@layer components {
+  resizable-group {
+    --resizable-border: var(--border-default);
+    --resizable-radius: var(--radius-xl);
+    --resizable-bg: var(--bg-raised);
+    --resizable-shadow: var(--shadow-xs);
+    --resizable-handle-size: 0.875rem;
+    --resizable-handle-hit-size: 0.875rem;
+    --resizable-handle-line-size: 2px;
+    --resizable-handle-line-color: var(--border-control);
+    --resizable-handle-line-active: var(--color-primary-emphasis);
+    --pane-padding: var(--space-lg);
+    --pane-gap: var(--space-lg);
+    --pane-min-inline: 12rem;
+    --pane-min-block: 10rem;
+
+    display: flex;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    color: var(--text-default);
+    background-color: var(--resizable-bg);
+    border: var(--border-width) solid var(--resizable-border);
+    border-radius: var(--resizable-radius);
+    box-shadow: var(--resizable-shadow);
+    overflow: hidden;
+
+    &.horizontal {
+      flex-direction: row;
+      min-block-size: 20rem;
+    }
+
+    &.vertical {
+      flex-direction: column;
+      min-block-size: 28rem;
+    }
+  }
+
+  resizable-pane {
+    --pane-size: auto;
+
+    display: grid;
+    align-content: start;
+    gap: var(--pane-gap);
+    min-inline-size: 0;
+    min-block-size: 0;
+    padding: var(--pane-padding);
+    overflow: auto;
+    background: var(--bg-default);
+    flex: 1 1 0;
+    flex-basis: var(--pane-size);
+  }
+
+  resizable-group.horizontal > resizable-pane {
+    min-inline-size: var(--pane-min-inline);
+  }
+
+  resizable-group.vertical > resizable-pane {
+    min-block-size: var(--pane-min-block);
+  }
+
+  resizable-pane > * {
+    min-inline-size: 0;
+    margin: 0;
+  }
+
+  resizable-handle {
+    position: relative;
+    flex: 0 0 var(--resizable-handle-size);
+    background: color-mix(in oklch, var(--bg-subtle) 70%, transparent);
+    touch-action: none;
+    user-select: none;
+    outline: none;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 50%;
+      background-color: var(--resizable-handle-line-color);
+      border-radius: var(--radius-full);
+      translate: -50% -50%;
+      transition:
+        background-color var(--duration-fast) var(--easing-default),
+        scale var(--duration-fast) var(--easing-default);
+    }
+  }
+
+  resizable-group.horizontal > resizable-handle {
+    cursor: col-resize;
+
+    &::before {
+      inline-size: var(--resizable-handle-line-size);
+      block-size: min(3.5rem, calc(100% - (var(--space-lg) * 2)));
+    }
+  }
+
+  resizable-group.vertical > resizable-handle {
+    cursor: row-resize;
+
+    &::before {
+      inline-size: min(3.5rem, calc(100% - (var(--space-lg) * 2)));
+      block-size: var(--resizable-handle-line-size);
+    }
+  }
+
+  resizable-handle:hover::before,
+  resizable-handle:focus-visible::before,
+  resizable-handle[data-active="true"]::before {
+    background-color: var(--resizable-handle-line-active);
+    scale: 1.15;
+  }
+
+  resizable-handle:focus-visible {
+    box-shadow: inset 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  }
+}

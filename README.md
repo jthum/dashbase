@@ -86,12 +86,14 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/menubar.css">
 <link rel="stylesheet" href="dist/components/navigation-menu.css">
 <link rel="stylesheet" href="dist/components/scroll-area.css">
+<link rel="stylesheet" href="dist/components/resizable.css">
 
 <!-- Load only the behavior shims you use -->
 <script src="dist/behaviors/dialog.js"></script>
 <script src="dist/behaviors/menubar.js"></script>
 <script src="dist/behaviors/navigation-menu.js"></script>
 <script src="dist/behaviors/popover.js"></script>
+<script src="dist/behaviors/resizable.js"></script>
 <script src="dist/behaviors/tabs.js"></script>
 ```
 
@@ -266,6 +268,22 @@ Menus and utility popovers share the same `popover-panel` primitive. Add `role="
     </article>
   </scroll-content>
 </scroll-area>
+```
+
+```html
+<resizable-group class="horizontal">
+  <resizable-pane style="--pane-size: 28%;">
+    <h3>Project files</h3>
+  </resizable-pane>
+
+  <resizable-handle aria-label="Resize file list and canvas"></resizable-handle>
+
+  <resizable-pane>
+    <h3>Canvas preview</h3>
+  </resizable-pane>
+</resizable-group>
+
+<script src="dist/behaviors/resizable.js"></script>
 ```
 
 ---
