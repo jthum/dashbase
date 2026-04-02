@@ -286,6 +286,8 @@ Menus and utility popovers share the same `popover-panel` primitive. Add `role="
 <script src="dist/behaviors/resizable.js"></script>
 ```
 
+Vertical groups resize along the block axis, so they need a definite block size such as `style="block-size: 32rem;"` or a parent layout that already constrains height.
+
 ---
 
 ## 🌐 Browser Support
