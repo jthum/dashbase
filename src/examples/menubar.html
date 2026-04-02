@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Menubar Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/panel.css">
+  <link rel="stylesheet" href="../components/popover.css">
+  <link rel="stylesheet" href="../components/menubar.css">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 64rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .surface {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 85%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 55%, transparent)
+      );
+    }
+
+    .surface header {
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    .surface header > * {
+      margin: 0;
+    }
+
+    .workspace-preview {
+      min-block-size: 14rem;
+      padding: var(--space-xl);
+      border: var(--border-width) dashed var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--bg-default);
+    }
+
+    .workspace-preview p {
+      max-inline-size: 56ch;
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Menubar Component</h1>
+    <p>Dashbase menubars reuse the same <code>&lt;popover-panel popover role="menu"&gt;</code> primitive as dropdown and context menus. The menubar layer only handles top-level roving focus and menu switching.</p>
+
+    <hr>
+
+    <section>
+      <h2>Application Menubar</h2>
+
+      <div class="surface">
+        <menu-bar role="menubar" aria-label="Application menu">
+          <button type="button" role="menuitem" popovertarget="file-menu" aria-haspopup="menu" aria-expanded="false">File</button>
+          <popover-panel id="file-menu" popover="auto" role="menu" aria-label="File">
+            <panel-header aria-hidden="true">
+              <small>File</small>
+            </panel-header>
+            <button type="button" role="menuitem">New tab <kbd>T</kbd></button>
+            <button type="button" role="menuitem">Open workspace… <kbd>O</kbd></button>
+            <button type="button" role="menuitem" popovertarget="export-menu" aria-haspopup="menu">Export</button>
+            <popover-panel id="export-menu" popover="auto" role="menu" class="submenu" aria-label="Export">
+              <button type="button" role="menuitem">PNG</button>
+              <button type="button" role="menuitem">PDF</button>
+              <button type="button" role="menuitem">CSV</button>
+            </popover-panel>
+            <hr>
+            <button type="button" role="menuitem" class="danger">Delete project</button>
+          </popover-panel>
+
+          <button type="button" role="menuitem" popovertarget="edit-menu" aria-haspopup="menu" aria-expanded="false">Edit</button>
+          <popover-panel id="edit-menu" popover="auto" role="menu" aria-label="Edit">
+            <panel-header aria-hidden="true">
+              <small>Edit</small>
+            </panel-header>
+            <button type="button" role="menuitem">Undo <kbd>Z</kbd></button>
+            <button type="button" role="menuitem">Redo <kbd>Shift Z</kbd></button>
+            <hr>
+            <button type="button" role="menuitem">Cut <kbd>X</kbd></button>
+            <button type="button" role="menuitem">Copy <kbd>C</kbd></button>
+            <button type="button" role="menuitem">Paste <kbd>V</kbd></button>
+          </popover-panel>
+
+          <button type="button" role="menuitem" popovertarget="view-menu" aria-haspopup="menu" aria-expanded="false">View</button>
+          <popover-panel id="view-menu" popover="auto" role="menu" aria-label="View">
+            <panel-header aria-hidden="true">
+              <small>View</small>
+            </panel-header>
+            <button type="button" role="menuitemcheckbox" aria-checked="true">Left sidebar</button>
+            <button type="button" role="menuitemcheckbox" aria-checked="false">Command palette hint</button>
+            <hr>
+            <button type="button" role="menuitemradio" name="density" aria-checked="true">Comfortable density</button>
+            <button type="button" role="menuitemradio" name="density" aria-checked="false">Compact density</button>
+          </popover-panel>
+
+          <button type="button" role="menuitem" popovertarget="help-menu" aria-haspopup="menu" aria-expanded="false">Help</button>
+          <popover-panel id="help-menu" popover="auto" role="menu" class="align-end" aria-label="Help">
+            <panel-header aria-hidden="true">
+              <small>Help</small>
+            </panel-header>
+            <a href="#" role="menuitem">Documentation</a>
+            <a href="#" role="menuitem">Keyboard shortcuts</a>
+            <a href="#" role="menuitem">Release notes</a>
+          </popover-panel>
+        </menu-bar>
+
+        <div class="workspace-preview">
+          <p>Use Left/Right to move across top-level items, Down to open a menu, and Left/Right again to switch between open root menus without leaving the keyboard.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Mixed Menubar Items</h2>
+
+      <div class="surface">
+        <header>
+          <h3>Project Workspace</h3>
+          <p>A menubar can mix direct links with menu-trigger items without changing the shared overlay architecture.</p>
+        </header>
+
+        <menu-bar role="menubar" aria-label="Project workspace menu">
+          <a href="#" role="menuitem">Dashboard</a>
+
+          <button type="button" role="menuitem" popovertarget="review-menu" aria-haspopup="menu" aria-expanded="false">Review</button>
+          <popover-panel id="review-menu" popover="auto" role="menu" aria-label="Review">
+            <panel-header aria-hidden="true">
+              <small>Review</small>
+            </panel-header>
+            <button type="button" role="menuitem">Request approval</button>
+            <button type="button" role="menuitem">Assign reviewer</button>
+            <button type="button" role="menuitemcheckbox" aria-checked="true">Require two approvals</button>
+          </popover-panel>
+
+          <button type="button" role="menuitem" popovertarget="share-menu" aria-haspopup="menu" aria-expanded="false">Share</button>
+          <popover-panel id="share-menu" popover="auto" role="menu" aria-label="Share">
+            <panel-header aria-hidden="true">
+              <small>Share</small>
+            </panel-header>
+            <button type="button" role="menuitem">Copy link</button>
+            <button type="button" role="menuitem">Invite by email</button>
+            <button type="button" role="menuitem">Publish to web</button>
+          </popover-panel>
+
+          <button type="button" role="menuitem" popovertarget="settings-menu" aria-haspopup="menu" aria-expanded="false">Settings</button>
+          <popover-panel id="settings-menu" popover="auto" role="menu" class="align-end" aria-label="Settings">
+            <panel-header aria-hidden="true">
+              <small>Settings</small>
+            </panel-header>
+            <button type="button" role="menuitem">General</button>
+            <button type="button" role="menuitem">Notifications</button>
+            <button type="button" role="menuitem" class="danger">Archive project</button>
+          </popover-panel>
+        </menu-bar>
+      </div>
+    </section>
+  </main>
+
+  <script src="../behaviors/popover.js"></script>
+  <script src="../behaviors/menubar.js"></script>
+  <script src="./theme-controls.js"></script>
+</body>
+</html>

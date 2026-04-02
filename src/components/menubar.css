@@ -1,0 +1,79 @@
+/*
+ * Dashbase — Menubar
+ *
+ * Provides a lightweight application menubar shell that reuses
+ * <popover-panel popover role="menu"> for each top-level menu.
+ *
+ * Structure:
+ *   <menu-bar role="menubar" aria-label="Workspace">
+ *     <button type="button" role="menuitem" popovertarget="file-menu" aria-haspopup="menu">File</button>
+ *     <popover-panel id="file-menu" popover="auto" role="menu" aria-label="File">...</popover-panel>
+ *   </menu-bar>
+ *
+ * Variants:
+ *   none
+ */
+
+@layer components {
+  menu-bar[role="menubar"] {
+    --menubar-bg: var(--bg-raised);
+    --menubar-border: var(--border-default);
+    --menubar-radius: var(--radius-xl);
+    --menubar-padding: var(--space-xs);
+    --menubar-gap: var(--space-xs);
+    --menubar-item-radius: var(--radius-md);
+    --menubar-item-padding-inline: var(--space-sm);
+    --menubar-item-padding-block: var(--space-xs);
+    --menubar-item-min-block-size: 2.125rem;
+
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--menubar-gap);
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    padding: var(--menubar-padding);
+    color: var(--text-default);
+    background-color: var(--menubar-bg);
+    border: var(--border-width) solid var(--menubar-border);
+    border-radius: var(--menubar-radius);
+    box-shadow: var(--shadow-sm);
+  }
+
+  menu-bar[role="menubar"] > :where(button, a)[role="menuitem"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: var(--menubar-item-min-block-size);
+    padding-inline: var(--menubar-item-padding-inline);
+    padding-block: var(--menubar-item-padding-block);
+    color: inherit;
+    background: transparent;
+    border: 0;
+    border-radius: var(--menubar-item-radius);
+    font: inherit;
+    line-height: var(--leading-tight);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-default),
+      color var(--duration-fast) var(--easing-default);
+  }
+
+  menu-bar[role="menubar"] > :where(button, a)[role="menuitem"]:hover,
+  menu-bar[role="menubar"] > :where(button, a)[role="menuitem"]:focus-visible {
+    color: var(--text-default);
+    background-color: var(--bg-subtle);
+    outline: none;
+  }
+
+  menu-bar[role="menubar"] > :where(button, a)[role="menuitem"][aria-expanded="true"] {
+    color: var(--text-default);
+    background-color: var(--bg-subtle);
+  }
+
+  menu-bar[role="menubar"] > :where(button, a)[role="menuitem"]:is([disabled], [aria-disabled="true"]) {
+    opacity: var(--disabled-opacity);
+    cursor: not-allowed;
+  }
+}

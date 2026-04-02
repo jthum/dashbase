@@ -83,9 +83,11 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/tabs.css">
 <link rel="stylesheet" href="dist/components/popover.css">
 <link rel="stylesheet" href="dist/components/dialog.css">
+<link rel="stylesheet" href="dist/components/menubar.css">
 
 <!-- Load only the behavior shims you use -->
 <script src="dist/behaviors/dialog.js"></script>
+<script src="dist/behaviors/menubar.js"></script>
 <script src="dist/behaviors/popover.js"></script>
 <script src="dist/behaviors/tabs.js"></script>
 ```
@@ -183,6 +185,41 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 ```
 
 Menus and utility popovers share the same `popover-panel` primitive. Add `role="menu"` only when the content truly behaves like a menu.
+
+```html
+<menu-bar role="menubar" aria-label="Application menu">
+  <button type="button" role="menuitem" popovertarget="file-menu" aria-haspopup="menu" aria-expanded="false">
+    File
+  </button>
+
+  <popover-panel id="file-menu" popover="auto" role="menu" aria-label="File">
+    <panel-header aria-hidden="true">
+      <small>File</small>
+    </panel-header>
+    <button type="button" role="menuitem">New tab</button>
+    <button type="button" role="menuitem">Open workspace…</button>
+    <button type="button" role="menuitem" popovertarget="export-menu" aria-haspopup="menu">
+      Export
+    </button>
+    <popover-panel id="export-menu" popover="auto" role="menu" class="submenu" aria-label="Export">
+      <button type="button" role="menuitem">PNG</button>
+      <button type="button" role="menuitem">PDF</button>
+    </popover-panel>
+  </popover-panel>
+
+  <button type="button" role="menuitem" popovertarget="view-menu" aria-haspopup="menu" aria-expanded="false">
+    View
+  </button>
+
+  <popover-panel id="view-menu" popover="auto" role="menu" aria-label="View">
+    <button type="button" role="menuitemcheckbox" aria-checked="true">Left sidebar</button>
+    <button type="button" role="menuitemcheckbox" aria-checked="false">Command palette hint</button>
+  </popover-panel>
+</menu-bar>
+
+<script src="dist/behaviors/popover.js"></script>
+<script src="dist/behaviors/menubar.js"></script>
+```
 
 ---
 
