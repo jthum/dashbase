@@ -1,0 +1,147 @@
+/*
+ * Dashbase — Data Table
+ *
+ * Enhances a semantic <table> with optional toolbar, client-side sorting,
+ * filtering, row selection, and an empty state.
+ *
+ * Structure:
+ *   <data-table>
+ *     <table-toolbar>
+ *       <input type="search" data-table-filter />
+ *     </table-toolbar>
+ *     <scroll-area class="bare">
+ *       <table>...</table>
+ *     </scroll-area>
+ *     <table-meta>...</table-meta>
+ *     <table-empty hidden>...</table-empty>
+ *   </data-table>
+ *
+ * Variants:
+ *   none
+ */
+
+@layer components {
+  data-table {
+    --data-table-gap: var(--space-md);
+    --data-table-toolbar-gap: var(--space-md);
+    --data-table-muted: var(--text-muted);
+    --data-table-empty-bg: color-mix(in oklch, var(--bg-subtle) 68%, transparent);
+    --data-table-empty-border: color-mix(in oklch, var(--border-default) 74%, transparent);
+    --data-table-selected-bg: color-mix(in oklch, var(--primary-subtle) 58%, var(--bg-raised));
+    --data-table-selected-hover-bg: color-mix(in oklch, var(--primary-muted) 32%, var(--data-table-selected-bg));
+    --data-table-sort-icon-opacity: 0.42;
+
+    display: grid;
+    gap: var(--data-table-gap);
+    min-inline-size: 0;
+  }
+
+  data-table > table-toolbar,
+  data-table > table-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--data-table-toolbar-gap);
+    min-inline-size: 0;
+  }
+
+  data-table > table-toolbar > input[type="search"] {
+    inline-size: clamp(14rem, 32vw, 22rem);
+    max-inline-size: 100%;
+  }
+
+  data-table > table-meta {
+    color: var(--data-table-muted);
+    font-size: var(--text-sm);
+  }
+
+  data-table > scroll-area {
+    min-inline-size: 0;
+  }
+
+  data-table > scroll-area > table {
+    margin: 0;
+  }
+
+  data-table > table-empty {
+    display: grid;
+    gap: var(--space-xs);
+    padding: var(--space-lg);
+    color: var(--data-table-muted);
+    background-color: var(--data-table-empty-bg);
+    border: var(--border-width) dashed var(--data-table-empty-border);
+    border-radius: var(--radius-lg);
+  }
+
+  data-table > table-empty[hidden] {
+    display: none;
+  }
+
+  data-table table > :where(thead, tbody) > tr > :where(th, td):has(> [data-table-select-all], > [data-table-row-select]) {
+    inline-size: 2.75rem;
+    padding-inline: var(--space-sm);
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  data-table table > thead > tr > th:has(> [data-table-sort]) {
+    white-space: nowrap;
+  }
+
+  data-table table > thead > tr > th > [data-table-sort] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    inline-size: 100%;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+    text-align: inherit;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+
+  data-table table > thead > tr > th > [data-table-sort]:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  data-table table > thead > tr > th > [data-table-sort]::after {
+    content: "";
+    flex: none;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-inline-end: 1.5px solid currentColor;
+    border-block-end: 1.5px solid currentColor;
+    rotate: 45deg;
+    translate: 0 -1px;
+    opacity: var(--data-table-sort-icon-opacity);
+    transition:
+      opacity var(--duration-fast) var(--easing-default),
+      rotate var(--duration-fast) var(--easing-default);
+  }
+
+  data-table table > thead > tr > th[aria-sort="ascending"] > [data-table-sort]::after {
+    rotate: 225deg;
+    opacity: 0.88;
+  }
+
+  data-table table > thead > tr > th[aria-sort="descending"] > [data-table-sort]::after {
+    rotate: 45deg;
+    opacity: 0.88;
+  }
+
+  data-table table > tbody > tr[data-selected] > :where(th, td) {
+    background-color: var(--data-table-selected-bg);
+  }
+
+  data-table table.interactive > tbody > tr[data-selected]:hover > :where(th, td) {
+    background-color: var(--data-table-selected-hover-bg);
+  }
+}

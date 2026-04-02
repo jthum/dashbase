@@ -75,6 +75,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 
 <!-- Load only the components you need -->
 <link rel="stylesheet" href="dist/components/button.css">
+<link rel="stylesheet" href="dist/components/checkbox.css">
 <link rel="stylesheet" href="dist/components/input.css">
 <link rel="stylesheet" href="dist/components/form-field.css">
 <link rel="stylesheet" href="dist/components/panel.css">
@@ -87,10 +88,12 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/combobox.css">
 <link rel="stylesheet" href="dist/components/command.css">
 <link rel="stylesheet" href="dist/components/date-picker.css">
+<link rel="stylesheet" href="dist/components/data-table.css">
 <link rel="stylesheet" href="dist/components/menubar.css">
 <link rel="stylesheet" href="dist/components/navigation-menu.css">
 <link rel="stylesheet" href="dist/components/scroll-area.css">
 <link rel="stylesheet" href="dist/components/resizable.css">
+<link rel="stylesheet" href="dist/components/table.css">
 <link rel="stylesheet" href="dist/components/toast.css">
 
 <!-- Load only the behavior shims you use -->
@@ -99,6 +102,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <script src="dist/behaviors/dialog.js"></script>
 <script src="dist/behaviors/command.js"></script>
 <script src="dist/behaviors/date-picker.js"></script>
+<script src="dist/behaviors/data-table.js"></script>
 <script src="dist/behaviors/menubar.js"></script>
 <script src="dist/behaviors/navigation-menu.js"></script>
 <script src="dist/behaviors/popover.js"></script>
@@ -216,6 +220,49 @@ For range selection, switch to `data-mode="range"` and use `data-range-start` / 
 
 <script src="dist/behaviors/calendar.js"></script>
 <script src="dist/behaviors/date-picker.js"></script>
+```
+
+```html
+<data-table>
+  <table-toolbar>
+    <input type="search" data-table-filter placeholder="Filter teammates" aria-label="Filter teammates" />
+    <small data-table-result-count aria-live="polite">0 visible of 0</small>
+  </table-toolbar>
+
+  <scroll-area class="bare">
+    <table class="compact striped interactive">
+      <thead>
+        <tr>
+          <th scope="col">
+            <input type="checkbox" data-table-select-all aria-label="Select all visible teammates" />
+          </th>
+          <th scope="col"><button type="button" data-table-sort data-sort-type="text">Teammate</button></th>
+          <th scope="col"><button type="button" data-table-sort data-sort-type="number">MRR</button></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-search="maya chen founding designer active">
+          <td><input type="checkbox" data-table-row-select aria-label="Select Maya Chen" /></td>
+          <th scope="row" data-sort-value="Maya Chen">Maya Chen</th>
+          <td data-sort-value="4200">$4,200</td>
+        </tr>
+        <tr data-search="omar haddad growth lead pilot">
+          <td><input type="checkbox" data-table-row-select aria-label="Select Omar Haddad" /></td>
+          <th scope="row" data-sort-value="Omar Haddad">Omar Haddad</th>
+          <td data-sort-value="3100">$3,100</td>
+        </tr>
+      </tbody>
+    </table>
+  </scroll-area>
+
+  <table-meta>
+    <small data-table-selection-count aria-live="polite">0 selected</small>
+  </table-meta>
+
+  <table-empty hidden>No teammates match that filter.</table-empty>
+</data-table>
+
+<script src="dist/behaviors/data-table.js"></script>
 ```
 
 ```html
