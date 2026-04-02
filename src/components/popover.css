@@ -22,6 +22,7 @@
  *   .align-end — align the panel to the invoker's end edge
  *   .above — position the panel above the invoker
  *   .submenu — position a menu panel beside its invoker
+ *   .context-menu — position a menu panel from pointer coordinates
  *   .wide — utility panel with a wider maximum inline size
  */
 
@@ -81,6 +82,13 @@
       --popover-inset-inline-start: auto;
       --popover-inset-inline-end: var(--space-lg);
     }
+
+    &.context-menu {
+      --popover-inset-block-start: var(--contextmenu-block-start, var(--space-lg));
+      --popover-inset-block-end: auto;
+      --popover-inset-inline-start: var(--contextmenu-inline-start, var(--space-lg));
+      --popover-inset-inline-end: auto;
+    }
   }
 
   popover-panel[popover]:popover-open {
@@ -92,7 +100,7 @@
   }
 
   @supports (inset-block-start: anchor(bottom)) {
-    popover-panel[popover] {
+    popover-panel[popover]:not(.context-menu) {
       --popover-inset-block-start: calc(anchor(bottom) + var(--popover-offset));
       --popover-inset-block-end: auto;
       --popover-inset-inline-start: anchor(left);
@@ -119,7 +127,7 @@
   }
 
   @supports not (inset-block-start: anchor(bottom)) {
-    popover-panel[popover] {
+    popover-panel[popover]:not(.context-menu) {
       min-inline-size: var(--popover-min-inline);
     }
   }

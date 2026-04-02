@@ -3,6 +3,7 @@
  *
  * Enhances <popover-panel popover> with:
  * - aria-expanded / aria-controls sync for popover triggers
+ * - right-click and keyboard-invoked context menus
  * - menu keyboard navigation when role="menu" is present
  * - submenu coordination for nested popover-panel menus
  * - checkbox / radio state management through aria-checked
@@ -10,7 +11,11 @@
 
 const POPOVER_PANEL_SELECTOR = "popover-panel[popover]";
 const MENU_PANEL_SELECTOR = 'popover-panel[popover][role="menu"]';
+const CONTEXT_MENU_ATTR = "data-contextmenu";
+const CONTEXT_MENU_CLASS = "context-menu";
+const CONTEXT_MENU_MARGIN = 12;
 let panelCount = 0;
+const activeInvokerByPanel = new WeakMap();
 
 function isPopoverPanel(value) {
   return value instanceof HTMLElement && value.matches(POPOVER_PANEL_SELECTOR);
@@ -61,14 +66,46 @@ function getPanelForTrigger(trigger) {
   return isPopoverPanel(panel) ? panel : null;
 }
 
+function getPanelForContextInvoker(invoker) {
+  const targetId = invoker.getAttribute(CONTEXT_MENU_ATTR);
+  if (!targetId) {
+    return null;
+  }
+
+  const panel = document.getElementById(targetId);
+  return isPopoverPanel(panel) ? panel : null;
+}
+
 function getTriggersForPanel(panel) {
   const id = ensurePanelId(panel);
   return [...document.querySelectorAll(`[popovertarget="${CSS.escape(id)}"]`)]
     .filter((element) => element instanceof HTMLElement);
 }
 
+function getContextInvokersForPanel(panel) {
+  const id = ensurePanelId(panel);
+  return [...document.querySelectorAll(`[${CONTEXT_MENU_ATTR}="${CSS.escape(id)}"]`)]
+    .filter((element) => element instanceof HTMLElement);
+}
+
+function getInvokersForPanel(panel) {
+  return [...new Set([
+    ...getTriggersForPanel(panel),
+    ...getContextInvokersForPanel(panel),
+  ])];
+}
+
 function getPrimaryTriggerForPanel(panel) {
   return getTriggersForPanel(panel)[0] ?? null;
+}
+
+function getFocusReturnTarget(panel) {
+  const activeInvoker = activeInvokerByPanel.get(panel);
+  if (activeInvoker instanceof HTMLElement && activeInvoker.isConnected) {
+    return activeInvoker;
+  }
+
+  return getInvokersForPanel(panel)[0] ?? null;
 }
 
 function getParentMenu(panel) {
@@ -122,11 +159,11 @@ function prepareMenuEntries(panel) {
 function ensurePanelRelationship(panel) {
   const id = ensurePanelId(panel);
 
-  for (const trigger of getTriggersForPanel(panel)) {
-    trigger.setAttribute("aria-controls", id);
+  for (const invoker of getInvokersForPanel(panel)) {
+    invoker.setAttribute("aria-controls", id);
 
-    if (isMenuPanel(panel) && !trigger.hasAttribute("aria-haspopup")) {
-      trigger.setAttribute("aria-haspopup", "menu");
+    if (isMenuPanel(panel) && !invoker.hasAttribute("aria-haspopup")) {
+      invoker.setAttribute("aria-haspopup", "menu");
     }
   }
 
@@ -138,9 +175,9 @@ function ensurePanelRelationship(panel) {
 function syncPanelState(panel) {
   const open = panel.matches(":popover-open");
 
-  for (const trigger of getTriggersForPanel(panel)) {
-    if (trigger.hasAttribute("aria-expanded") || isMenuPanel(panel)) {
-      trigger.setAttribute("aria-expanded", String(open));
+  for (const invoker of getInvokersForPanel(panel)) {
+    if (invoker.hasAttribute("aria-expanded") || isMenuPanel(panel)) {
+      invoker.setAttribute("aria-expanded", String(open));
     }
   }
 }
@@ -153,7 +190,7 @@ function closePanel(panel, { focusTrigger = false } = {}) {
   }
 
   if (focusTrigger) {
-    getPrimaryTriggerForPanel(panel)?.focus();
+    getFocusReturnTarget(panel)?.focus();
   }
 }
 
@@ -230,6 +267,57 @@ function openMenuPanel(panel) {
   if (!panel.matches(":popover-open")) {
     panel.showPopover();
   }
+}
+
+function positionContextMenu(panel, clientX, clientY) {
+  const x = Math.max(CONTEXT_MENU_MARGIN, clientX);
+  const y = Math.max(CONTEXT_MENU_MARGIN, clientY);
+
+  panel.style.setProperty("--contextmenu-inline-start", `${x}px`);
+  panel.style.setProperty("--contextmenu-block-start", `${y}px`);
+  panel.style.setProperty("--popover-inset-inline-end", "auto");
+  panel.style.setProperty("--popover-inset-block-end", "auto");
+
+  requestAnimationFrame(() => {
+    const rect = panel.getBoundingClientRect();
+    let nextX = x;
+    let nextY = y;
+
+    if (rect.right > window.innerWidth - CONTEXT_MENU_MARGIN) {
+      nextX = Math.max(
+        CONTEXT_MENU_MARGIN,
+        x - (rect.right - (window.innerWidth - CONTEXT_MENU_MARGIN)),
+      );
+    }
+
+    if (rect.bottom > window.innerHeight - CONTEXT_MENU_MARGIN) {
+      nextY = Math.max(
+        CONTEXT_MENU_MARGIN,
+        y - (rect.bottom - (window.innerHeight - CONTEXT_MENU_MARGIN)),
+      );
+    }
+
+    panel.style.setProperty("--contextmenu-inline-start", `${nextX}px`);
+    panel.style.setProperty("--contextmenu-block-start", `${nextY}px`);
+  });
+}
+
+function openContextMenu(panel, invoker, clientX, clientY) {
+  ensurePanelRelationship(panel);
+  activeInvokerByPanel.set(panel, invoker);
+  closeOpenRootMenus({ except: panel });
+
+  if (!panel.classList.contains(CONTEXT_MENU_CLASS)) {
+    panel.classList.add(CONTEXT_MENU_CLASS);
+  }
+
+  positionContextMenu(panel, clientX, clientY);
+
+  if (!panel.matches(":popover-open")) {
+    panel.showPopover();
+  }
+
+  focusMenuEntry(panel, 0);
 }
 
 function toggleCheckboxItem(item) {
@@ -327,10 +415,52 @@ document.addEventListener("click", (event) => {
   });
 });
 
+document.addEventListener("contextmenu", (event) => {
+  const target = event.target instanceof HTMLElement ? event.target : null;
+  if (!target) {
+    return;
+  }
+
+  const invoker = target.closest(`[${CONTEXT_MENU_ATTR}]`);
+  if (!(invoker instanceof HTMLElement)) {
+    if (!target.closest(MENU_PANEL_SELECTOR)) {
+      closeOpenRootMenus();
+    }
+    return;
+  }
+
+  const panel = getPanelForContextInvoker(invoker);
+  if (!isMenuPanel(panel)) {
+    return;
+  }
+
+  event.preventDefault();
+  openContextMenu(panel, invoker, event.clientX, event.clientY);
+});
+
 document.addEventListener("keydown", (event) => {
   const target = event.target instanceof HTMLElement ? event.target : null;
   if (!target) {
     return;
+  }
+
+  const contextInvoker = target.closest(`[${CONTEXT_MENU_ATTR}]`);
+  if (contextInvoker instanceof HTMLElement) {
+    const panel = getPanelForContextInvoker(contextInvoker);
+    const isContextMenuKey = event.key === "ContextMenu";
+    const isShiftF10 = event.key === "F10" && event.shiftKey;
+
+    if (isMenuPanel(panel) && (isContextMenuKey || isShiftF10)) {
+      const rect = contextInvoker.getBoundingClientRect();
+      event.preventDefault();
+      openContextMenu(
+        panel,
+        contextInvoker,
+        rect.left + CONTEXT_MENU_MARGIN,
+        rect.top + CONTEXT_MENU_MARGIN,
+      );
+      return;
+    }
   }
 
   const triggerPanel = getPanelForTrigger(target);

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Context Menu Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/popover.css">
+  <link rel="stylesheet" href="../components/button.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 62rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .surface {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 80%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 60%, transparent)
+      );
+    }
+
+    .context-target {
+      display: grid;
+      place-items: center;
+      min-block-size: 14rem;
+      padding: var(--space-xl);
+      border: var(--border-width) dashed var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--bg-default);
+      text-align: center;
+      color: var(--text-muted);
+      cursor: context-menu;
+    }
+
+    .context-target:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: 2px;
+    }
+
+    .file-list {
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .file-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-md);
+      align-items: center;
+      padding: var(--space-md);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--bg-default);
+      cursor: context-menu;
+    }
+
+    .file-row:focus-visible {
+      outline: var(--focus-ring-width) solid var(--focus-ring-color);
+      outline-offset: 2px;
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Context Menu Component</h1>
+    <p>Dashbase context menus reuse the same <code>&lt;popover-panel popover role="menu"&gt;</code> primitive as dropdown menus. Add <code>data-contextmenu</code> to any focusable region, and the shared popover behavior opens the menu on right click or the keyboard context-menu shortcut.</p>
+
+    <hr>
+
+    <section>
+      <h2>Canvas Surface</h2>
+      <div
+        class="context-target"
+        data-contextmenu="canvas-menu"
+        tabindex="0"
+        aria-label="Canvas surface. Right click or press Shift+F10 for actions."
+      >
+        Right click this surface
+        <br>
+        or focus it and press Shift+F10
+      </div>
+
+      <popover-panel id="canvas-menu" popover="manual" role="menu" class="context-menu" aria-label="Canvas actions">
+        <small>Canvas</small>
+        <button type="button" role="menuitem">Paste</button>
+        <button type="button" role="menuitem">Duplicate selection</button>
+        <button type="button" role="menuitemcheckbox" aria-checked="true">Snap to grid</button>
+        <button type="button" role="menuitem" popovertarget="canvas-theme-menu" aria-haspopup="menu">Theme</button>
+        <popover-panel id="canvas-theme-menu" popover="manual" role="menu" class="submenu context-menu" aria-label="Theme">
+          <button type="button" role="menuitemradio" name="canvas-theme" aria-checked="true">System</button>
+          <button type="button" role="menuitemradio" name="canvas-theme" aria-checked="false">Light</button>
+          <button type="button" role="menuitemradio" name="canvas-theme" aria-checked="false">Dark</button>
+        </popover-panel>
+        <hr>
+        <button type="button" role="menuitem" class="danger">Delete selection</button>
+      </popover-panel>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>File Rows</h2>
+      <div class="surface file-list">
+        <div
+          class="file-row"
+          data-contextmenu="file-menu"
+          tabindex="0"
+          aria-label="Quarterly report. Right click for file actions."
+        >
+          <strong>Quarterly report.pdf</strong>
+          <span>2.4 MB</span>
+        </div>
+
+        <div
+          class="file-row"
+          data-contextmenu="file-menu"
+          tabindex="0"
+          aria-label="Customer cohort export. Right click for file actions."
+        >
+          <strong>customer-cohorts.csv</strong>
+          <span>860 KB</span>
+        </div>
+      </div>
+
+      <popover-panel id="file-menu" popover="manual" role="menu" class="context-menu" aria-label="File actions">
+        <small>File</small>
+        <button type="button" role="menuitem">Open</button>
+        <button type="button" role="menuitem">Rename</button>
+        <button type="button" role="menuitem">Download</button>
+        <hr>
+        <button type="button" role="menuitem" class="danger">Move to trash</button>
+      </popover-panel>
+    </section>
+  </main>
+
+  <script src="../behaviors/popover.js"></script>
+  <script src="./theme-controls.js"></script>
+</body>
+</html>
