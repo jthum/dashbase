@@ -224,7 +224,7 @@ Menus and utility popovers share the same `popover-panel` primitive. Add `role="
 ```
 
 ```html
-<nav class="navigation-menu" aria-label="Primary">
+<nav aria-label="Primary">
   <a href="#">Overview</a>
 
   <button type="button" popovertarget="products-panel" aria-expanded="false">

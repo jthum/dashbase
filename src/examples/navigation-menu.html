@@ -172,7 +172,7 @@
 <body>
   <main>
     <h1>Navigation Menu Component</h1>
-    <p>Dashbase navigation menus use a semantic <code>&lt;nav class="navigation-menu"&gt;</code> root and the same <code>&lt;popover-panel popover&gt;</code> primitive as other anchored surfaces. The behavior shim only coordinates top-level roving focus and panel switching.</p>
+    <p>Dashbase navigation menus style semantic <code>&lt;nav&gt;</code> directly when it contains anchored <code>&lt;popover-panel popover&gt;</code> children. The behavior shim only coordinates top-level roving focus and panel switching.</p>
 
     <hr>
 
@@ -180,7 +180,7 @@
       <h2>Product Navigation</h2>
 
       <div class="surface">
-        <nav class="navigation-menu" aria-label="Product navigation">
+        <nav aria-label="Product navigation">
           <a href="#">Overview</a>
 
           <button type="button" popovertarget="products-panel" aria-expanded="false">

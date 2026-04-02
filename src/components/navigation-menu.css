@@ -5,10 +5,10 @@
  * the shared <popover-panel popover> primitive.
  *
  * Structure:
- *   <nav class="navigation-menu" aria-label="Primary">
+ *   <nav aria-label="Primary">
  *     <a href="/">Overview</a>
  *     <button type="button" popovertarget="products-panel" aria-expanded="false">Products</button>
- *     <popover-panel id="products-panel" popover="auto" class="navigation-menu-panel">...</popover-panel>
+ *     <popover-panel id="products-panel" popover="auto">...</popover-panel>
  *   </nav>
  *
  * Variants:
@@ -16,7 +16,7 @@
  */
 
 @layer components {
-  nav.navigation-menu {
+  nav:has(> popover-panel[popover]) {
     --navigation-menu-gap: var(--space-xs);
     --navigation-menu-item-radius: var(--radius-md);
     --navigation-menu-item-padding-inline: var(--space-sm);
@@ -31,7 +31,7 @@
     max-inline-size: 100%;
   }
 
-  nav.navigation-menu > :where(a, button) {
+  nav:has(> popover-panel[popover]) > :where(a, button) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -53,24 +53,24 @@
       color var(--duration-fast) var(--easing-default);
   }
 
-  nav.navigation-menu > :where(a, button):hover,
-  nav.navigation-menu > :where(a, button):focus-visible {
+  nav:has(> popover-panel[popover]) > :where(a, button):hover,
+  nav:has(> popover-panel[popover]) > :where(a, button):focus-visible {
     color: var(--text-default);
     background-color: var(--bg-subtle);
     outline: none;
   }
 
-  nav.navigation-menu > :where(a, button)[aria-expanded="true"] {
+  nav:has(> popover-panel[popover]) > :where(a, button)[aria-expanded="true"] {
     color: var(--text-default);
     background-color: var(--bg-subtle);
   }
 
-  nav.navigation-menu > :where(a, button):is([disabled], [aria-disabled="true"]) {
+  nav:has(> popover-panel[popover]) > :where(a, button):is([disabled], [aria-disabled="true"]) {
     opacity: var(--disabled-opacity);
     cursor: not-allowed;
   }
 
-  nav.navigation-menu > popover-panel[popover] {
+  nav:has(> popover-panel[popover]) > popover-panel[popover] {
     --popover-padding: var(--space-xl);
     --popover-min-inline: 20rem;
     --popover-max-inline: min(40rem, calc(100vi - (var(--space-xl) * 2)));
@@ -78,11 +78,11 @@
     --panel-footer-justify: flex-start;
   }
 
-  nav.navigation-menu > popover-panel[popover] > panel-header > :where(h1, h2, h3, h4, h5, h6) {
+  nav:has(> popover-panel[popover]) > popover-panel[popover] > panel-header > :where(h1, h2, h3, h4, h5, h6) {
     font-size: var(--text-lg);
   }
 
-  nav.navigation-menu > popover-panel[popover] > panel-content > :where(nav, ul, ol) {
+  nav:has(> popover-panel[popover]) > popover-panel[popover] > panel-content > :where(nav, ul, ol) {
     margin: 0;
     padding: 0;
     list-style: none;

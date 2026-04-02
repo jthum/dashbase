@@ -1,15 +1,25 @@
 /*
  * Dashbase — Navigation Menu behavior
  *
- * Adds roving focus and top-level panel switching for:
- *   <nav class="navigation-menu"> ... </nav>
+ * Adds roving focus and top-level panel switching for semantic <nav> roots
+ * that contain direct child <popover-panel popover> elements.
  *
  * The navigation panels themselves reuse <popover-panel popover>, while this
  * behavior only coordinates the root navigation items.
  */
 
-const NAVIGATION_MENU_SELECTOR = "nav.navigation-menu";
+const NAVIGATION_ROOT_TAG = "NAV";
 const NAVIGATION_PANEL_SELECTOR = "popover-panel[popover]";
+
+function isNavigationMenuRoot(value) {
+  return (
+    value instanceof HTMLElement &&
+    value.tagName === NAVIGATION_ROOT_TAG &&
+    [...value.children].some(
+      (child) => child instanceof HTMLElement && child.matches(NAVIGATION_PANEL_SELECTOR),
+    )
+  );
+}
 
 function isDisabledNavigationItem(item) {
   return (
@@ -34,8 +44,8 @@ function getPanelForNavigationItem(item) {
     return null;
   }
 
-  const menu = item.closest(NAVIGATION_MENU_SELECTOR);
-  if (!(menu instanceof HTMLElement)) {
+  const menu = item.parentElement;
+  if (!isNavigationMenuRoot(menu)) {
     return null;
   }
 
@@ -114,8 +124,8 @@ function openNavigationPanel(item) {
     return null;
   }
 
-  const menu = item.closest(NAVIGATION_MENU_SELECTOR);
-  if (!(menu instanceof HTMLElement)) {
+  const menu = item.parentElement;
+  if (!isNavigationMenuRoot(menu)) {
     return null;
   }
 
@@ -138,36 +148,31 @@ function initializeNavigationMenu(menu) {
   setActiveNavigationItem(menu, activeItem);
 }
 
-for (const menu of document.querySelectorAll(NAVIGATION_MENU_SELECTOR)) {
-  if (menu instanceof HTMLElement) {
+for (const menu of document.querySelectorAll("nav")) {
+  if (isNavigationMenuRoot(menu)) {
     initializeNavigationMenu(menu);
   }
 }
 
 document.addEventListener("focusin", (event) => {
   const target = event.target instanceof HTMLElement ? event.target : null;
-  const item = target?.closest(`${NAVIGATION_MENU_SELECTOR} > :where(a, button)`);
-  if (!(item instanceof HTMLElement)) {
+  const item = target?.closest(":where(a, button)");
+  if (!(item instanceof HTMLElement) || !isNavigationMenuRoot(item.parentElement)) {
     return;
   }
 
-  const menu = item.closest(NAVIGATION_MENU_SELECTOR);
-  if (!(menu instanceof HTMLElement)) {
-    return;
-  }
-
-  setActiveNavigationItem(menu, item);
+  setActiveNavigationItem(item.parentElement, item);
 });
 
 document.addEventListener("pointerover", (event) => {
   const target = event.target instanceof HTMLElement ? event.target : null;
-  const item = target?.closest(`${NAVIGATION_MENU_SELECTOR} > :where(a, button)`);
-  if (!(item instanceof HTMLElement)) {
+  const item = target?.closest(":where(a, button)");
+  if (!(item instanceof HTMLElement) || !isNavigationMenuRoot(item.parentElement)) {
     return;
   }
 
-  const menu = item.closest(NAVIGATION_MENU_SELECTOR);
-  if (!(menu instanceof HTMLElement) || !hasOpenNavigationPanel(menu)) {
+  const menu = item.parentElement;
+  if (!hasOpenNavigationPanel(menu)) {
     return;
   }
 
@@ -186,12 +191,9 @@ document.addEventListener("keydown", (event) => {
     return;
   }
 
-  const directItem = target.closest(`${NAVIGATION_MENU_SELECTOR} > :where(a, button)`);
-  if (directItem instanceof HTMLElement) {
-    const menu = directItem.closest(NAVIGATION_MENU_SELECTOR);
-    if (!(menu instanceof HTMLElement)) {
-      return;
-    }
+  const directItem = target.closest(":where(a, button)");
+  if (directItem instanceof HTMLElement && isNavigationMenuRoot(directItem.parentElement)) {
+    const menu = directItem.parentElement;
 
     if (event.key === "ArrowRight") {
       event.preventDefault();
@@ -250,7 +252,7 @@ document.addEventListener("keydown", (event) => {
   }
 
   const panel = target.closest(NAVIGATION_PANEL_SELECTOR);
-  if (!(panel instanceof HTMLElement)) {
+  if (!(panel instanceof HTMLElement) || !isNavigationMenuRoot(panel.parentElement)) {
     return;
   }
 
@@ -259,10 +261,7 @@ document.addEventListener("keydown", (event) => {
     return;
   }
 
-  const menu = invoker.closest(NAVIGATION_MENU_SELECTOR);
-  if (!(menu instanceof HTMLElement)) {
-    return;
-  }
+  const menu = panel.parentElement;
 
   if (event.key === "Escape") {
     event.preventDefault();
