@@ -83,6 +83,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/tabs.css">
 <link rel="stylesheet" href="dist/components/popover.css">
 <link rel="stylesheet" href="dist/components/dialog.css">
+<link rel="stylesheet" href="dist/components/command.css">
 <link rel="stylesheet" href="dist/components/menubar.css">
 <link rel="stylesheet" href="dist/components/navigation-menu.css">
 <link rel="stylesheet" href="dist/components/scroll-area.css">
@@ -91,6 +92,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 
 <!-- Load only the behavior shims you use -->
 <script src="dist/behaviors/dialog.js"></script>
+<script src="dist/behaviors/command.js"></script>
 <script src="dist/behaviors/menubar.js"></script>
 <script src="dist/behaviors/navigation-menu.js"></script>
 <script src="dist/behaviors/popover.js"></script>
@@ -164,6 +166,37 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 </ui-tabs>
 
 <script src="dist/behaviors/tabs.js"></script>
+```
+
+```html
+<button type="button" invoketarget="workspace-command" invokeaction="showModal">
+  Open command palette
+</button>
+
+<dialog id="workspace-command" data-command-shortcut="mod+k" aria-label="Command palette">
+  <command-search>
+    <input type="search" placeholder="Search pages, actions, and settings…" />
+  </command-search>
+
+  <command-list>
+    <command-group>
+      <small>Pages</small>
+      <a href="/reports">Reports <kbd>G R</kbd></a>
+      <a href="/settings">Settings <kbd>G S</kbd></a>
+    </command-group>
+
+    <command-group>
+      <small>Actions</small>
+      <button type="button">Invite teammate <kbd>I</kbd></button>
+      <button type="button">New release draft <kbd>R</kbd></button>
+    </command-group>
+
+    <command-empty hidden>No commands match that search.</command-empty>
+  </command-list>
+</dialog>
+
+<script src="dist/behaviors/dialog.js"></script>
+<script src="dist/behaviors/command.js"></script>
 ```
 
 ```html

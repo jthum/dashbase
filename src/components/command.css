@@ -1,0 +1,140 @@
+/*
+ * Dashbase — Command
+ *
+ * Styles a command palette built on the native <dialog> element.
+ *
+ * Structure:
+ *   <dialog data-command-shortcut="mod+k">
+ *     <command-search>
+ *       <input type="search" placeholder="Search…" />
+ *     </command-search>
+ *     <command-list>
+ *       <command-group>
+ *         <small>Pages</small>
+ *         <a href="#">Dashboard</a>
+ *         <button type="button">Settings</button>
+ *       </command-group>
+ *       <command-empty hidden>No matching commands.</command-empty>
+ *     </command-list>
+ *   </dialog>
+ *
+ * Variants:
+ *   none
+ */
+
+@layer components {
+  dialog:has(> command-list) {
+    --command-width: min(40rem, calc(100vi - (var(--space-lg) * 2)));
+    --command-search-padding-inline: var(--space-lg);
+    --command-search-padding-block: var(--space-md);
+    --command-item-padding-inline: var(--space-md);
+    --command-item-padding-block: var(--space-sm);
+    --command-item-radius: var(--radius-lg);
+    --command-item-gap: var(--space-sm);
+    --command-group-gap: var(--space-xs);
+
+    inline-size: var(--command-width);
+    padding: 0;
+    overflow: clip;
+  }
+
+  dialog:has(> command-list) > command-search {
+    display: block;
+    padding-inline: var(--command-search-padding-inline);
+    padding-block: var(--command-search-padding-block);
+    border-block-end: var(--border-width) solid var(--border-default);
+  }
+
+  dialog:has(> command-list) > command-search > input[type="search"] {
+    inline-size: 100%;
+    min-inline-size: 0;
+    padding: 0;
+    color: var(--text-default);
+    background: transparent;
+    border: 0;
+    font: inherit;
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    outline: none;
+  }
+
+  dialog:has(> command-list) > command-search > input[type="search"]::placeholder {
+    color: var(--text-muted);
+  }
+
+  command-list {
+    display: grid;
+    gap: var(--space-sm);
+    max-block-size: min(28rem, calc(100vb - (var(--space-2xl) * 2)));
+    padding: var(--space-sm);
+    overflow: auto;
+  }
+
+  command-group {
+    display: grid;
+    gap: var(--command-group-gap);
+  }
+
+  command-group > :where(small, strong) {
+    margin: 0;
+    padding-inline: var(--command-item-padding-inline);
+    padding-block: var(--space-xs);
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+  }
+
+  command-group > :where(button, a) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--command-item-gap);
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 2.5rem;
+    padding-inline: var(--command-item-padding-inline);
+    padding-block: var(--command-item-padding-block);
+    color: var(--text-default);
+    background: transparent;
+    border: 0;
+    border-radius: var(--command-item-radius);
+    font: inherit;
+    font-size: var(--text-sm);
+    line-height: var(--leading-tight);
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-default),
+      color var(--duration-fast) var(--easing-default);
+  }
+
+  command-group > :where(button, a):hover,
+  command-group > :where(button, a):focus-visible,
+  command-group > :where(button, a)[aria-selected="true"] {
+    color: var(--text-default);
+    background-color: var(--bg-subtle);
+    outline: none;
+  }
+
+  command-group > :where(button, a) > :where(kbd, small:last-child, span:last-child) {
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    line-height: 1;
+    letter-spacing: var(--tracking-wide);
+    white-space: nowrap;
+  }
+
+  command-empty {
+    display: block;
+    padding-inline: var(--command-item-padding-inline);
+    padding-block: var(--space-lg);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    text-align: center;
+  }
+}
