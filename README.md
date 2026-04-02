@@ -163,7 +163,9 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 </button>
 
 <popover-panel id="project-menu" popover="auto" role="menu" aria-label="Project actions">
-  <small>Workspace</small>
+  <panel-header aria-hidden="true">
+    <small>Workspace</small>
+  </panel-header>
   <button type="button" role="menuitem">Profile <kbd>P</kbd></button>
   <button type="button" role="menuitem">Billing <kbd>B</kbd></button>
   <button type="button" role="menuitem" popovertarget="theme-menu" aria-haspopup="menu">

@@ -101,13 +101,15 @@
         or focus it and press Shift+F10
       </div>
 
-      <popover-panel id="canvas-menu" popover="manual" role="menu" class="context-menu" aria-label="Canvas actions">
-        <small>Canvas</small>
+      <popover-panel id="canvas-menu" popover="auto" role="menu" class="context-menu" aria-label="Canvas actions">
+        <panel-header aria-hidden="true">
+          <small>Canvas</small>
+        </panel-header>
         <button type="button" role="menuitem">Paste</button>
         <button type="button" role="menuitem">Duplicate selection</button>
         <button type="button" role="menuitemcheckbox" aria-checked="true">Snap to grid</button>
         <button type="button" role="menuitem" popovertarget="canvas-theme-menu" aria-haspopup="menu">Theme</button>
-        <popover-panel id="canvas-theme-menu" popover="manual" role="menu" class="submenu context-menu" aria-label="Theme">
+        <popover-panel id="canvas-theme-menu" popover="auto" role="menu" class="submenu context-menu" aria-label="Theme">
           <button type="button" role="menuitemradio" name="canvas-theme" aria-checked="true">System</button>
           <button type="button" role="menuitemradio" name="canvas-theme" aria-checked="false">Light</button>
           <button type="button" role="menuitemradio" name="canvas-theme" aria-checked="false">Dark</button>
@@ -143,8 +145,10 @@
         </div>
       </div>
 
-      <popover-panel id="file-menu" popover="manual" role="menu" class="context-menu" aria-label="File actions">
-        <small>File</small>
+      <popover-panel id="file-menu" popover="auto" role="menu" class="context-menu" aria-label="File actions">
+        <panel-header aria-hidden="true">
+          <small>File</small>
+        </panel-header>
         <button type="button" role="menuitem">Open</button>
         <button type="button" role="menuitem">Rename</button>
         <button type="button" role="menuitem">Download</button>
