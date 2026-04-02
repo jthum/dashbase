@@ -147,8 +147,24 @@ function initializeCommandDialog(dialog) {
   syncActiveItem(dialog, getVisibleCommandItems(dialog)[0] ?? null);
   applyFilter(dialog);
 
-  search?.addEventListener("input", () => {
+  const syncFilter = () => {
     applyFilter(dialog);
+  };
+
+  search?.addEventListener("input", syncFilter);
+  search?.addEventListener("search", syncFilter);
+  search?.addEventListener("change", syncFilter);
+  search?.addEventListener("keyup", (event) => {
+    if (
+      event.key === "ArrowDown" ||
+      event.key === "ArrowUp" ||
+      event.key === "Enter" ||
+      event.key === "Escape"
+    ) {
+      return;
+    }
+
+    syncFilter();
   });
 
   const observer = new MutationObserver(() => {

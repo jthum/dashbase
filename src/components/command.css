@@ -34,6 +34,9 @@
     --command-group-gap: var(--space-xs);
 
     inline-size: var(--command-width);
+    margin-inline: auto;
+    margin-block-start: max(10vb, var(--space-2xl));
+    margin-block-end: auto;
     padding: 0;
     overflow: clip;
   }
@@ -75,7 +78,12 @@
     gap: var(--command-group-gap);
   }
 
-  command-group > :where(small, strong) {
+  command-group[hidden] {
+    display: none;
+  }
+
+  command-group > small,
+  command-group > strong {
     margin: 0;
     padding-inline: var(--command-item-padding-inline);
     padding-block: var(--space-xs);
@@ -87,10 +95,12 @@
     text-transform: uppercase;
   }
 
-  command-group > :where(button, a) {
+  command-group > button,
+  command-group > a {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
+    justify-content: stretch;
     gap: var(--command-item-gap);
     inline-size: 100%;
     min-inline-size: 0;
@@ -106,21 +116,31 @@
     line-height: var(--leading-tight);
     text-align: start;
     text-decoration: none;
+    white-space: normal;
     cursor: pointer;
     transition:
       background-color var(--duration-fast) var(--easing-default),
       color var(--duration-fast) var(--easing-default);
   }
 
-  command-group > :where(button, a):hover,
-  command-group > :where(button, a):focus-visible,
-  command-group > :where(button, a)[aria-selected="true"] {
+  command-group > button[hidden],
+  command-group > a[hidden] {
+    display: none;
+  }
+
+  command-group > button:hover,
+  command-group > button:focus-visible,
+  command-group > button[aria-selected="true"],
+  command-group > a:hover,
+  command-group > a:focus-visible,
+  command-group > a[aria-selected="true"] {
     color: var(--text-default);
     background-color: var(--bg-subtle);
     outline: none;
   }
 
-  command-group > :where(button, a) > :where(kbd, small:last-child, span:last-child) {
+  command-group > button > :where(kbd, small:last-child, span:last-child),
+  command-group > a > :where(kbd, small:last-child, span:last-child) {
     color: var(--text-muted);
     font-size: var(--text-xs);
     line-height: 1;
@@ -136,5 +156,9 @@
     font-size: var(--text-sm);
     line-height: var(--leading-normal);
     text-align: center;
+  }
+
+  command-empty[hidden] {
+    display: none;
   }
 }
