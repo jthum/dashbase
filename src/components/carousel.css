@@ -5,27 +5,27 @@
  * navigation.
  *
  * Structure:
- *   <carousel>
- *     <carousel-track>
- *       <carousel-slide>...</carousel-slide>
- *     </carousel-track>
- *     <carousel-controls>
+ *   <ui-carousel>
+ *     <item-group>
+ *       <ui-item role="group" aria-roledescription="slide">...</ui-item>
+ *     </item-group>
+ *     <control-bar>
  *       <button type="button" data-carousel-prev>Previous</button>
  *       <carousel-dots></carousel-dots>
  *       <button type="button" data-carousel-next>Next</button>
- *     </carousel-controls>
- *   </carousel>
+ *     </control-bar>
+ *   </ui-carousel>
  *
  * Variants:
  *   .vertical — vertical snap axis
  */
 
 @layer components {
-  carousel {
+  ui-carousel {
     --carousel-gap: var(--space-lg);
-    --carousel-slide-size: 100%;
-    --carousel-slide-block-size: auto;
-    --carousel-track-block-size: 24rem;
+    --carousel-item-size: 100%;
+    --carousel-item-block-size: auto;
+    --carousel-group-block-size: 24rem;
     --carousel-control-size: 2.5rem;
     --carousel-control-bg: var(--bg-raised);
     --carousel-control-fg: var(--text-default);
@@ -39,9 +39,9 @@
     gap: var(--space-md);
     min-inline-size: 0;
 
-    &.vertical > carousel-track {
+    &.vertical > item-group {
       flex-direction: column;
-      block-size: var(--carousel-track-block-size);
+      block-size: var(--carousel-group-block-size);
       overflow-x: hidden;
       overflow-y: auto;
       overscroll-behavior-y: contain;
@@ -49,14 +49,14 @@
       touch-action: pan-y pinch-zoom;
     }
 
-    &.vertical > carousel-track > carousel-slide {
-      flex: 0 0 var(--carousel-slide-block-size);
-      block-size: var(--carousel-slide-block-size);
+    &.vertical > item-group > * {
+      flex: 0 0 var(--carousel-item-block-size);
+      block-size: var(--carousel-item-block-size);
       min-block-size: 0;
     }
   }
 
-  carousel-track {
+  ui-carousel > item-group {
     display: flex;
     gap: var(--carousel-gap);
     overflow-x: auto;
@@ -72,23 +72,23 @@
     touch-action: pan-x pinch-zoom;
   }
 
-  carousel-track::-webkit-scrollbar {
+  ui-carousel > item-group::-webkit-scrollbar {
     display: none;
   }
 
-  carousel-slide {
-    flex: 0 0 var(--carousel-slide-size);
+  ui-carousel > item-group > * {
+    flex: 0 0 var(--carousel-item-size);
     min-inline-size: 0;
     scroll-snap-align: start;
     scroll-snap-stop: always;
     display: block;
   }
 
-  carousel-slide[data-active] {
+  ui-carousel > item-group > *[data-active] {
     z-index: 1;
   }
 
-  carousel-controls {
+  ui-carousel > control-bar {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
@@ -96,7 +96,7 @@
     min-inline-size: 0;
   }
 
-  carousel-dots {
+  ui-carousel > control-bar > carousel-dots {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -107,11 +107,11 @@
     scrollbar-width: none;
   }
 
-  carousel-dots::-webkit-scrollbar {
+  ui-carousel > control-bar > carousel-dots::-webkit-scrollbar {
     display: none;
   }
 
-  carousel :where([data-carousel-prev], [data-carousel-next]) {
+  ui-carousel :where([data-carousel-prev], [data-carousel-next]) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -134,24 +134,24 @@
       color var(--duration-fast) var(--easing-default);
   }
 
-  carousel :where([data-carousel-prev], [data-carousel-next]):hover:not(:disabled),
-  carousel :where([data-carousel-prev], [data-carousel-next]):focus-visible:not(:disabled) {
+  ui-carousel :where([data-carousel-prev], [data-carousel-next]):hover:not(:disabled),
+  ui-carousel :where([data-carousel-prev], [data-carousel-next]):focus-visible:not(:disabled) {
     color: var(--text-default);
     background-color: var(--bg-subtle);
     border-color: var(--border-control);
     outline: none;
   }
 
-  carousel :where([data-carousel-prev], [data-carousel-next]):active:not(:disabled) {
+  ui-carousel :where([data-carousel-prev], [data-carousel-next]):active:not(:disabled) {
     transform: scale(0.98);
   }
 
-  carousel :where([data-carousel-prev], [data-carousel-next]):disabled {
+  ui-carousel :where([data-carousel-prev], [data-carousel-next]):disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  carousel-dots > button {
+  ui-carousel > control-bar > carousel-dots > button {
     inline-size: var(--carousel-dot-size);
     block-size: var(--carousel-dot-size);
     padding: 0;
@@ -166,19 +166,19 @@
       opacity var(--duration-fast) var(--easing-default);
   }
 
-  carousel-dots > button:hover,
-  carousel-dots > button:focus-visible {
+  ui-carousel > control-bar > carousel-dots > button:hover,
+  ui-carousel > control-bar > carousel-dots > button:focus-visible {
     background-color: color-mix(in oklch, var(--carousel-dot-active-bg) 72%, var(--carousel-dot-bg));
     outline: none;
   }
 
-  carousel-dots > button[aria-current="true"] {
+  ui-carousel > control-bar > carousel-dots > button[aria-current="true"] {
     background-color: var(--carousel-dot-active-bg);
     transform: scale(1.12);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    carousel-track {
+    ui-carousel > item-group {
       scroll-behavior: auto;
     }
   }

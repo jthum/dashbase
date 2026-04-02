@@ -135,6 +135,8 @@ If a proposed element has distinct answers to these four questions, it earns its
 
 If it passes the rubric, follow this strict naming law:
 
+- **Every custom element name must include a hyphen.** If it does not, it is not a valid custom-element name for Dashbase vocabulary, even if browsers still render the tag.
+
 - **Structural Elements (Descriptive):** For containers that describe relationships between children, use plain descriptive names: `<form-field>`, `<input-group>`, `<tab-list>`.
 - **Presentational Elements (`ui-*`):** For visual patterns that have no semantic document meaning (painted rectangles), explicitly mark them as UI polyfills: `<ui-badge>` (numerical counts), `<ui-status>` (live state labels), `<ui-tag>` (taxonomy categories).
 

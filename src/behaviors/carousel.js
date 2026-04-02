@@ -1,42 +1,40 @@
 /*
  * Dashbase — Carousel behavior
  *
- * Enhances <carousel> roots with:
+ * Enhances <ui-carousel> roots with:
  * - previous / next button controls
  * - authored dot navigation
  * - active snap-position and control-state sync
  */
 
-const CAROUSEL_ROOT_SELECTOR = "carousel";
-const CAROUSEL_TRACK_SELECTOR = "carousel-track";
-const CAROUSEL_SLIDE_SELECTOR = "carousel-slide";
+const CAROUSEL_ROOT_SELECTOR = "ui-carousel";
+const CAROUSEL_GROUP_SELECTOR = "item-group";
 
 function isCarouselRoot(value) {
   return value instanceof HTMLElement && value.matches(CAROUSEL_ROOT_SELECTOR);
 }
 
 function getCarouselParts(root) {
-  const track = root.querySelector(`:scope > ${CAROUSEL_TRACK_SELECTOR}`);
-  if (!(track instanceof HTMLElement)) {
+  const group = root.querySelector(`:scope > ${CAROUSEL_GROUP_SELECTOR}`);
+  if (!(group instanceof HTMLElement)) {
     return null;
   }
 
-  const slides = [...track.querySelectorAll(`:scope > ${CAROUSEL_SLIDE_SELECTOR}`)]
-    .filter((slide) => slide instanceof HTMLElement);
+  const slides = [...group.children].filter((slide) => slide instanceof HTMLElement);
   if (slides.length === 0) {
     return null;
   }
 
-  const dots = root.querySelector(":scope > carousel-controls > carousel-dots");
+  const dots = root.querySelector(":scope > control-bar > carousel-dots");
   const dotButtons = dots instanceof HTMLElement
     ? [...dots.querySelectorAll(":scope > button")].filter((button) => button instanceof HTMLButtonElement)
     : [];
 
   return {
-    track,
+    group,
     slides,
-    prev: root.querySelector(":scope [data-carousel-prev]"),
-    next: root.querySelector(":scope [data-carousel-next]"),
+    prev: root.querySelector(":scope > control-bar [data-carousel-prev]"),
+    next: root.querySelector(":scope > control-bar [data-carousel-next]"),
     dotButtons,
   };
 }
@@ -59,12 +57,12 @@ function getCarouselAxis(root) {
 
 function getSnapState(root, parts) {
   const axis = getCarouselAxis(root);
-  const currentOffset = parts.track[axis.scroll];
-  const trackRect = parts.track.getBoundingClientRect();
-  const maxScroll = Math.max(0, parts.track[axis.scrollSize] - parts.track[axis.clientSize]);
+  const currentOffset = parts.group[axis.scroll];
+  const groupRect = parts.group.getBoundingClientRect();
+  const maxScroll = Math.max(0, parts.group[axis.scrollSize] - parts.group[axis.clientSize]);
   const rawPositions = parts.slides.map((slide, index) => {
     const slideRect = slide.getBoundingClientRect();
-    const rawPosition = currentOffset + (slideRect[axis.delta] - trackRect[axis.delta]);
+    const rawPosition = currentOffset + (slideRect[axis.delta] - groupRect[axis.delta]);
     return {
       position: Math.min(maxScroll, Math.max(0, rawPosition)),
       slideIndex: index,
@@ -134,7 +132,7 @@ function scrollToSnap(parts, snapState, index) {
     return;
   }
 
-  parts.track.scrollTo({
+  parts.group.scrollTo({
     [snapState.axis.delta]: point.position,
   });
 }
@@ -159,7 +157,7 @@ function initializeCarousel(root) {
 
   root.dataset.carouselInitialized = "true";
   let snapState = getSnapState(root, parts);
-  let activeIndex = getNearestSnapIndex(parts.track, snapState);
+  let activeIndex = getNearestSnapIndex(parts.group, snapState);
   let pendingIndex = null;
   let settleTimer = 0;
 
@@ -244,13 +242,13 @@ function initializeCarousel(root) {
 
   function syncAfterScrollSettles() {
     snapState = getSnapState(root, parts);
-    const settledIndex = getNearestSnapIndex(parts.track, snapState);
+    const settledIndex = getNearestSnapIndex(parts.group, snapState);
     pendingIndex = null;
     activeIndex = settledIndex;
     syncCarousel(parts, snapState, activeIndex);
   }
 
-  parts.track.addEventListener("scroll", () => {
+  parts.group.addEventListener("scroll", () => {
     if (settleTimer) {
       window.clearTimeout(settleTimer);
     }
@@ -268,7 +266,7 @@ function initializeCarousel(root) {
   const resizeObserver = new ResizeObserver(() => {
     syncAfterScrollSettles();
   });
-  resizeObserver.observe(parts.track);
+  resizeObserver.observe(parts.group);
 }
 
 for (const root of document.querySelectorAll(CAROUSEL_ROOT_SELECTOR)) {
