@@ -83,6 +83,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/tabs.css">
 <link rel="stylesheet" href="dist/components/popover.css">
 <link rel="stylesheet" href="dist/components/dialog.css">
+<link rel="stylesheet" href="dist/components/combobox.css">
 <link rel="stylesheet" href="dist/components/command.css">
 <link rel="stylesheet" href="dist/components/menubar.css">
 <link rel="stylesheet" href="dist/components/navigation-menu.css">
@@ -91,6 +92,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/toast.css">
 
 <!-- Load only the behavior shims you use -->
+<script src="dist/behaviors/combobox.js"></script>
 <script src="dist/behaviors/dialog.js"></script>
 <script src="dist/behaviors/command.js"></script>
 <script src="dist/behaviors/menubar.js"></script>
@@ -197,6 +199,34 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 
 <script src="dist/behaviors/dialog.js"></script>
 <script src="dist/behaviors/command.js"></script>
+```
+
+```html
+<form-field>
+  <label for="reviewer">Assign reviewer</label>
+
+  <combo-box>
+    <input
+      id="reviewer"
+      type="text"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-expanded="false"
+      aria-controls="reviewer-options"
+      autocomplete="off"
+      placeholder="Search teammates…"
+    />
+
+    <popover-panel id="reviewer-options" popover="auto" role="listbox" aria-label="Reviewer options">
+      <button type="button" role="option" data-value="ava-malik">Ava Malik <span>Design systems</span></button>
+      <button type="button" role="option" data-value="rina-shah">Rina Shah <span>Quality assurance</span></button>
+      <button type="button" role="option" data-value="marco-silva">Marco Silva <span>Frontend</span></button>
+      <combobox-empty hidden>No reviewers match that search.</combobox-empty>
+    </popover-panel>
+  </combo-box>
+</form-field>
+
+<script src="dist/behaviors/combobox.js"></script>
 ```
 
 ```html

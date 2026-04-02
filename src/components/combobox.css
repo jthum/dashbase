@@ -1,0 +1,133 @@
+/*
+ * Dashbase — Combobox
+ *
+ * Styles a searchable combobox built from a semantic input plus a popover listbox.
+ *
+ * Structure:
+ *   <combo-box>
+ *     <input
+ *       type="text"
+ *       role="combobox"
+ *       aria-autocomplete="list"
+ *       aria-expanded="false"
+ *       aria-controls="framework-options"
+ *     />
+ *     <popover-panel id="framework-options" popover="auto" role="listbox">
+ *       <button type="button" role="option">Dashbase</button>
+ *       <button type="button" role="option">Shadcn</button>
+ *       <combobox-empty hidden>No matches.</combobox-empty>
+ *     </popover-panel>
+ *   </combo-box>
+ *
+ * Variants:
+ *   none
+ */
+
+@layer components {
+  combo-box {
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  combo-box > input[role="combobox"] {
+    padding-inline-end: calc(var(--control-padding-inline) + 1.25rem);
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+      linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+    background-repeat: no-repeat;
+    background-position:
+      right calc(var(--control-padding-inline) + 0.35rem) center,
+      right var(--control-padding-inline) center;
+    background-size: 0.45rem 0.45rem;
+
+    &:dir(rtl) {
+      background-position:
+        left calc(var(--control-padding-inline) + 0.35rem) center,
+        left var(--control-padding-inline) center;
+    }
+
+    &[aria-expanded="true"] {
+      border-color: var(--color-primary);
+    }
+  }
+
+  combo-box > popover-panel[popover][role="listbox"] {
+    --popover-padding: var(--space-xs);
+    --popover-radius: var(--radius-lg);
+    --popover-min-inline: 14rem;
+    --popover-max-inline: min(var(--combobox-inline-size, 20rem), calc(100vi - (var(--space-lg) * 2)));
+    --popover-inset-block-start: var(--combobox-block-start, var(--space-lg));
+    --popover-inset-block-end: auto;
+    --popover-inset-inline-start: var(--combobox-inline-start, var(--space-lg));
+    --popover-inset-inline-end: auto;
+
+    inline-size: var(--combobox-inline-size, var(--popover-min-inline));
+    min-inline-size: var(--combobox-inline-size, var(--popover-min-inline));
+    max-inline-size: min(var(--combobox-inline-size, var(--popover-max-inline)), calc(100vi - (var(--space-lg) * 2)));
+    max-block-size: min(18rem, calc(100vb - (var(--space-lg) * 2)));
+    overflow: auto;
+  }
+
+  combo-box > popover-panel[popover][role="listbox"]::backdrop {
+    background: transparent;
+  }
+
+  combo-box > popover-panel[popover][role="listbox"] > button[role="option"] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-md);
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 2.25rem;
+    padding-inline: var(--space-sm);
+    padding-block: var(--space-xs);
+    color: var(--text-default);
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-md);
+    font: inherit;
+    font-size: var(--text-sm);
+    line-height: var(--leading-tight);
+    text-align: start;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-default),
+      color var(--duration-fast) var(--easing-default);
+  }
+
+  combo-box > popover-panel[popover][role="listbox"] > button[role="option"][hidden] {
+    display: none;
+  }
+
+  combo-box > popover-panel[popover][role="listbox"] > button[role="option"]:hover,
+  combo-box > popover-panel[popover][role="listbox"] > button[role="option"]:focus-visible,
+  combo-box > popover-panel[popover][role="listbox"] > button[role="option"][aria-selected="true"] {
+    color: var(--text-default);
+    background-color: var(--bg-subtle);
+    outline: none;
+  }
+
+  combo-box > popover-panel[popover][role="listbox"] > button[role="option"] > :where(kbd, small:last-child, span:last-child) {
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    line-height: 1;
+    letter-spacing: var(--tracking-wide);
+    white-space: nowrap;
+  }
+
+  combobox-empty {
+    display: block;
+    padding-inline: var(--space-sm);
+    padding-block: var(--space-lg);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    text-align: center;
+  }
+
+  combobox-empty[hidden] {
+    display: none;
+  }
+}
