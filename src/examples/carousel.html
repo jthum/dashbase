@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Carousel Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/aspect-ratio.css">
+  <link rel="stylesheet" href="../components/carousel.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 72rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .surface {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 88%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 56%, transparent)
+      );
+    }
+
+    .surface > * {
+      margin: 0;
+    }
+
+    .slide-card {
+      display: grid;
+      gap: var(--space-md);
+      padding: var(--space-lg);
+      color: var(--text-default);
+      background: var(--bg-raised);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .slide-card h3,
+    .slide-card p {
+      margin: 0;
+    }
+
+    .hero-media {
+      overflow: clip;
+      border-radius: calc(var(--radius-xl) - var(--border-width));
+    }
+
+    .eyebrow {
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Carousel Component</h1>
+    <p>Dashbase uses <code>&lt;carousel&gt;</code> when a sequence of slides should remain horizontally scrollable but still gain previous/next controls, dot navigation, and keyboard support. The foundation stays native with scroll snapping; the behavior shim only coordinates state.</p>
+
+    <section class="surface">
+      <h2>Feature Tour</h2>
+      <p>Each slide fills the viewport width by default, which makes this a good fit for media previews, onboarding tours, and marketing storytelling.</p>
+
+      <carousel aria-label="Launch feature tour">
+        <carousel-track>
+          <carousel-slide>
+            <article class="slide-card">
+              <aspect-ratio class="hero-media">
+                <svg viewBox="0 0 160 90" role="img" aria-label="Analytics dashboard preview">
+                  <rect width="160" height="90" fill="var(--color-primary-subtle)"></rect>
+                  <rect x="12" y="12" width="44" height="66" rx="8" fill="var(--bg-raised)"></rect>
+                  <rect x="68" y="18" width="72" height="8" rx="4" fill="var(--color-primary)"></rect>
+                  <rect x="68" y="36" width="48" height="8" rx="4" fill="var(--text-muted)"></rect>
+                  <rect x="68" y="54" width="60" height="8" rx="4" fill="var(--text-muted)"></rect>
+                </svg>
+              </aspect-ratio>
+              <div class="eyebrow">Launch report</div>
+              <h3>Track signups and activation in the same view</h3>
+              <p>Combine acquisition, trial conversion, and workspace activation in a single release dashboard without switching tools.</p>
+            </article>
+          </carousel-slide>
+
+          <carousel-slide>
+            <article class="slide-card">
+              <aspect-ratio class="hero-media">
+                <svg viewBox="0 0 160 90" role="img" aria-label="Segment comparison preview">
+                  <rect width="160" height="90" fill="var(--color-success-subtle)"></rect>
+                  <rect x="16" y="18" width="28" height="48" rx="8" fill="var(--bg-raised)"></rect>
+                  <rect x="52" y="18" width="28" height="34" rx="8" fill="var(--bg-raised)"></rect>
+                  <rect x="88" y="18" width="28" height="58" rx="8" fill="var(--bg-raised)"></rect>
+                  <rect x="124" y="18" width="20" height="42" rx="8" fill="var(--bg-raised)"></rect>
+                </svg>
+              </aspect-ratio>
+              <div class="eyebrow">Segment comparison</div>
+              <h3>Compare cohorts without losing the narrative</h3>
+              <p>Pin campaign slices side by side and keep the commentary directly attached to the chart or table you are reviewing.</p>
+            </article>
+          </carousel-slide>
+
+          <carousel-slide>
+            <article class="slide-card">
+              <aspect-ratio class="hero-media">
+                <svg viewBox="0 0 160 90" role="img" aria-label="Approval queue preview">
+                  <rect width="160" height="90" fill="var(--color-warning-subtle)"></rect>
+                  <rect x="16" y="16" width="128" height="14" rx="7" fill="var(--bg-raised)"></rect>
+                  <rect x="16" y="38" width="96" height="10" rx="5" fill="var(--bg-raised)"></rect>
+                  <rect x="16" y="56" width="120" height="10" rx="5" fill="var(--bg-raised)"></rect>
+                </svg>
+              </aspect-ratio>
+              <div class="eyebrow">Approvals</div>
+              <h3>Move from draft to approval without leaving the workspace</h3>
+              <p>Drafts, comments, and final approvals all live inside the same surface, so the carousel can walk teams through a multi-step flow.</p>
+            </article>
+          </carousel-slide>
+        </carousel-track>
+
+        <carousel-controls>
+          <button type="button" data-carousel-prev aria-label="Previous slide">Previous</button>
+          <carousel-dots aria-label="Feature tour slides"></carousel-dots>
+          <button type="button" data-carousel-next aria-label="Next slide">Next</button>
+        </carousel-controls>
+      </carousel>
+    </section>
+
+    <section class="surface">
+      <h2>Looping Card Rail</h2>
+      <p>Set a smaller <code>--carousel-slide-size</code> when you want a card rail that peeks ahead to the next item. Add <code>data-loop</code> to wrap around the ends.</p>
+
+      <carousel data-loop style="--carousel-slide-size: min(100%, 22rem);" aria-label="Recent customer highlights">
+        <carousel-track>
+          <carousel-slide>
+            <article class="slide-card">
+              <div class="eyebrow">Customer highlight</div>
+              <h3>Northwind reduced triage time by 41%</h3>
+              <p>Support leads now keep incident notes, escalations, and follow-up tasks in the same shared workspace.</p>
+            </article>
+          </carousel-slide>
+          <carousel-slide>
+            <article class="slide-card">
+              <div class="eyebrow">Customer highlight</div>
+              <h3>Atlas replaced weekly status decks with live boards</h3>
+              <p>Executives moved from exported screenshots to scrollable progress views with narrative context attached.</p>
+            </article>
+          </carousel-slide>
+          <carousel-slide>
+            <article class="slide-card">
+              <div class="eyebrow">Customer highlight</div>
+              <h3>Beacon launched a shared review flow for legal and finance</h3>
+              <p>Approvers can review exactly the same content surface rather than bouncing between PDFs and task comments.</p>
+            </article>
+          </carousel-slide>
+        </carousel-track>
+
+        <carousel-controls>
+          <button type="button" data-carousel-prev aria-label="Previous customer highlight">Previous</button>
+          <carousel-dots aria-label="Customer highlight slides"></carousel-dots>
+          <button type="button" data-carousel-next aria-label="Next customer highlight">Next</button>
+        </carousel-controls>
+      </carousel>
+    </section>
+  </main>
+
+  <script src="../behaviors/carousel.js"></script>
+  <script src="./theme-controls.js"></script>
+</body>
+</html>

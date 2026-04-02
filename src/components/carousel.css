@@ -1,0 +1,151 @@
+/*
+ * Dashbase — Carousel
+ *
+ * Provides a scroll-snap carousel with optional previous/next buttons and dot
+ * navigation.
+ *
+ * Structure:
+ *   <carousel>
+ *     <carousel-track>
+ *       <carousel-slide>...</carousel-slide>
+ *     </carousel-track>
+ *     <carousel-controls>
+ *       <button type="button" data-carousel-prev>Previous</button>
+ *       <carousel-dots></carousel-dots>
+ *       <button type="button" data-carousel-next>Next</button>
+ *     </carousel-controls>
+ *   </carousel>
+ *
+ * Variants:
+ *   [data-loop] — wrap previous/next navigation
+ */
+
+@layer components {
+  carousel {
+    --carousel-gap: var(--space-lg);
+    --carousel-slide-size: 100%;
+    --carousel-control-size: 2.5rem;
+    --carousel-control-bg: var(--bg-raised);
+    --carousel-control-fg: var(--text-default);
+    --carousel-control-border: var(--border-default);
+    --carousel-control-shadow: var(--shadow-xs);
+    --carousel-dot-size: 0.625rem;
+    --carousel-dot-bg: color-mix(in oklch, var(--border-control) 74%, transparent);
+    --carousel-dot-active-bg: var(--color-primary);
+
+    display: grid;
+    gap: var(--space-md);
+    min-inline-size: 0;
+  }
+
+  carousel-track {
+    display: flex;
+    gap: var(--carousel-gap);
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-inline-size: 0;
+    overscroll-behavior-x: contain;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  carousel-slide {
+    flex: 0 0 var(--carousel-slide-size);
+    min-inline-size: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: block;
+  }
+
+  carousel-slide[data-active] {
+    z-index: 1;
+  }
+
+  carousel-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    min-inline-size: 0;
+  }
+
+  carousel-dots {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs);
+  }
+
+  carousel :where([data-carousel-prev], [data-carousel-next]) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    min-inline-size: max-content;
+    block-size: var(--carousel-control-size);
+    padding-inline: var(--space-md);
+    padding-block: 0;
+    color: var(--carousel-control-fg);
+    font: inherit;
+    background-color: var(--carousel-control-bg);
+    border: var(--border-width) solid var(--carousel-control-border);
+    border-radius: var(--radius-full);
+    box-shadow: var(--carousel-control-shadow);
+    cursor: pointer;
+    transition:
+      transform var(--duration-fast) var(--easing-default),
+      background-color var(--duration-fast) var(--easing-default),
+      border-color var(--duration-fast) var(--easing-default),
+      color var(--duration-fast) var(--easing-default);
+  }
+
+  carousel :where([data-carousel-prev], [data-carousel-next]):hover:not(:disabled),
+  carousel :where([data-carousel-prev], [data-carousel-next]):focus-visible:not(:disabled) {
+    color: var(--text-default);
+    background-color: var(--bg-subtle);
+    border-color: var(--border-control);
+    outline: none;
+  }
+
+  carousel :where([data-carousel-prev], [data-carousel-next]):active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  carousel :where([data-carousel-prev], [data-carousel-next]):disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  carousel [data-carousel-dot] {
+    inline-size: var(--carousel-dot-size);
+    block-size: var(--carousel-dot-size);
+    padding: 0;
+    margin: 0;
+    background-color: var(--carousel-dot-bg);
+    border: 0;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition:
+      transform var(--duration-fast) var(--easing-default),
+      background-color var(--duration-fast) var(--easing-default),
+      opacity var(--duration-fast) var(--easing-default);
+  }
+
+  carousel [data-carousel-dot]:hover,
+  carousel [data-carousel-dot]:focus-visible {
+    background-color: color-mix(in oklch, var(--carousel-dot-active-bg) 72%, var(--carousel-dot-bg));
+    outline: none;
+  }
+
+  carousel [data-carousel-dot][aria-current="true"] {
+    background-color: var(--carousel-dot-active-bg);
+    transform: scale(1.12);
+  }
+}

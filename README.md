@@ -81,6 +81,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/panel.css">
 <link rel="stylesheet" href="dist/components/accordion.css">
 <link rel="stylesheet" href="dist/components/calendar.css">
+<link rel="stylesheet" href="dist/components/carousel.css">
 <link rel="stylesheet" href="dist/components/card.css">
 <link rel="stylesheet" href="dist/components/tabs.css">
 <link rel="stylesheet" href="dist/components/popover.css">
@@ -98,6 +99,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 
 <!-- Load only the behavior shims you use -->
 <script src="dist/behaviors/calendar.js"></script>
+<script src="dist/behaviors/carousel.js"></script>
 <script src="dist/behaviors/combobox.js"></script>
 <script src="dist/behaviors/dialog.js"></script>
 <script src="dist/behaviors/command.js"></script>
@@ -263,6 +265,27 @@ For range selection, switch to `data-mode="range"` and use `data-range-start` / 
 </data-table>
 
 <script src="dist/behaviors/data-table.js"></script>
+```
+
+```html
+<carousel aria-label="Launch feature tour">
+  <carousel-track>
+    <carousel-slide>
+      <article>Track signups and activation in the same view.</article>
+    </carousel-slide>
+    <carousel-slide>
+      <article>Compare campaign cohorts without losing the narrative.</article>
+    </carousel-slide>
+  </carousel-track>
+
+  <carousel-controls>
+    <button type="button" data-carousel-prev aria-label="Previous slide">Previous</button>
+    <carousel-dots aria-label="Feature tour slides"></carousel-dots>
+    <button type="button" data-carousel-next aria-label="Next slide">Next</button>
+  </carousel-controls>
+</carousel>
+
+<script src="dist/behaviors/carousel.js"></script>
 ```
 
 ```html
