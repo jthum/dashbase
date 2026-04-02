@@ -1,0 +1,212 @@
+/*
+ * Dashbase — Chart
+ *
+ * Provides a styled chart surface around inline SVG charts, optional legends,
+ * and lightweight tooltips.
+ *
+ * Structure:
+ *   <chart-view>
+ *     <chart-header>...</chart-header>
+ *     <svg data-chart>...</svg>
+ *     <chart-legend>...</chart-legend>
+ *     <chart-tooltip hidden></chart-tooltip>
+ *   </chart-view>
+ *
+ * Variants:
+ *   none
+ */
+
+@layer components {
+  chart-view {
+    --chart-bg: var(--bg-raised);
+    --chart-fg: var(--text-default);
+    --chart-muted: var(--text-muted);
+    --chart-border: var(--border-default);
+    --chart-grid: color-mix(in oklch, var(--border-default) 68%, transparent);
+    --chart-tooltip-bg: color-mix(in oklch, var(--bg-raised) 94%, var(--bg-default));
+    --chart-tooltip-shadow: var(--shadow-md);
+    --chart-series-1: var(--color-primary);
+    --chart-series-2: var(--color-success);
+    --chart-series-3: var(--color-warning);
+    --chart-series-4: var(--color-danger);
+    --chart-tooltip-inline-start: 50%;
+    --chart-tooltip-block-start: 0px;
+
+    position: relative;
+    display: grid;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    color: var(--chart-fg);
+    background: var(--chart-bg);
+    border: var(--border-width) solid var(--chart-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xs);
+  }
+
+  chart-header {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  chart-header > * {
+    margin: 0;
+  }
+
+  chart-header > small {
+    color: var(--chart-muted);
+    font-size: var(--text-sm);
+  }
+
+  chart-view > svg[data-chart] {
+    inline-size: 100%;
+    block-size: auto;
+    overflow: visible;
+  }
+
+  chart-view [data-chart-grid] {
+    stroke: var(--chart-grid);
+    stroke-width: 1;
+  }
+
+  chart-view [data-chart-axis] {
+    fill: var(--chart-muted);
+    font-size: 11px;
+  }
+
+  chart-view [data-series="series-1"] {
+    --chart-series-color: var(--chart-series-1);
+  }
+
+  chart-view [data-series="series-2"] {
+    --chart-series-color: var(--chart-series-2);
+  }
+
+  chart-view [data-series="series-3"] {
+    --chart-series-color: var(--chart-series-3);
+  }
+
+  chart-view [data-series="series-4"] {
+    --chart-series-color: var(--chart-series-4);
+  }
+
+  chart-view [data-chart-line] {
+    fill: none;
+    stroke: var(--chart-series-color, currentColor);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  chart-view [data-chart-area] {
+    fill: color-mix(in oklch, var(--chart-series-color, currentColor) 18%, transparent);
+  }
+
+  chart-view [data-chart-bar] {
+    fill: var(--chart-series-color, currentColor);
+    transition:
+      opacity var(--duration-fast) var(--easing-default),
+      transform var(--duration-fast) var(--easing-default);
+    transform-box: fill-box;
+    transform-origin: center bottom;
+  }
+
+  chart-view [data-chart-point] {
+    fill: var(--chart-series-color, currentColor);
+    stroke: var(--chart-bg);
+    stroke-width: 3;
+    transition:
+      opacity var(--duration-fast) var(--easing-default),
+      transform var(--duration-fast) var(--easing-default);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  chart-view :where([data-chart-point], [data-chart-bar]):is(:hover, :focus-visible) {
+    transform: scale(1.06);
+    outline: none;
+  }
+
+  chart-view[data-hidden-series~="series-1"] [data-series="series-1"],
+  chart-view[data-hidden-series~="series-2"] [data-series="series-2"],
+  chart-view[data-hidden-series~="series-3"] [data-series="series-3"],
+  chart-view[data-hidden-series~="series-4"] [data-series="series-4"] {
+    opacity: 0.16;
+  }
+
+  chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  chart-legend > [data-chart-toggle] {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding-inline: var(--space-sm);
+    padding-block: calc(var(--space-xs) + 1px);
+    color: var(--chart-fg);
+    font: inherit;
+    background: color-mix(in oklch, var(--bg-subtle) 72%, transparent);
+    border: var(--border-width) solid var(--chart-border);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+  }
+
+  chart-legend > [data-chart-toggle][aria-pressed="false"] {
+    opacity: 0.58;
+  }
+
+  chart-legend > [data-chart-toggle]::before {
+    content: "";
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    border-radius: var(--radius-full);
+    background: var(--chart-series-1);
+  }
+
+  chart-legend > [data-chart-toggle][data-chart-toggle="series-2"]::before {
+    background: var(--chart-series-2);
+  }
+
+  chart-legend > [data-chart-toggle][data-chart-toggle="series-3"]::before {
+    background: var(--chart-series-3);
+  }
+
+  chart-legend > [data-chart-toggle][data-chart-toggle="series-4"]::before {
+    background: var(--chart-series-4);
+  }
+
+  chart-tooltip {
+    position: absolute;
+    inset-inline-start: var(--chart-tooltip-inline-start);
+    inset-block-start: var(--chart-tooltip-block-start);
+    display: grid;
+    gap: 0.125rem;
+    min-inline-size: max-content;
+    padding: var(--space-sm);
+    color: var(--chart-fg);
+    background: var(--chart-tooltip-bg);
+    border: var(--border-width) solid var(--chart-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--chart-tooltip-shadow);
+    pointer-events: none;
+    translate: -50% calc(-100% - var(--space-sm));
+    z-index: 2;
+  }
+
+  chart-tooltip[hidden] {
+    display: none;
+  }
+
+  chart-tooltip > strong,
+  chart-tooltip > small,
+  chart-tooltip > span {
+    margin: 0;
+  }
+
+  chart-tooltip > small {
+    color: var(--chart-muted);
+    font-size: var(--text-xs);
+  }
+}

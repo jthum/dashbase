@@ -83,6 +83,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/calendar.css">
 <link rel="stylesheet" href="dist/components/carousel.css">
 <link rel="stylesheet" href="dist/components/card.css">
+<link rel="stylesheet" href="dist/components/chart.css">
 <link rel="stylesheet" href="dist/components/tabs.css">
 <link rel="stylesheet" href="dist/components/popover.css">
 <link rel="stylesheet" href="dist/components/dialog.css">
@@ -100,6 +101,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <!-- Load only the behavior shims you use -->
 <script src="dist/behaviors/calendar.js"></script>
 <script src="dist/behaviors/carousel.js"></script>
+<script src="dist/behaviors/chart.js"></script>
 <script src="dist/behaviors/combobox.js"></script>
 <script src="dist/behaviors/dialog.js"></script>
 <script src="dist/behaviors/command.js"></script>
@@ -286,6 +288,30 @@ For range selection, switch to `data-mode="range"` and use `data-range-start` / 
 </carousel>
 
 <script src="dist/behaviors/carousel.js"></script>
+```
+
+```html
+<chart-view aria-label="Revenue chart">
+  <chart-header>
+    <h2>Revenue vs activation</h2>
+    <small>Q1 growth across two series</small>
+  </chart-header>
+
+  <svg data-chart viewBox="0 0 320 180" role="img" aria-label="Revenue and activation chart">
+    <g data-series="series-1">
+      <path data-chart-line d="M32 106 L104 92 L176 76 L248 50"></path>
+      <circle tabindex="0" data-chart-point data-series="series-1" data-chart-label="April" data-chart-series="Revenue" data-chart-value="$73K" cx="248" cy="50" r="5"></circle>
+    </g>
+  </svg>
+
+  <chart-legend>
+    <button type="button" data-chart-toggle="series-1">Revenue</button>
+  </chart-legend>
+
+  <chart-tooltip hidden></chart-tooltip>
+</chart-view>
+
+<script src="dist/behaviors/chart.js"></script>
 ```
 
 ```html
