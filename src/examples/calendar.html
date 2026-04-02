@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Calendar Component</title>
+  <link rel="stylesheet" href="../baseline/baseline.css">
+  <link rel="stylesheet" href="../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../components/calendar.css">
+  <link rel="stylesheet" href="./theme-controls.css">
+
+  <style>
+    main {
+      max-width: 64rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--space-xl);
+    }
+
+    .grid {
+      display: grid;
+      gap: var(--space-xl);
+    }
+
+    @media (min-width: 48rem) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .surface {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 88%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 56%, transparent)
+      );
+    }
+
+    .surface > * {
+      margin: 0;
+    }
+
+    .selection {
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+      min-block-size: 1.5em;
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Calendar Component</h1>
+    <p>Dashbase renders <code>&lt;calendar-view&gt;</code> into an interactive month calendar. Use <code>data-month</code> to choose the visible month, <code>data-selected</code> for the picked day, and optional constraints like <code>data-disabled</code>, <code>data-min</code>, <code>data-max</code>, and <code>data-week-start</code>.</p>
+
+    <hr>
+
+    <section class="stack">
+      <div class="surface">
+        <h2>Standalone Calendars</h2>
+        <p>Arrow keys move day to day, <kbd>Home</kbd>/<kbd>End</kbd> jump across the week, and <kbd>Page Up</kbd>/<kbd>Page Down</kbd> move across months.</p>
+
+        <div class="grid">
+          <div class="stack">
+            <calendar-view
+              id="release-calendar"
+              aria-label="Release schedule"
+              data-month="2026-04"
+              data-selected="2026-04-18"
+              data-week-start="1"
+            ></calendar-view>
+            <p id="release-selection" class="selection" aria-live="polite">Selected release date: 2026-04-18</p>
+          </div>
+
+          <div class="stack">
+            <calendar-view
+              id="availability-calendar"
+              aria-label="Interview availability"
+              data-month="2026-04"
+              data-selected="2026-04-09"
+              data-min="2026-04-04"
+              data-max="2026-04-27"
+              data-disabled="2026-04-10,2026-04-11,2026-04-17,2026-04-18,2026-04-24"
+            ></calendar-view>
+            <p id="availability-selection" class="selection" aria-live="polite">Selected interview slot: 2026-04-09</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../behaviors/calendar.js"></script>
+  <script src="./theme-controls.js"></script>
+  <script>
+    const releaseCalendar = document.getElementById("release-calendar");
+    const availabilityCalendar = document.getElementById("availability-calendar");
+    const releaseSelection = document.getElementById("release-selection");
+    const availabilitySelection = document.getElementById("availability-selection");
+
+    releaseCalendar?.addEventListener("change", () => {
+      if (!(releaseSelection instanceof HTMLElement)) {
+        return;
+      }
+
+      releaseSelection.textContent = `Selected release date: ${releaseCalendar.getAttribute("data-selected") || "none"}`;
+    });
+
+    availabilityCalendar?.addEventListener("change", () => {
+      if (!(availabilitySelection instanceof HTMLElement)) {
+        return;
+      }
+
+      availabilitySelection.textContent = `Selected interview slot: ${availabilityCalendar.getAttribute("data-selected") || "none"}`;
+    });
+  </script>
+</body>
+</html>

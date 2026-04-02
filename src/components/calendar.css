@@ -1,0 +1,157 @@
+/*
+ * Dashbase — Calendar
+ *
+ * Styles an interactive month calendar rendered inside <calendar-view>.
+ *
+ * Structure:
+ *   <calendar-view
+ *     aria-label="Release calendar"
+ *     data-month="2026-04"
+ *     data-selected="2026-04-18"
+ *   ></calendar-view>
+ *
+ * Variants:
+ *   none
+ */
+
+@layer components {
+  calendar-view {
+    --calendar-inline-size: min(20rem, 100%);
+    --calendar-padding: var(--space-lg);
+    --calendar-gap: var(--space-md);
+    --calendar-day-size: 2.25rem;
+    --calendar-day-radius: var(--radius-md);
+    --calendar-nav-size: 2rem;
+
+    display: grid;
+    gap: var(--calendar-gap);
+    inline-size: var(--calendar-inline-size);
+    min-inline-size: 0;
+    padding: var(--calendar-padding);
+    color: var(--text-default);
+    background: linear-gradient(
+      180deg,
+      color-mix(in oklch, var(--bg-raised) 90%, transparent),
+      color-mix(in oklch, var(--bg-subtle) 58%, transparent)
+    );
+    border: var(--border-width) solid var(--border-default);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+  }
+
+  calendar-header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  calendar-header > [data-calendar-title] {
+    margin: 0;
+    font-size: var(--text-base);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    text-align: center;
+  }
+
+  calendar-header > button {
+    display: grid;
+    place-items: center;
+    inline-size: var(--calendar-nav-size);
+    block-size: var(--calendar-nav-size);
+    padding: 0;
+    color: var(--text-muted);
+    background: transparent;
+    border: var(--border-width) solid transparent;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-default),
+      border-color var(--duration-fast) var(--easing-default),
+      color var(--duration-fast) var(--easing-default);
+  }
+
+  calendar-header > button:hover,
+  calendar-header > button:focus-visible {
+    color: var(--text-default);
+    background-color: var(--bg-subtle);
+    border-color: var(--border-default);
+    outline: none;
+  }
+
+  calendar-view table {
+    inline-size: 100%;
+    border-collapse: separate;
+    border-spacing: var(--space-2xs);
+    table-layout: fixed;
+  }
+
+  calendar-view th {
+    padding-block-end: var(--space-2xs);
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-widest);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  calendar-view td {
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  calendar-view td[aria-selected="true"] > button {
+    color: var(--color-primary-emphasis);
+    background-color: var(--color-primary-subtle);
+    border-color: var(--color-primary-muted);
+  }
+
+  calendar-view td > button {
+    display: grid;
+    place-items: center;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: var(--calendar-day-size);
+    padding: 0;
+    color: var(--text-default);
+    background: transparent;
+    border: var(--border-width) solid transparent;
+    border-radius: var(--calendar-day-radius);
+    font: inherit;
+    font-size: var(--text-sm);
+    line-height: 1;
+    text-align: center;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-default),
+      border-color var(--duration-fast) var(--easing-default),
+      color var(--duration-fast) var(--easing-default);
+  }
+
+  calendar-view td > button:hover,
+  calendar-view td > button:focus-visible {
+    background-color: var(--bg-subtle);
+    border-color: var(--border-default);
+    outline: none;
+  }
+
+  calendar-view td > button[aria-current="date"] {
+    border-color: var(--border-control);
+  }
+
+  calendar-view td > button[data-outside-month] {
+    color: var(--text-muted);
+    opacity: 0.72;
+  }
+
+  calendar-view td > button[disabled] {
+    color: var(--text-muted);
+    opacity: var(--disabled-opacity);
+    cursor: not-allowed;
+    background: transparent;
+    border-color: transparent;
+  }
+}

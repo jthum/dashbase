@@ -79,6 +79,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/form-field.css">
 <link rel="stylesheet" href="dist/components/panel.css">
 <link rel="stylesheet" href="dist/components/accordion.css">
+<link rel="stylesheet" href="dist/components/calendar.css">
 <link rel="stylesheet" href="dist/components/card.css">
 <link rel="stylesheet" href="dist/components/tabs.css">
 <link rel="stylesheet" href="dist/components/popover.css">
@@ -92,6 +93,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/toast.css">
 
 <!-- Load only the behavior shims you use -->
+<script src="dist/behaviors/calendar.js"></script>
 <script src="dist/behaviors/combobox.js"></script>
 <script src="dist/behaviors/dialog.js"></script>
 <script src="dist/behaviors/command.js"></script>
@@ -168,6 +170,17 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 </ui-tabs>
 
 <script src="dist/behaviors/tabs.js"></script>
+```
+
+```html
+<calendar-view
+  aria-label="Release calendar"
+  data-month="2026-04"
+  data-selected="2026-04-18"
+  data-week-start="1"
+></calendar-view>
+
+<script src="dist/behaviors/calendar.js"></script>
 ```
 
 ```html
