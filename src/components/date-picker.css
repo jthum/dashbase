@@ -1,0 +1,113 @@
+/*
+ * Dashbase — Date Picker
+ *
+ * Styles an anchored date picker built from a semantic text input, a trigger,
+ * and a nested <calendar-view> inside <popover-panel>.
+ *
+ * Structure:
+ *   <date-picker>
+ *     <input type="text" readonly />
+ *     <button type="button" aria-label="Open calendar">...</button>
+ *     <popover-panel popover="auto">
+ *       <calendar-view ...></calendar-view>
+ *       <panel-footer>...</panel-footer>
+ *     </popover-panel>
+ *   </date-picker>
+ *
+ * Variants:
+ *   none
+ */
+
+@layer components {
+  date-picker {
+    display: block;
+    position: relative;
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  date-picker > input[type="text"] {
+    inline-size: 100%;
+    padding-inline-end: calc(var(--control-padding-inline) + 2rem);
+    cursor: pointer;
+  }
+
+  date-picker > input[type="text"][readonly] {
+    background-color: var(--bg-default);
+  }
+
+  date-picker > button[type="button"] {
+    position: absolute;
+    inset-inline-end: var(--space-xs);
+    inset-block-start: 50%;
+    translate: 0 -50%;
+    display: grid;
+    place-items: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    padding: 0;
+    color: var(--text-muted);
+    background: transparent;
+    border: var(--border-width) solid transparent;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--easing-default),
+      color var(--duration-fast) var(--easing-default),
+      border-color var(--duration-fast) var(--easing-default);
+  }
+
+  date-picker > button[type="button"]:hover,
+  date-picker > button[type="button"]:focus-visible,
+  date-picker > input[type="text"][aria-expanded="true"] + button[type="button"] {
+    color: var(--text-default);
+    background-color: var(--bg-subtle);
+    border-color: var(--border-default);
+    outline: none;
+  }
+
+  date-picker > button[type="button"] > svg {
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+
+  date-picker > popover-panel[popover] {
+    --popover-padding: var(--space-sm);
+    --popover-min-inline: max(18rem, var(--datepicker-inline-size, 18rem));
+    --popover-max-inline: min(max(18rem, var(--datepicker-inline-size, 18rem)), calc(100vi - (var(--space-lg) * 2)));
+    --popover-inset-block-start: var(--datepicker-block-start, var(--space-lg));
+    --popover-inset-block-end: auto;
+    --popover-inset-inline-start: var(--datepicker-inline-start, var(--space-lg));
+    --popover-inset-inline-end: auto;
+    --panel-padding: var(--space-sm);
+    --panel-gap: var(--space-sm);
+
+    inline-size: max(18rem, var(--datepicker-inline-size, 18rem));
+    min-inline-size: max(18rem, var(--datepicker-inline-size, 18rem));
+    max-inline-size: min(max(18rem, var(--datepicker-inline-size, 18rem)), calc(100vi - (var(--space-lg) * 2)));
+    overflow: clip;
+  }
+
+  date-picker:has(> popover-panel[popover] > calendar-view[data-mode="range"]) > popover-panel[popover] {
+    --popover-min-inline: max(22rem, var(--datepicker-inline-size, 22rem));
+    --popover-max-inline: min(max(22rem, var(--datepicker-inline-size, 22rem)), calc(100vi - (var(--space-lg) * 2)));
+    inline-size: max(22rem, var(--datepicker-inline-size, 22rem));
+    min-inline-size: max(22rem, var(--datepicker-inline-size, 22rem));
+    max-inline-size: min(max(22rem, var(--datepicker-inline-size, 22rem)), calc(100vi - (var(--space-lg) * 2)));
+  }
+
+  date-picker > popover-panel[popover] > calendar-view {
+    inline-size: 100%;
+    padding: var(--space-xs);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  date-picker > popover-panel[popover] > panel-footer {
+    justify-content: space-between;
+    padding-block-start: var(--space-sm);
+    border-block-start: var(--border-width) solid var(--border-default);
+  }
+}

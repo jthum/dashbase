@@ -488,6 +488,14 @@ function renderCalendar(root) {
   root.setAttribute("aria-label", root.getAttribute("aria-label") ?? "Calendar");
 }
 
+function refreshCalendar(root, focusDate = null) {
+  renderCalendar(root);
+
+  if (focusDate) {
+    focusCalendarDate(root, formatDateString(focusDate));
+  }
+}
+
 function focusCalendarDate(root, dateString) {
   const button = root.querySelector(`${CALENDAR_DAY_SELECTOR}[data-calendar-date="${CSS.escape(dateString)}"]`);
   if (button instanceof HTMLButtonElement) {
@@ -533,8 +541,7 @@ function selectCalendarDate(root, date) {
     setSingleSelectedDate(root, date);
   }
 
-  renderCalendar(root);
-  focusCalendarDate(root, formatDateString(date));
+  refreshCalendar(root, date);
   emitCalendarChange(root);
 }
 
@@ -546,6 +553,13 @@ function initializeCalendar(root) {
   root.dataset.calendarInitialized = "true";
   root.setAttribute("role", root.getAttribute("role") || "group");
   renderCalendar(root);
+
+  root.addEventListener("calendar-refresh", (event) => {
+    const focusDate = event instanceof CustomEvent && event.detail?.focusDate
+      ? parseDateString(event.detail.focusDate)
+      : null;
+    refreshCalendar(root, focusDate);
+  });
 
   root.addEventListener("click", (event) => {
     const target = event.target instanceof Element ? event.target : null;
@@ -563,8 +577,7 @@ function initializeCalendar(root) {
 
       setMonth(root, nextMonth);
       setActiveDate(root, nextMonth);
-      renderCalendar(root);
-      focusCalendarDate(root, formatDateString(getCalendarAnchorDate(root, getCalendarMonth(root))));
+      refreshCalendar(root, getCalendarAnchorDate(root, getCalendarMonth(root)));
       return;
     }
 
@@ -597,8 +610,7 @@ function initializeCalendar(root) {
       const next = new Date(current.getFullYear(), month - 1, 1);
       setMonth(root, next);
       setActiveDate(root, next);
-      renderCalendar(root);
-      focusCalendarDate(root, formatDateString(getCalendarAnchorDate(root, getCalendarMonth(root))));
+      refreshCalendar(root, getCalendarAnchorDate(root, getCalendarMonth(root)));
       return;
     }
 
@@ -612,8 +624,7 @@ function initializeCalendar(root) {
       const next = new Date(year, current.getMonth(), 1);
       setMonth(root, next);
       setActiveDate(root, next);
-      renderCalendar(root);
-      focusCalendarDate(root, formatDateString(getCalendarAnchorDate(root, getCalendarMonth(root))));
+      refreshCalendar(root, getCalendarAnchorDate(root, getCalendarMonth(root)));
       return;
     }
 
@@ -654,8 +665,7 @@ function initializeCalendar(root) {
     }
 
     setActiveDate(root, active);
-    renderCalendar(root);
-    focusCalendarDate(root, formatDateString(active));
+    refreshCalendar(root, active);
   });
 
   root.addEventListener("keydown", (event) => {
@@ -726,8 +736,7 @@ function initializeCalendar(root) {
     event.preventDefault();
     setMonth(root, nextDate);
     setActiveDate(root, nextDate);
-    renderCalendar(root);
-    focusCalendarDate(root, formatDateString(nextDate));
+    refreshCalendar(root, nextDate);
   });
 }
 

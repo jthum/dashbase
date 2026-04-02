@@ -86,6 +86,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/components/dialog.css">
 <link rel="stylesheet" href="dist/components/combobox.css">
 <link rel="stylesheet" href="dist/components/command.css">
+<link rel="stylesheet" href="dist/components/date-picker.css">
 <link rel="stylesheet" href="dist/components/menubar.css">
 <link rel="stylesheet" href="dist/components/navigation-menu.css">
 <link rel="stylesheet" href="dist/components/scroll-area.css">
@@ -97,6 +98,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <script src="dist/behaviors/combobox.js"></script>
 <script src="dist/behaviors/dialog.js"></script>
 <script src="dist/behaviors/command.js"></script>
+<script src="dist/behaviors/date-picker.js"></script>
 <script src="dist/behaviors/menubar.js"></script>
 <script src="dist/behaviors/navigation-menu.js"></script>
 <script src="dist/behaviors/popover.js"></script>
@@ -186,6 +188,35 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 ```
 
 For range selection, switch to `data-mode="range"` and use `data-range-start` / `data-range-end` instead of `data-selected`. Month and year selectors are built into the rendered header.
+
+```html
+<date-picker>
+  <input type="text" placeholder="Select launch date" readonly />
+  <button type="button" aria-label="Open launch date picker">
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M4 1.75V3.25M12 1.75V3.25M2 5.25H14M3.25 2.75H12.75C13.3023 2.75 13.75 3.19772 13.75 3.75V13C13.75 13.5523 13.3023 14 12.75 14H3.25C2.69772 14 2.25 13.5523 2.25 13V3.75C2.25 3.19772 2.69772 2.75 3.25 2.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <popover-panel popover="auto" aria-label="Launch date picker">
+    <calendar-view
+      aria-label="Launch date"
+      data-month="2026-04"
+      data-selected="2026-04-18"
+      data-time
+      data-time-value="09:30"
+    ></calendar-view>
+
+    <panel-footer>
+      <button type="button" data-date-picker-clear>Clear</button>
+      <button type="button" data-date-picker-close>Done</button>
+    </panel-footer>
+  </popover-panel>
+</date-picker>
+
+<script src="dist/behaviors/calendar.js"></script>
+<script src="dist/behaviors/date-picker.js"></script>
+```
 
 ```html
 <button type="button" invoketarget="workspace-command" invokeaction="showModal">
