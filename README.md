@@ -178,10 +178,14 @@ To use Dashbase in your project, include the base stylesheet followed by the com
   data-month="2026-04"
   data-selected="2026-04-18"
   data-week-start="1"
+  data-time
+  data-time-value="09:30"
 ></calendar-view>
 
 <script src="dist/behaviors/calendar.js"></script>
 ```
+
+For range selection, switch to `data-mode="range"` and use `data-range-start` / `data-range-end` instead of `data-selected`. Month and year selectors are built into the rendered header.
 
 ```html
 <button type="button" invoketarget="workspace-command" invokeaction="showModal">

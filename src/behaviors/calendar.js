@@ -3,20 +3,31 @@
  *
  * Renders and enhances <calendar-view> with:
  * - month navigation
- * - single-date selection
+ * - month and year selectors
+ * - single-date or range selection
  * - keyboard navigation across day buttons
+ * - optional time controls
  * - optional disabled dates through data-disabled, data-min, and data-max
  */
 
 const CALENDAR_ROOT_SELECTOR = "calendar-view";
 const CALENDAR_PREV_SELECTOR = '[data-calendar-action="prev"]';
 const CALENDAR_NEXT_SELECTOR = '[data-calendar-action="next"]';
+const CALENDAR_MONTH_SELECTOR = '[data-calendar-month-select]';
+const CALENDAR_YEAR_SELECTOR = '[data-calendar-year-select]';
 const CALENDAR_DAY_SELECTOR = '[data-calendar-date]';
+const CALENDAR_TIME_SINGLE_SELECTOR = '[data-calendar-time="single"]';
+const CALENDAR_TIME_START_SELECTOR = '[data-calendar-time="start"]';
+const CALENDAR_TIME_END_SELECTOR = '[data-calendar-time="end"]';
 let calendarCount = 0;
 
 const monthFormatter = new Intl.DateTimeFormat(undefined, {
   month: "long",
   year: "numeric",
+});
+
+const monthLabelFormatter = new Intl.DateTimeFormat(undefined, {
+  month: "long",
 });
 
 const weekdayFormatter = new Intl.DateTimeFormat(undefined, {
@@ -117,6 +128,19 @@ function isSameMonth(a, b) {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
 }
 
+function normalizeDate(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function isDateInRange(date, start, end) {
+  if (!start || !end) {
+    return false;
+  }
+
+  const value = normalizeDate(date).getTime();
+  return value >= normalizeDate(start).getTime() && value <= normalizeDate(end).getTime();
+}
+
 function getStartOfWeek(date, weekStart) {
   const diff = (date.getDay() - weekStart + 7) % 7;
   return addDays(date, -diff);
@@ -148,6 +172,14 @@ function clampWeekStart(value) {
   return parsed;
 }
 
+function isRangeMode(root) {
+  return (root.getAttribute("data-mode") ?? "").toLowerCase() === "range";
+}
+
+function hasTimeControls(root) {
+  return root.hasAttribute("data-time");
+}
+
 function getDisabledDateSet(root) {
   return new Set(
     (root.getAttribute("data-disabled") ?? "")
@@ -165,12 +197,12 @@ function isDateDisabled(root, date) {
   }
 
   const min = parseDateString(root.getAttribute("data-min"));
-  if (min && date < new Date(min.getFullYear(), min.getMonth(), min.getDate())) {
+  if (min && normalizeDate(date) < normalizeDate(min)) {
     return true;
   }
 
   const max = parseDateString(root.getAttribute("data-max"));
-  if (max && date > new Date(max.getFullYear(), max.getMonth(), max.getDate())) {
+  if (max && normalizeDate(date) > normalizeDate(max)) {
     return true;
   }
 
@@ -187,25 +219,44 @@ function ensureCalendarId(root) {
   return root.id;
 }
 
+function getSingleSelectedDate(root) {
+  return parseDateString(root.getAttribute("data-selected"));
+}
+
+function getRangeStartDate(root) {
+  return parseDateString(root.getAttribute("data-range-start"));
+}
+
+function getRangeEndDate(root) {
+  return parseDateString(root.getAttribute("data-range-end"));
+}
+
 function getCalendarMonth(root) {
   return (
     parseMonthString(root.getAttribute("data-month")) ||
-    parseDateString(root.getAttribute("data-selected")) ||
+    getRangeStartDate(root) ||
+    getSingleSelectedDate(root) ||
     new Date(new Date().getFullYear(), new Date().getMonth(), 1)
   );
 }
 
-function getCalendarSelectedDate(root) {
-  return parseDateString(root.getAttribute("data-selected"));
-}
-
-function getCalendarActiveDate(root, monthDate) {
+function getCalendarAnchorDate(root, monthDate) {
   const active = parseDateString(root.getAttribute("data-active"));
   if (active && !isDateDisabled(root, active)) {
     return active;
   }
 
-  const selected = getCalendarSelectedDate(root);
+  const rangeEnd = getRangeEndDate(root);
+  if (rangeEnd && !isDateDisabled(root, rangeEnd)) {
+    return rangeEnd;
+  }
+
+  const rangeStart = getRangeStartDate(root);
+  if (rangeStart && !isDateDisabled(root, rangeStart)) {
+    return rangeStart;
+  }
+
+  const selected = getSingleSelectedDate(root);
   if (selected && !isDateDisabled(root, selected)) {
     return selected;
   }
@@ -241,18 +292,118 @@ function setActiveDate(root, date) {
   root.setAttribute("data-active", formatDateString(date));
 }
 
-function setSelectedDate(root, date) {
+function setSingleSelectedDate(root, date) {
   root.setAttribute("data-selected", formatDateString(date));
+}
+
+function clearSingleSelectedDate(root) {
+  root.removeAttribute("data-selected");
+}
+
+function setRange(root, start, end = null) {
+  root.setAttribute("data-range-start", formatDateString(start));
+  if (end) {
+    root.setAttribute("data-range-end", formatDateString(end));
+  } else {
+    root.removeAttribute("data-range-end");
+  }
+}
+
+function getCalendarTimeValue(root) {
+  return root.getAttribute("data-time-value") ?? "";
+}
+
+function getCalendarTimeStart(root) {
+  return root.getAttribute("data-time-start") ?? "";
+}
+
+function getCalendarTimeEnd(root) {
+  return root.getAttribute("data-time-end") ?? "";
+}
+
+function getYearOptions(root, monthDate) {
+  const min = parseDateString(root.getAttribute("data-min"));
+  const max = parseDateString(root.getAttribute("data-max"));
+  const baseYear = monthDate.getFullYear();
+  const startYear = min ? min.getFullYear() : baseYear - 12;
+  const endYear = max ? max.getFullYear() : baseYear + 12;
+  const years = [];
+
+  for (let year = startYear; year <= endYear; year += 1) {
+    years.push(year);
+  }
+
+  return years;
+}
+
+function getRangeState(date, root) {
+  const start = getRangeStartDate(root);
+  const end = getRangeEndDate(root);
+
+  if (!start) {
+    return null;
+  }
+
+  if (!end) {
+    return isSameDate(date, start) ? "single" : null;
+  }
+
+  if (isSameDate(date, start) && isSameDate(date, end)) {
+    return "single";
+  }
+
+  if (isSameDate(date, start)) {
+    return "start";
+  }
+
+  if (isSameDate(date, end)) {
+    return "end";
+  }
+
+  if (isDateInRange(date, start, end)) {
+    return "middle";
+  }
+
+  return null;
+}
+
+function renderTimeSection(root) {
+  if (!hasTimeControls(root)) {
+    return "";
+  }
+
+  if (isRangeMode(root)) {
+    return `
+      <calendar-time data-mode="range">
+        <calendar-field>
+          <label for="${ensureCalendarId(root)}-time-start">Start time</label>
+          <input id="${ensureCalendarId(root)}-time-start" type="time" value="${getCalendarTimeStart(root)}" data-calendar-time="start" />
+        </calendar-field>
+        <calendar-field>
+          <label for="${ensureCalendarId(root)}-time-end">End time</label>
+          <input id="${ensureCalendarId(root)}-time-end" type="time" value="${getCalendarTimeEnd(root)}" data-calendar-time="end" />
+        </calendar-field>
+      </calendar-time>
+    `;
+  }
+
+  return `
+    <calendar-time>
+      <calendar-field>
+        <label for="${ensureCalendarId(root)}-time-value">Time</label>
+        <input id="${ensureCalendarId(root)}-time-value" type="time" value="${getCalendarTimeValue(root)}" data-calendar-time="single" />
+      </calendar-field>
+    </calendar-time>
+  `;
 }
 
 function renderCalendar(root) {
   const rootId = ensureCalendarId(root);
   const monthDate = getCalendarMonth(root);
   const weekStart = clampWeekStart(root.getAttribute("data-week-start"));
-  const selectedDate = getCalendarSelectedDate(root);
-  const activeDate = getCalendarActiveDate(root, monthDate);
+  const selectedDate = getSingleSelectedDate(root);
+  const activeDate = getCalendarAnchorDate(root, monthDate);
   const today = new Date();
-  const titleId = `${rootId}-title`;
 
   setMonth(root, monthDate);
   setActiveDate(root, activeDate);
@@ -260,6 +411,7 @@ function renderCalendar(root) {
   const weekdays = getWeekdayLabels(weekStart);
   const weeks = [];
   const visibleDates = getVisibleMonthDates(monthDate, weekStart);
+  const yearOptions = getYearOptions(root, monthDate);
 
   for (let index = 0; index < visibleDates.length; index += 7) {
     weeks.push(visibleDates.slice(index, index + 7));
@@ -268,10 +420,24 @@ function renderCalendar(root) {
   root.innerHTML = `
     <calendar-header>
       <button type="button" data-calendar-action="prev" aria-label="Previous month">‹</button>
-      <strong id="${titleId}" data-calendar-title aria-live="polite">${monthFormatter.format(monthDate)}</strong>
+      <calendar-controls>
+        <select data-calendar-month-select aria-label="Month">
+          ${Array.from({ length: 12 }, (_, monthIndex) => {
+            const value = String(monthIndex + 1).padStart(2, "0");
+            const selected = monthIndex === monthDate.getMonth() ? " selected" : "";
+            return `<option value="${value}"${selected}>${monthLabelFormatter.format(new Date(2026, monthIndex, 1))}</option>`;
+          }).join("")}
+        </select>
+        <select data-calendar-year-select aria-label="Year">
+          ${yearOptions.map((year) => {
+            const selected = year === monthDate.getFullYear() ? " selected" : "";
+            return `<option value="${year}"${selected}>${year}</option>`;
+          }).join("")}
+        </select>
+      </calendar-controls>
       <button type="button" data-calendar-action="next" aria-label="Next month">›</button>
     </calendar-header>
-    <table role="grid" aria-labelledby="${titleId}">
+    <table role="grid" aria-label="${(root.getAttribute("aria-label") ?? "Calendar")} — ${monthFormatter.format(monthDate)}">
       <thead>
         <tr>
           ${weekdays.map((label) => `<th scope="col">${label}</th>`).join("")}
@@ -283,13 +449,20 @@ function renderCalendar(root) {
             ${week.map((date) => {
               const dateString = formatDateString(date);
               const outsideMonth = !isSameMonth(date, monthDate);
-              const selected = selectedDate ? isSameDate(date, selectedDate) : false;
+              const rangeState = isRangeMode(root) ? getRangeState(date, root) : null;
+              const selected = isRangeMode(root)
+                ? rangeState !== null
+                : (selectedDate ? isSameDate(date, selectedDate) : false);
               const current = isSameDate(date, today);
               const active = isSameDate(date, activeDate);
               const disabled = isDateDisabled(root, date);
 
               return `
-                <td role="gridcell" aria-selected="${selected ? "true" : "false"}">
+                <td
+                  role="gridcell"
+                  aria-selected="${selected ? "true" : "false"}"
+                  ${rangeState ? `data-range-state="${rangeState}"` : ""}
+                >
                   <button
                     type="button"
                     data-calendar-date="${dateString}"
@@ -308,7 +481,11 @@ function renderCalendar(root) {
         `).join("")}
       </tbody>
     </table>
+    ${renderTimeSection(root)}
   `;
+
+  root.dataset.calendarTitle = `${root.getAttribute("aria-label") ?? "Calendar"} — ${monthFormatter.format(monthDate)}`;
+  root.setAttribute("aria-label", root.getAttribute("aria-label") ?? "Calendar");
 }
 
 function focusCalendarDate(root, dateString) {
@@ -323,9 +500,42 @@ function emitCalendarChange(root) {
   root.dispatchEvent(new CustomEvent("calendar-change", {
     bubbles: true,
     detail: {
-      value: root.getAttribute("data-selected"),
+      mode: isRangeMode(root) ? "range" : "single",
+      selected: root.getAttribute("data-selected"),
+      rangeStart: root.getAttribute("data-range-start"),
+      rangeEnd: root.getAttribute("data-range-end"),
+      timeValue: root.getAttribute("data-time-value"),
+      timeStart: root.getAttribute("data-time-start"),
+      timeEnd: root.getAttribute("data-time-end"),
     },
   }));
+}
+
+function selectCalendarDate(root, date) {
+  setMonth(root, date);
+  setActiveDate(root, date);
+
+  if (isRangeMode(root)) {
+    clearSingleSelectedDate(root);
+    const start = getRangeStartDate(root);
+    const end = getRangeEndDate(root);
+
+    if (!start || end) {
+      setRange(root, date);
+    } else if (normalizeDate(date).getTime() < normalizeDate(start).getTime()) {
+      setRange(root, date, start);
+    } else {
+      setRange(root, start, date);
+    }
+  } else {
+    root.removeAttribute("data-range-start");
+    root.removeAttribute("data-range-end");
+    setSingleSelectedDate(root, date);
+  }
+
+  renderCalendar(root);
+  focusCalendarDate(root, formatDateString(date));
+  emitCalendarChange(root);
 }
 
 function initializeCalendar(root) {
@@ -346,7 +556,7 @@ function initializeCalendar(root) {
     const action = target.closest("[data-calendar-action]");
     if (action instanceof HTMLButtonElement) {
       const month = getCalendarMonth(root);
-      const currentActive = getCalendarActiveDate(root, month);
+      const currentActive = getCalendarAnchorDate(root, month);
       const nextMonth = action.matches(CALENDAR_PREV_SELECTOR)
         ? addMonths(currentActive, -1)
         : addMonths(currentActive, 1);
@@ -354,7 +564,7 @@ function initializeCalendar(root) {
       setMonth(root, nextMonth);
       setActiveDate(root, nextMonth);
       renderCalendar(root);
-      focusCalendarDate(root, formatDateString(getCalendarActiveDate(root, getCalendarMonth(root))));
+      focusCalendarDate(root, formatDateString(getCalendarAnchorDate(root, getCalendarMonth(root))));
       return;
     }
 
@@ -368,12 +578,61 @@ function initializeCalendar(root) {
       return;
     }
 
-    setMonth(root, selected);
-    setActiveDate(root, selected);
-    setSelectedDate(root, selected);
-    renderCalendar(root);
-    focusCalendarDate(root, formatDateString(selected));
-    emitCalendarChange(root);
+    selectCalendarDate(root, selected);
+  });
+
+  root.addEventListener("change", (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (!target) {
+      return;
+    }
+
+    if (target.matches(CALENDAR_MONTH_SELECTOR)) {
+      const month = Number(target.getAttribute("value") ?? (target instanceof HTMLSelectElement ? target.value : ""));
+      const current = getCalendarMonth(root);
+      if (!Number.isInteger(month) || month < 1 || month > 12) {
+        return;
+      }
+
+      const next = new Date(current.getFullYear(), month - 1, 1);
+      setMonth(root, next);
+      setActiveDate(root, next);
+      renderCalendar(root);
+      focusCalendarDate(root, formatDateString(getCalendarAnchorDate(root, getCalendarMonth(root))));
+      return;
+    }
+
+    if (target.matches(CALENDAR_YEAR_SELECTOR)) {
+      const year = Number(target.getAttribute("value") ?? (target instanceof HTMLSelectElement ? target.value : ""));
+      const current = getCalendarMonth(root);
+      if (!Number.isInteger(year)) {
+        return;
+      }
+
+      const next = new Date(year, current.getMonth(), 1);
+      setMonth(root, next);
+      setActiveDate(root, next);
+      renderCalendar(root);
+      focusCalendarDate(root, formatDateString(getCalendarAnchorDate(root, getCalendarMonth(root))));
+      return;
+    }
+
+    if (target.matches(CALENDAR_TIME_SINGLE_SELECTOR) && target instanceof HTMLInputElement) {
+      root.setAttribute("data-time-value", target.value);
+      emitCalendarChange(root);
+      return;
+    }
+
+    if (target.matches(CALENDAR_TIME_START_SELECTOR) && target instanceof HTMLInputElement) {
+      root.setAttribute("data-time-start", target.value);
+      emitCalendarChange(root);
+      return;
+    }
+
+    if (target.matches(CALENDAR_TIME_END_SELECTOR) && target instanceof HTMLInputElement) {
+      root.setAttribute("data-time-end", target.value);
+      emitCalendarChange(root);
+    }
   });
 
   root.addEventListener("focusin", (event) => {

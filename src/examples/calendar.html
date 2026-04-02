@@ -69,14 +69,14 @@
 <body>
   <main>
     <h1>Calendar Component</h1>
-    <p>Dashbase renders <code>&lt;calendar-view&gt;</code> into an interactive month calendar. Use <code>data-month</code> to choose the visible month, <code>data-selected</code> for the picked day, and optional constraints like <code>data-disabled</code>, <code>data-min</code>, <code>data-max</code>, and <code>data-week-start</code>.</p>
+    <p>Dashbase renders <code>&lt;calendar-view&gt;</code> into an interactive calendar surface with built-in month and year selectors. Use <code>data-selected</code> for single-date mode, <code>data-mode="range"</code> plus <code>data-range-start</code>/<code>data-range-end</code> for range selection, and add <code>data-time</code> when you want native time inputs alongside the calendar.</p>
 
     <hr>
 
     <section class="stack">
       <div class="surface">
-        <h2>Standalone Calendars</h2>
-        <p>Arrow keys move day to day, <kbd>Home</kbd>/<kbd>End</kbd> jump across the week, and <kbd>Page Up</kbd>/<kbd>Page Down</kbd> move across months.</p>
+        <h2>Feature-Rich Calendars</h2>
+        <p>Arrow keys move day to day, <kbd>Home</kbd>/<kbd>End</kbd> jump across the week, and <kbd>Page Up</kbd>/<kbd>Page Down</kbd> move across months. The header selectors can jump directly to another month or year without a separate picker UI.</p>
 
         <div class="grid">
           <div class="stack">
@@ -86,8 +86,10 @@
               data-month="2026-04"
               data-selected="2026-04-18"
               data-week-start="1"
+              data-time
+              data-time-value="09:30"
             ></calendar-view>
-            <p id="release-selection" class="selection" aria-live="polite">Selected release date: 2026-04-18</p>
+            <p id="release-selection" class="selection" aria-live="polite">Selected release date: 2026-04-18 at 09:30</p>
           </div>
 
           <div class="stack">
@@ -95,12 +97,17 @@
               id="availability-calendar"
               aria-label="Interview availability"
               data-month="2026-04"
-              data-selected="2026-04-09"
+              data-mode="range"
+              data-range-start="2026-04-09"
+              data-range-end="2026-04-13"
               data-min="2026-04-04"
               data-max="2026-04-27"
               data-disabled="2026-04-10,2026-04-11,2026-04-17,2026-04-18,2026-04-24"
+              data-time
+              data-time-start="10:00"
+              data-time-end="15:30"
             ></calendar-view>
-            <p id="availability-selection" class="selection" aria-live="polite">Selected interview slot: 2026-04-09</p>
+            <p id="availability-selection" class="selection" aria-live="polite">Selected interview slot: 2026-04-09 10:00 → 2026-04-13 15:30</p>
           </div>
         </div>
       </div>
@@ -120,7 +127,9 @@
         return;
       }
 
-      releaseSelection.textContent = `Selected release date: ${releaseCalendar.getAttribute("data-selected") || "none"}`;
+      const date = releaseCalendar.getAttribute("data-selected") || "none";
+      const time = releaseCalendar.getAttribute("data-time-value");
+      releaseSelection.textContent = `Selected release date: ${date}${time ? ` at ${time}` : ""}`;
     });
 
     availabilityCalendar?.addEventListener("change", () => {
@@ -128,7 +137,11 @@
         return;
       }
 
-      availabilitySelection.textContent = `Selected interview slot: ${availabilityCalendar.getAttribute("data-selected") || "none"}`;
+      const start = availabilityCalendar.getAttribute("data-range-start") || "none";
+      const end = availabilityCalendar.getAttribute("data-range-end") || "none";
+      const startTime = availabilityCalendar.getAttribute("data-time-start") || "";
+      const endTime = availabilityCalendar.getAttribute("data-time-end") || "";
+      availabilitySelection.textContent = `Selected interview slot: ${start}${startTime ? ` ${startTime}` : ""} → ${end}${endTime ? ` ${endTime}` : ""}`;
     });
   </script>
 </body>
