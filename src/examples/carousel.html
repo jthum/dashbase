@@ -70,15 +70,15 @@
 <body>
   <main>
     <h1>Carousel Component</h1>
-    <p>Dashbase uses <code>&lt;carousel&gt;</code> when a sequence of slides should remain horizontally scrollable but still gain previous/next controls, dot navigation, and keyboard support. The foundation stays native with scroll snapping; the behavior shim only coordinates state.</p>
+    <p>Dashbase uses <code>&lt;carousel&gt;</code> when a sequence of slides should remain scrollable but still gain previous/next controls and optional dot navigation. The foundation stays native with scroll snapping; the behavior shim only coordinates state.</p>
 
     <section class="surface">
       <h2>Feature Tour</h2>
       <p>Each slide fills the viewport width by default, which makes this a good fit for media previews, onboarding tours, and marketing storytelling.</p>
 
-      <carousel aria-label="Launch feature tour">
+      <carousel role="region" aria-roledescription="carousel" aria-label="Launch feature tour">
         <carousel-track>
-          <carousel-slide>
+          <carousel-slide role="group" aria-roledescription="slide" aria-label="1 of 3">
             <article class="slide-card">
               <aspect-ratio class="hero-media">
                 <svg viewBox="0 0 160 90" role="img" aria-label="Analytics dashboard preview">
@@ -95,7 +95,7 @@
             </article>
           </carousel-slide>
 
-          <carousel-slide>
+          <carousel-slide role="group" aria-roledescription="slide" aria-label="2 of 3">
             <article class="slide-card">
               <aspect-ratio class="hero-media">
                 <svg viewBox="0 0 160 90" role="img" aria-label="Segment comparison preview">
@@ -112,7 +112,7 @@
             </article>
           </carousel-slide>
 
-          <carousel-slide>
+          <carousel-slide role="group" aria-roledescription="slide" aria-label="3 of 3">
             <article class="slide-card">
               <aspect-ratio class="hero-media">
                 <svg viewBox="0 0 160 90" role="img" aria-label="Approval queue preview">
@@ -131,33 +131,37 @@
 
         <carousel-controls>
           <button type="button" data-carousel-prev aria-label="Previous slide">Previous</button>
-          <carousel-dots aria-label="Feature tour slides"></carousel-dots>
+          <carousel-dots aria-label="Feature tour slides">
+            <button type="button" aria-label="Go to slide 1"></button>
+            <button type="button" aria-label="Go to slide 2"></button>
+            <button type="button" aria-label="Go to slide 3"></button>
+          </carousel-dots>
           <button type="button" data-carousel-next aria-label="Next slide">Next</button>
         </carousel-controls>
       </carousel>
     </section>
 
     <section class="surface">
-      <h2>Looping Card Rail</h2>
-      <p>Set a smaller <code>--carousel-slide-size</code> when you want a card rail that peeks ahead to the next item. Add <code>data-loop</code> to wrap around the ends.</p>
+      <h2>Card Rail</h2>
+      <p>Set a smaller <code>--carousel-slide-size</code> when you want a card rail that peeks ahead to the next item while keeping authored controls and dots.</p>
 
-      <carousel data-loop style="--carousel-slide-size: min(100%, 22rem);" aria-label="Recent customer highlights">
+      <carousel role="region" aria-roledescription="carousel" style="--carousel-slide-size: min(100%, 22rem);" aria-label="Recent customer highlights">
         <carousel-track>
-          <carousel-slide>
+          <carousel-slide role="group" aria-roledescription="slide" aria-label="1 of 3">
             <article class="slide-card">
               <div class="eyebrow">Customer highlight</div>
               <h3>Northwind reduced triage time by 41%</h3>
               <p>Support leads now keep incident notes, escalations, and follow-up tasks in the same shared workspace.</p>
             </article>
           </carousel-slide>
-          <carousel-slide>
+          <carousel-slide role="group" aria-roledescription="slide" aria-label="2 of 3">
             <article class="slide-card">
               <div class="eyebrow">Customer highlight</div>
               <h3>Atlas replaced weekly status decks with live boards</h3>
               <p>Executives moved from exported screenshots to scrollable progress views with narrative context attached.</p>
             </article>
           </carousel-slide>
-          <carousel-slide>
+          <carousel-slide role="group" aria-roledescription="slide" aria-label="3 of 3">
             <article class="slide-card">
               <div class="eyebrow">Customer highlight</div>
               <h3>Beacon launched a shared review flow for legal and finance</h3>
@@ -168,8 +172,53 @@
 
         <carousel-controls>
           <button type="button" data-carousel-prev aria-label="Previous customer highlight">Previous</button>
-          <carousel-dots aria-label="Customer highlight slides"></carousel-dots>
+          <carousel-dots aria-label="Customer highlight slides">
+            <button type="button" aria-label="Go to customer highlight 1"></button>
+            <button type="button" aria-label="Go to customer highlight 2"></button>
+            <button type="button" aria-label="Go to customer highlight 3"></button>
+          </carousel-dots>
           <button type="button" data-carousel-next aria-label="Next customer highlight">Next</button>
+        </carousel-controls>
+      </carousel>
+    </section>
+
+    <section class="surface">
+      <h2>Vertical Queue</h2>
+      <p>Use <code>.vertical</code> when the carousel should snap on the block axis instead. In this mode, arrow up and arrow down step through the slides.</p>
+
+      <carousel class="vertical" role="region" aria-roledescription="carousel" style="--carousel-track-block-size: 26rem;" aria-label="Launch checklist">
+        <carousel-track>
+          <carousel-slide role="group" aria-roledescription="slide" aria-label="1 of 3">
+            <article class="slide-card">
+              <div class="eyebrow">Checklist</div>
+              <h3>Finalize release notes</h3>
+              <p>Lock the customer-facing changelog and confirm which experiments graduate into the public release.</p>
+            </article>
+          </carousel-slide>
+          <carousel-slide role="group" aria-roledescription="slide" aria-label="2 of 3">
+            <article class="slide-card">
+              <div class="eyebrow">Checklist</div>
+              <h3>Prepare enablement assets</h3>
+              <p>Refresh screenshots, launch snippets, and internal support guidance before the flag moves to default on.</p>
+            </article>
+          </carousel-slide>
+          <carousel-slide role="group" aria-roledescription="slide" aria-label="3 of 3">
+            <article class="slide-card">
+              <div class="eyebrow">Checklist</div>
+              <h3>Watch activation after rollout</h3>
+              <p>Use the same sequence as a review queue while the team monitors errors, signups, and early user feedback.</p>
+            </article>
+          </carousel-slide>
+        </carousel-track>
+
+        <carousel-controls>
+          <button type="button" data-carousel-prev aria-label="Previous checklist item">Previous</button>
+          <carousel-dots aria-label="Launch checklist slides">
+            <button type="button" aria-label="Go to checklist item 1"></button>
+            <button type="button" aria-label="Go to checklist item 2"></button>
+            <button type="button" aria-label="Go to checklist item 3"></button>
+          </carousel-dots>
+          <button type="button" data-carousel-next aria-label="Next checklist item">Next</button>
         </carousel-controls>
       </carousel>
     </section>

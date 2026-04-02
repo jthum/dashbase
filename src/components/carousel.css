@@ -17,13 +17,15 @@
  *   </carousel>
  *
  * Variants:
- *   [data-loop] — wrap previous/next navigation
+ *   .vertical — vertical snap axis
  */
 
 @layer components {
   carousel {
     --carousel-gap: var(--space-lg);
     --carousel-slide-size: 100%;
+    --carousel-slide-block-size: 100%;
+    --carousel-track-block-size: 24rem;
     --carousel-control-size: 2.5rem;
     --carousel-control-bg: var(--bg-raised);
     --carousel-control-fg: var(--text-default);
@@ -36,6 +38,21 @@
     display: grid;
     gap: var(--space-md);
     min-inline-size: 0;
+
+    &.vertical > carousel-track {
+      flex-direction: column;
+      block-size: var(--carousel-track-block-size);
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior-y: contain;
+      scroll-snap-type: y mandatory;
+      touch-action: pan-y pinch-zoom;
+    }
+
+    &.vertical > carousel-track > carousel-slide {
+      flex: 0 0 var(--carousel-slide-block-size);
+      block-size: var(--carousel-slide-block-size);
+    }
   }
 
   carousel-track {
@@ -47,8 +64,11 @@
     overscroll-behavior-x: contain;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+    scroll-padding-block: 0;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pinch-zoom;
   }
 
   carousel-track::-webkit-scrollbar {
@@ -123,7 +143,7 @@
     cursor: not-allowed;
   }
 
-  carousel [data-carousel-dot] {
+  carousel-dots > button {
     inline-size: var(--carousel-dot-size);
     block-size: var(--carousel-dot-size);
     padding: 0;
@@ -138,14 +158,20 @@
       opacity var(--duration-fast) var(--easing-default);
   }
 
-  carousel [data-carousel-dot]:hover,
-  carousel [data-carousel-dot]:focus-visible {
+  carousel-dots > button:hover,
+  carousel-dots > button:focus-visible {
     background-color: color-mix(in oklch, var(--carousel-dot-active-bg) 72%, var(--carousel-dot-bg));
     outline: none;
   }
 
-  carousel [data-carousel-dot][aria-current="true"] {
+  carousel-dots > button[aria-current="true"] {
     background-color: var(--carousel-dot-active-bg);
     transform: scale(1.12);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    carousel-track {
+      scroll-behavior: auto;
+    }
   }
 }
