@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "name": "Combobox",
+  "slug": "combobox",
+  "category": "interactive",
+  "summary": "Builds a searchable combobox from a semantic input plus a popover listbox, with filtering, active option movement, and selection handled by a small shim.",
+  "files": {
+    "css": "./combobox.css",
+    "behavior": "./combobox.js",
+    "examples": [
+      "./combobox.html"
+    ]
+  },
+  "root": {
+    "tag": "combo-box",
+    "selector": "combo-box"
+  },
+  "anatomy": [
+    {
+      "name": "input",
+      "selector": "input[role=\"combobox\"]",
+      "required": true
+    },
+    {
+      "name": "panel",
+      "selector": "popover-panel[popover][role=\"listbox\"]",
+      "required": true,
+      "children": [
+        "option",
+        "empty"
+      ]
+    },
+    {
+      "name": "option",
+      "selector": "button[role=\"option\"]",
+      "required": true
+    },
+    {
+      "name": "empty",
+      "selector": "combobox-empty",
+      "required": false
+    }
+  ],
+  "variants": [],
+  "states": [
+    {
+      "name": "expanded",
+      "target": "input",
+      "attribute": "aria-expanded",
+      "values": [
+        "true",
+        "false"
+      ]
+    },
+    {
+      "name": "active-descendant",
+      "target": "input",
+      "attribute": "aria-activedescendant"
+    },
+    {
+      "name": "selected",
+      "target": "option",
+      "attribute": "aria-selected",
+      "values": [
+        "true"
+      ]
+    },
+    {
+      "name": "hidden",
+      "target": "option",
+      "attribute": "hidden"
+    }
+  ],
+  "events": [
+    {
+      "name": "change",
+      "source": "input"
+    }
+  ],
+  "behavior": {
+    "defaultMode": "shim-backed",
+    "shim": "./combobox.js"
+  },
+  "imports": {
+    "css": [
+      "dist/components/input/input.css",
+      "dist/components/popover/popover.css",
+      "dist/components/combobox/combobox.css"
+    ],
+    "js": [
+      "dist/components/combobox/combobox.js"
+    ]
+  }
+}

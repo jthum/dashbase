@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "name": "Tabs",
+  "slug": "tabs",
+  "category": "interactive",
+  "summary": "Uses ui-tabs, tab-list, and tab-panel anatomy with ARIA roles, authored hidden panels, and a small shim for keyboard navigation and selection sync.",
+  "files": {
+    "css": "./tabs.css",
+    "behavior": "./tabs.js",
+    "examples": [
+      "./tabs.html"
+    ]
+  },
+  "root": {
+    "tag": "ui-tabs",
+    "selector": "ui-tabs"
+  },
+  "anatomy": [
+    {
+      "name": "list",
+      "selector": "tab-list[role=\"tablist\"]",
+      "required": true,
+      "children": [
+        "tab"
+      ]
+    },
+    {
+      "name": "tab",
+      "selector": "[role=\"tab\"]",
+      "required": true
+    },
+    {
+      "name": "panel",
+      "selector": "tab-panel[role=\"tabpanel\"]",
+      "required": true
+    }
+  ],
+  "variants": [
+    {
+      "name": "vertical",
+      "type": "class",
+      "target": "root",
+      "value": "vertical"
+    },
+    {
+      "name": "orientation",
+      "type": "attribute",
+      "target": "list",
+      "attribute": "aria-orientation",
+      "values": [
+        "horizontal",
+        "vertical"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "name": "selected",
+      "target": "tab",
+      "attribute": "aria-selected",
+      "values": [
+        "true",
+        "false"
+      ]
+    },
+    {
+      "name": "hidden",
+      "target": "panel",
+      "attribute": "hidden"
+    },
+    {
+      "name": "disabled",
+      "target": "tab",
+      "attribute": "aria-disabled",
+      "values": [
+        "true",
+        "false"
+      ]
+    }
+  ],
+  "events": [],
+  "behavior": {
+    "defaultMode": "shim-backed",
+    "shim": "./tabs.js"
+  },
+  "imports": {
+    "css": [
+      "dist/components/tabs/tabs.css"
+    ],
+    "js": [
+      "dist/components/tabs/tabs.js"
+    ]
+  }
+}

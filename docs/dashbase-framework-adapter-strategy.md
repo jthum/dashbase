@@ -74,6 +74,7 @@ Dashbase should separate three concerns:
 
 2. **Machine-Readable Contracts**
    - each component exposes the structure and behavior surface a wrapper needs
+   - contracts live next to the component as `src/components/{name}/{name}.contract.json`
    - this is not a full behavior language
    - it is a stable contract for generators
    - it must be sufficient to build a shim-backed adapter automatically

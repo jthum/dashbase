@@ -1,6 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateComponentContracts } from "./component-contracts.js";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const COMPONENTS_DIR = join(ROOT, "src/components");
@@ -323,6 +324,7 @@ function appendValidationErrors({
 }
 
 export async function validateContracts({ log = true } = {}) {
+  const contractEntries = await validateComponentContracts({ log: false });
   const componentCatalog = await buildComponentCatalog();
   const allComponents = [...componentCatalog.values()];
   const exampleFiles = (
@@ -385,7 +387,7 @@ export async function validateContracts({ log = true } = {}) {
 
   if (log) {
     console.log(
-      `Validated ${exampleFiles.length} example files and ${documentationSnippetCount} documentation snippets against component CSS.`,
+      `Validated ${contractEntries.length} component contracts, ${exampleFiles.length} example files, and ${documentationSnippetCount} documentation snippets against component CSS.`,
     );
   }
 }

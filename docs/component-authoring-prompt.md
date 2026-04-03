@@ -24,16 +24,24 @@ Output expectations:
 
 1. Component CSS in the component's own folder under `src/components/{component-name}/`
 2. Optional behavior shim in that same component folder only if the platform has a real behavior gap
-3. Example page in that same component folder if it is component-owned, or in `src/examples/` if it is a cross-component demo
-4. README snippet only if the component is part of the public front-door story
-5. Short explanation of semantics, state model, and why the chosen primitive is correct
-6. Identify the adapter-facing contract:
+3. A colocated `src/components/{component-name}/{component-name}.contract.json` file for adapter generation
+4. Example page in that same component folder if it is component-owned, or in `src/examples/` if it is a cross-component demo
+5. README snippet only if the component is part of the public front-door story
+6. Short explanation of semantics, state model, and why the chosen primitive is correct
+7. Identify the adapter-facing contract:
    - root element
    - anatomy elements
    - variant/modifier surface
    - ARIA/state expectations
    - emitted events
    - whether future framework adapters would be thin wrappers or controller-backed
+
+Contract expectations:
+
+- Keep contracts as pure data in `.contract.json`, never executable code
+- Colocate the contract with the component's CSS, shim, and example page
+- Use relative `files.*` paths for source assets and `dist/...` paths for generated imports
+- Include enough anatomy, variant, and state detail that a shim-backed generator can build a working adapter without guessing
 
 Overlay-specific rules:
 

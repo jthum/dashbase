@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "name": "Carousel",
+  "slug": "carousel",
+  "category": "interactive",
+  "summary": "Enhances a scroll-snap sequence with previous/next controls, authored dot navigation, and active snap-state sync while keeping the DOM as the source of truth.",
+  "files": {
+    "css": "./carousel.css",
+    "behavior": "./carousel.js",
+    "examples": [
+      "./carousel.html"
+    ]
+  },
+  "root": {
+    "tag": "ui-carousel",
+    "selector": "ui-carousel"
+  },
+  "anatomy": [
+    {
+      "name": "group",
+      "selector": "item-group",
+      "required": true,
+      "children": [
+        "item"
+      ]
+    },
+    {
+      "name": "item",
+      "selector": "item-group > *",
+      "required": true
+    },
+    {
+      "name": "controls",
+      "selector": "control-bar",
+      "required": true,
+      "children": [
+        "prev-button",
+        "next-button",
+        "dots"
+      ]
+    },
+    {
+      "name": "prev-button",
+      "selector": "[data-carousel-prev]",
+      "required": true
+    },
+    {
+      "name": "next-button",
+      "selector": "[data-carousel-next]",
+      "required": true
+    },
+    {
+      "name": "dots",
+      "selector": "carousel-dots",
+      "required": false,
+      "children": [
+        "dot"
+      ]
+    },
+    {
+      "name": "dot",
+      "selector": "carousel-dots > button",
+      "required": false
+    }
+  ],
+  "variants": [
+    {
+      "name": "vertical",
+      "type": "class",
+      "target": "root",
+      "value": "vertical"
+    }
+  ],
+  "states": [
+    {
+      "name": "active",
+      "target": "item",
+      "attribute": "data-active"
+    },
+    {
+      "name": "current",
+      "target": "dot",
+      "attribute": "aria-current",
+      "values": [
+        "true"
+      ]
+    }
+  ],
+  "events": [],
+  "behavior": {
+    "defaultMode": "shim-backed",
+    "shim": "./carousel.js"
+  },
+  "imports": {
+    "css": [
+      "dist/components/carousel/carousel.css"
+    ],
+    "js": [
+      "dist/components/carousel/carousel.js"
+    ]
+  }
+}

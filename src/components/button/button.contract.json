@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "name": "Button",
+  "slug": "button",
+  "category": "interactive",
+  "summary": "Styles native button elements with class-based variants, sizes, and icon treatment without requiring a behavior shim.",
+  "files": {
+    "css": "./button.css",
+    "examples": [
+      "./button.html"
+    ]
+  },
+  "root": {
+    "tag": "button",
+    "selector": "button"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "selector": "button",
+      "required": true
+    }
+  ],
+  "variants": [
+    {
+      "name": "primary",
+      "type": "class",
+      "target": "root",
+      "value": "primary"
+    },
+    {
+      "name": "danger",
+      "type": "class",
+      "target": "root",
+      "value": "danger"
+    },
+    {
+      "name": "ghost",
+      "type": "class",
+      "target": "root",
+      "value": "ghost"
+    },
+    {
+      "name": "outline",
+      "type": "class",
+      "target": "root",
+      "value": "outline"
+    },
+    {
+      "name": "link",
+      "type": "class",
+      "target": "root",
+      "value": "link"
+    },
+    {
+      "name": "xs",
+      "type": "class",
+      "target": "root",
+      "value": "xs"
+    },
+    {
+      "name": "small",
+      "type": "class",
+      "target": "root",
+      "value": "small"
+    },
+    {
+      "name": "large",
+      "type": "class",
+      "target": "root",
+      "value": "large"
+    },
+    {
+      "name": "xl",
+      "type": "class",
+      "target": "root",
+      "value": "xl"
+    },
+    {
+      "name": "icon",
+      "type": "class",
+      "target": "root",
+      "value": "icon"
+    }
+  ],
+  "states": [
+    {
+      "name": "disabled",
+      "target": "root",
+      "attribute": "disabled"
+    }
+  ],
+  "events": [],
+  "behavior": {
+    "defaultMode": "none"
+  },
+  "imports": {
+    "css": [
+      "dist/components/button/button.css"
+    ]
+  }
+}

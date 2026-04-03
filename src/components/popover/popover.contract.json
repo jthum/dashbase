@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "name": "Popover Panel",
+  "slug": "popover",
+  "category": "interactive",
+  "summary": "Provides the shared anchored overlay primitive for utility popovers and menus, with panel anatomy, menu mode, and a browser-native popover shim.",
+  "files": {
+    "css": "./popover.css",
+    "behavior": "./popover.js",
+    "examples": [
+      "./popover.html",
+      "./dropdown.html",
+      "./context-menu.html"
+    ]
+  },
+  "root": {
+    "tag": "popover-panel",
+    "selector": "popover-panel[popover]"
+  },
+  "anatomy": [
+    {
+      "name": "header",
+      "selector": "panel-header",
+      "required": false
+    },
+    {
+      "name": "content",
+      "selector": "panel-content",
+      "required": false
+    },
+    {
+      "name": "footer",
+      "selector": "panel-footer",
+      "required": false
+    },
+    {
+      "name": "menu-item",
+      "selector": ":where(button, a)[role^=\"menuitem\"]",
+      "required": false
+    }
+  ],
+  "variants": [
+    {
+      "name": "wide",
+      "type": "class",
+      "target": "root",
+      "value": "wide"
+    },
+    {
+      "name": "align-end",
+      "type": "class",
+      "target": "root",
+      "value": "align-end"
+    },
+    {
+      "name": "above",
+      "type": "class",
+      "target": "root",
+      "value": "above"
+    },
+    {
+      "name": "submenu",
+      "type": "class",
+      "target": "root",
+      "value": "submenu"
+    },
+    {
+      "name": "context-menu",
+      "type": "class",
+      "target": "root",
+      "value": "context-menu"
+    },
+    {
+      "name": "role",
+      "type": "attribute",
+      "target": "root",
+      "attribute": "role",
+      "values": [
+        "menu"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "name": "open",
+      "target": "root",
+      "attribute": "popover"
+    },
+    {
+      "name": "checked",
+      "target": "menu-item",
+      "attribute": "aria-checked",
+      "values": [
+        "true",
+        "false"
+      ]
+    }
+  ],
+  "events": [],
+  "behavior": {
+    "defaultMode": "shim-backed",
+    "shim": "./popover.js"
+  },
+  "imports": {
+    "css": [
+      "dist/components/panel/panel.css",
+      "dist/components/popover/popover.css"
+    ],
+    "js": [
+      "dist/components/popover/popover.js"
+    ]
+  }
+}
