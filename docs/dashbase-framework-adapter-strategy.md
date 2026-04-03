@@ -181,7 +181,7 @@ This is a contract format, not a user-facing DSL.
 
 The current proof of concept uses those optional `exportName` and `tag` fields
 to generate React wrappers into `generated/react/` via
-`scripts/generate-react-poc.ts`, with no additional npm dependencies.
+`scripts/generate-react.ts`, with no additional npm dependencies.
 It now also uses a small `docs.examples` block plus named example markers in
 component HTML files to generate per-component React usage docs and the first
 target-specific `examples.tsx` modules.

@@ -14,8 +14,8 @@
     "validate:contracts": "bun run scripts/validate-examples.js",
     "validate:examples": "bun run scripts/validate-examples.js",
     "generate:pattern-manifest": "bun run scripts/generate-pattern-manifest.js",
-    "generate:react-poc": "bun run scripts/generate-react-poc.ts",
-    "validate:react-poc": "bun run scripts/validate-react-poc.ts",
+    "generate:react": "bun run scripts/generate-react.ts",
+    "validate:react": "bun run scripts/validate-react.ts",
     "build": "bun run scripts/build.js",
     "dev": "bun run scripts/build.js --watch"
   },

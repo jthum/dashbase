@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const GENERATED_DIR = join(ROOT, "generated/react");
-const TMP_DIR = join(ROOT, ".tmp/react-poc");
+const TMP_DIR = join(ROOT, ".tmp/react");
 
 async function collectEntryPoints(dir: string) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -33,25 +33,33 @@ async function collectEntryPoints(dir: string) {
   return files.sort();
 }
 
-async function validateReactPoc() {
+async function validateReact() {
   const entrypoints = await collectEntryPoints(GENERATED_DIR);
-  const result = await Bun.build({
-    entrypoints,
-    external: ["react", "react/jsx-runtime", "react/jsx-dev-runtime"],
-    outdir: TMP_DIR,
-    target: "browser",
-  });
+  const external = ["react", "react/jsx-runtime", "react/jsx-dev-runtime"];
+
+  for (const entrypoint of entrypoints) {
+    const result = await Bun.build({
+      entrypoints: [entrypoint],
+      external,
+      outdir: TMP_DIR,
+      target: "browser",
+    });
+
+    if (!result.success) {
+      await rm(TMP_DIR, { recursive: true, force: true });
+      throw new AggregateError(
+        result.logs,
+        `Generated React target failed syntax validation for ${entrypoint}.`,
+      );
+    }
+  }
 
   await rm(TMP_DIR, { recursive: true, force: true });
 
-  if (!result.success) {
-    throw new AggregateError(result.logs, "React proof-of-concept generation failed syntax validation.");
-  }
-
-  console.log(`Validated generated React proof-of-concept package (${entrypoints.length} entrypoints).`);
+  console.log(`Validated generated React target (${entrypoints.length} entrypoints).`);
 }
 
-validateReactPoc().catch((error) => {
+validateReact().catch((error) => {
   console.error(error);
   process.exit(1);
 });

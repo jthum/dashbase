@@ -1,6 +1,6 @@
 import type { DashbaseAssetManifest } from "./runtime.ts";
 
-export const dashbaseReactPocManifest = {
+export const dashbaseReactManifest = {
   button: {
     css: [
     "dist/components/button/button.css"
@@ -44,7 +44,7 @@ export const dashbaseReactPocManifest = {
   },
 } as const satisfies Record<string, DashbaseAssetManifest>;
 
-export const dashbaseReactPocPatternManifest = {
+export const dashbaseReactPatternManifest = {
   "app/dashboard-shell/default": {
     css: [
     "./pattern.css",
