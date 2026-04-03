@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "A semantic-first CSS component library for web applications",
   "type": "module",
-  "main": "dist/dashbase.css",
+  "main": "dist/bundles/dashbase.css",
+  "style": "dist/bundles/dashbase.css",
   "files": [
     "dist/"
   ],

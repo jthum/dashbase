@@ -485,11 +485,13 @@ Combobox, Date Picker, Command Palette, Toast/Notification, Data Grid. These are
 
 ```
 src/
-  tokens/
-    base.css          ← @layer declarations + tokens
+  baseline/
+    baseline.css      ← imports reset/tokens/primitives/base
   components/
-    button.css        ← authored with @apply
-    input.css
+    button/
+      button.css      ← authored with @apply
+    input/
+      input.css
     ...
 tailwind.config.js    ← configured to scan src/ for @apply
 ```
@@ -498,8 +500,8 @@ tailwind.config.js    ← configured to scan src/ for @apply
 
 ```bash
 # Tailwind CLI compiles @apply → vanilla CSS
-npx tailwindcss -i src/base.css -o dist/base.css
-npx tailwindcss -i src/components/button/button.css -o dist/components/button.css
+npx tailwindcss -i src/baseline/baseline.css -o dist/baseline.css
+npx tailwindcss -i src/components/button/button.css -o dist/components/button/button.css
 # ... per component, or via a build script
 ```
 
@@ -507,37 +509,37 @@ npx tailwindcss -i src/components/button/button.css -o dist/components/button.cs
 
 ```
 dist/
-  base.css                  ← tokens + layer declarations (always required)
-  dashbase.css              ← all components bundled (convenience)
+  baseline.css              ← tokens + layer declarations (always required)
+  baseline.min.css          ← optimized baseline for production
+  bundles/
+    dashbase.css            ← all components bundled (convenience)
+    dashbase.min.css        ← optimized bundle
   components/
-    button.css
-    input.css
-    textarea.css
-    select.css
-    checkbox.css
-    radio.css
-    form-field.css
-    input-group.css
-    fieldset.css
-    card.css
-    badge.css
-    alert.css
-    avatar.css
-    table.css
-    panel.css
-    dialog.css
-    popover.css
-    accordion.css
-    tabs.css
+    button/
+      button.css
+      button.min.css
+    input/
+      input.css
+      input.min.css
+    tabs/
+      tabs.css
+      tabs.min.css
+      tabs.js
+      tabs.min.js
+    popover/
+      popover.css
+      popover.min.css
+      popover.js
+      popover.min.js
 ```
 
 ### Output Properties
 
-- Zero runtime JavaScript
+- Optional progressive-enhancement JavaScript
 - Zero Tailwind dependency
 - Zero framework dependency
-- Plain CSS, importable anywhere
-- `base.css` target size: < 5kb uncompressed
+- Plain CSS plus optional browser-native behavior shims
+- `baseline.css` target size: < 5kb uncompressed
 
 ### Optional Tailwind Interop
 
@@ -552,37 +554,31 @@ Teams using Tailwind include Dashbase `dist/` files before Tailwind's stylesheet
 ```
 dashbase/
 ├── src/
-│   ├── base.css                  ← layer declarations, tokens
-│   ├── reset.css                 ← box-sizing only
-│   └── components/
-│       ├── button.css
-│       ├── input.css
-│       ├── textarea.css
-│       ├── select.css
-│       ├── checkbox.css
-│       ├── radio.css
-│       ├── form-field.css
-│       ├── input-group.css
-│       ├── fieldset.css
-│       ├── card.css
-│       ├── badge.css
-│       ├── alert.css
-│       ├── avatar.css
-│       ├── table.css
-│       ├── panel.css
-│       ├── dialog.css
-│       ├── popover.css
-│       ├── accordion.css
-│       ├── tabs.css
-│       └── tooltip.css
+│   ├── baseline/
+│   │   ├── baseline.css          ← imports reset/tokens/primitives/base
+│   │   ├── reset.css
+│   │   ├── tokens.css
+│   │   ├── primitives.css
+│   │   └── base.css
+│   ├── components/
+│   │   ├── button/
+│   │   │   └── button.css
+│   │   ├── tabs/
+│   │   │   ├── tabs.css
+│   │   │   ├── tabs.js
+│   │   │   └── tabs.html
+│   │   ├── popover/
+│   │   │   ├── popover.css
+│   │   │   ├── popover.js
+│   │   │   ├── popover.html
+│   │   │   ├── dropdown.html
+│   │   │   └── context-menu.html
+│   │   └── ...
+│   └── examples/                 ← cross-component demos + shared helpers
 ├── dist/                         ← compiled output (git-ignored or published)
 ├── themes/
 │   ├── minimal.css               ← ~5 variables, near-native look
 │   └── default.css               ← full token set, opinionated design
-├── behaviors/
-│   ├── tabs.js                   ← progressive enhancement only
-│   ├── dialog.js                 ← invoker command shim
-│   └── popover.js                ← popover trigger + menu behavior shim
 ├── docs/                         ← examples and usage docs
 ├── tailwind.config.js
 ├── package.json
@@ -619,7 +615,7 @@ Order: `button` → `input` → `textarea` → `checkbox` → `radio` → `selec
 
 For each component:
 - [ ] Author `src/components/{name}/{name}.css` using `@apply`
-- [ ] Compile to `dist/components/{name}.css`
+- [ ] Compile to `dist/components/{name}/{name}.css`
 - [ ] Write a minimal HTML test page using only semantic elements
 - [ ] Verify: renders reasonably in Chrome, Firefox, Safari (not pixel-perfect — functionally consistent)
 - [ ] Verify: keyboard navigation works without JS

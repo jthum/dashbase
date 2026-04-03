@@ -61,12 +61,12 @@ bun run build
 
 This generates:
 
-- `dist/baseline.css` for the reset/tokens/primitives/base layers
-- `dist/components/*.css` for modular component imports
-- `dist/behaviors/*.js` for optional progressive-enhancement shims
-- `dist/dashbase.css` for the full bundle
+- `dist/baseline.css` and `dist/baseline.min.css` for the reset/tokens/primitives/base layers
+- `dist/components/<name>/<name>.css` and `.min.css` for modular component imports
+- `dist/components/<name>/<name>.js` and `.min.js` for optional progressive-enhancement shims
+- `dist/bundles/dashbase.css` and `dist/bundles/dashbase.min.css` as optional convenience bundles
 
-The generated CSS stays readable on purpose. Dashbase ships formatted source with comments intact, and the build reports both raw and gzip sizes so transfer cost stays visible without sacrificing view-source friendliness.
+The readable files stay inspectable on purpose. Use the plain `.css` / `.js` files when you want view-source friendliness, and switch to the matching `.min.css` / `.min.js` files for production delivery.
 
 To use Dashbase in your project, include the base stylesheet followed by the components you need.
 
@@ -75,45 +75,45 @@ To use Dashbase in your project, include the base stylesheet followed by the com
 <link rel="stylesheet" href="dist/baseline.css">
 
 <!-- Load only the components you need -->
-<link rel="stylesheet" href="dist/components/button.css">
-<link rel="stylesheet" href="dist/components/checkbox.css">
-<link rel="stylesheet" href="dist/components/input.css">
-<link rel="stylesheet" href="dist/components/form-field.css">
-<link rel="stylesheet" href="dist/components/panel.css">
-<link rel="stylesheet" href="dist/components/accordion.css">
-<link rel="stylesheet" href="dist/components/calendar.css">
-<link rel="stylesheet" href="dist/components/carousel.css">
-<link rel="stylesheet" href="dist/components/card.css">
-<link rel="stylesheet" href="dist/components/chart.css">
-<link rel="stylesheet" href="dist/components/tabs.css">
-<link rel="stylesheet" href="dist/components/popover.css">
-<link rel="stylesheet" href="dist/components/dialog.css">
-<link rel="stylesheet" href="dist/components/combobox.css">
-<link rel="stylesheet" href="dist/components/command.css">
-<link rel="stylesheet" href="dist/components/date-picker.css">
-<link rel="stylesheet" href="dist/components/data-table.css">
-<link rel="stylesheet" href="dist/components/menubar.css">
-<link rel="stylesheet" href="dist/components/navigation-menu.css">
-<link rel="stylesheet" href="dist/components/scroll-area.css">
-<link rel="stylesheet" href="dist/components/resizable.css">
-<link rel="stylesheet" href="dist/components/table.css">
-<link rel="stylesheet" href="dist/components/toast.css">
+<link rel="stylesheet" href="dist/components/button/button.css">
+<link rel="stylesheet" href="dist/components/checkbox/checkbox.css">
+<link rel="stylesheet" href="dist/components/input/input.css">
+<link rel="stylesheet" href="dist/components/form-field/form-field.css">
+<link rel="stylesheet" href="dist/components/panel/panel.css">
+<link rel="stylesheet" href="dist/components/accordion/accordion.css">
+<link rel="stylesheet" href="dist/components/calendar/calendar.css">
+<link rel="stylesheet" href="dist/components/carousel/carousel.css">
+<link rel="stylesheet" href="dist/components/card/card.css">
+<link rel="stylesheet" href="dist/components/chart/chart.css">
+<link rel="stylesheet" href="dist/components/tabs/tabs.css">
+<link rel="stylesheet" href="dist/components/popover/popover.css">
+<link rel="stylesheet" href="dist/components/dialog/dialog.css">
+<link rel="stylesheet" href="dist/components/combobox/combobox.css">
+<link rel="stylesheet" href="dist/components/command/command.css">
+<link rel="stylesheet" href="dist/components/date-picker/date-picker.css">
+<link rel="stylesheet" href="dist/components/data-table/data-table.css">
+<link rel="stylesheet" href="dist/components/menubar/menubar.css">
+<link rel="stylesheet" href="dist/components/navigation-menu/navigation-menu.css">
+<link rel="stylesheet" href="dist/components/scroll-area/scroll-area.css">
+<link rel="stylesheet" href="dist/components/resizable/resizable.css">
+<link rel="stylesheet" href="dist/components/table/table.css">
+<link rel="stylesheet" href="dist/components/toast/toast.css">
 
 <!-- Load only the behavior shims you use -->
-<script src="dist/behaviors/calendar.js"></script>
-<script src="dist/behaviors/carousel.js"></script>
-<script src="dist/behaviors/chart.js"></script>
-<script src="dist/behaviors/combobox.js"></script>
-<script src="dist/behaviors/dialog.js"></script>
-<script src="dist/behaviors/command.js"></script>
-<script src="dist/behaviors/date-picker.js"></script>
-<script src="dist/behaviors/data-table.js"></script>
-<script src="dist/behaviors/menubar.js"></script>
-<script src="dist/behaviors/navigation-menu.js"></script>
-<script src="dist/behaviors/popover.js"></script>
-<script src="dist/behaviors/resizable.js"></script>
-<script src="dist/behaviors/tabs.js"></script>
-<script src="dist/behaviors/toast.js"></script>
+<script src="dist/components/calendar/calendar.js"></script>
+<script src="dist/components/carousel/carousel.js"></script>
+<script src="dist/components/chart/chart.js"></script>
+<script src="dist/components/combobox/combobox.js"></script>
+<script src="dist/components/dialog/dialog.js"></script>
+<script src="dist/components/command/command.js"></script>
+<script src="dist/components/date-picker/date-picker.js"></script>
+<script src="dist/components/data-table/data-table.js"></script>
+<script src="dist/components/menubar/menubar.js"></script>
+<script src="dist/components/navigation-menu/navigation-menu.js"></script>
+<script src="dist/components/popover/popover.js"></script>
+<script src="dist/components/resizable/resizable.js"></script>
+<script src="dist/components/tabs/tabs.js"></script>
+<script src="dist/components/toast/toast.js"></script>
 ```
 
 ### Example Usage
@@ -180,7 +180,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
   </tab-panel>
 </ui-tabs>
 
-<script src="dist/behaviors/tabs.js"></script>
+<script src="dist/components/tabs/tabs.js"></script>
 ```
 
 ```html
@@ -193,7 +193,7 @@ To use Dashbase in your project, include the base stylesheet followed by the com
   data-time-value="09:30"
 ></calendar-view>
 
-<script src="dist/behaviors/calendar.js"></script>
+<script src="dist/components/calendar/calendar.js"></script>
 ```
 
 For range selection, switch to `data-mode="range"` and use `data-range-start` / `data-range-end` instead of `data-selected`. Month and year selectors are built into the rendered header.
@@ -223,8 +223,8 @@ For range selection, switch to `data-mode="range"` and use `data-range-start` / 
   </popover-panel>
 </date-picker>
 
-<script src="dist/behaviors/calendar.js"></script>
-<script src="dist/behaviors/date-picker.js"></script>
+<script src="dist/components/calendar/calendar.js"></script>
+<script src="dist/components/date-picker/date-picker.js"></script>
 ```
 
 ```html
@@ -267,7 +267,7 @@ For range selection, switch to `data-mode="range"` and use `data-range-start` / 
   <table-empty hidden>No teammates match that filter.</table-empty>
 </data-table>
 
-<script src="dist/behaviors/data-table.js"></script>
+<script src="dist/components/data-table/data-table.js"></script>
 ```
 
 ```html
@@ -291,7 +291,7 @@ For range selection, switch to `data-mode="range"` and use `data-range-start` / 
   </control-bar>
 </ui-carousel>
 
-<script src="dist/behaviors/carousel.js"></script>
+<script src="dist/components/carousel/carousel.js"></script>
 ```
 
 Use `<ui-carousel class="vertical">` when the sequence should snap vertically instead of horizontally. Vertical items keep their natural content height by default, and you can still override `--carousel-item-block-size` when you want full-height panels. Dashbase expects slide semantics and dot buttons to be authored in the markup rather than generated by JavaScript. When multiple items are visible at once, the helper treats pagination as reachable snap positions and hides any extra authored dots that do not correspond to a distinct snap point. `item-group > *` is the contract, and `<ui-item>` is the neutral fallback when no native child element fits cleanly.
@@ -317,7 +317,7 @@ Use `<ui-carousel class="vertical">` when the sequence should snap vertically in
   <chart-tooltip hidden></chart-tooltip>
 </chart-view>
 
-<script src="dist/behaviors/chart.js"></script>
+<script src="dist/components/chart/chart.js"></script>
 ```
 
 ```html
@@ -347,8 +347,8 @@ Use `<ui-carousel class="vertical">` when the sequence should snap vertically in
   </command-list>
 </dialog>
 
-<script src="dist/behaviors/dialog.js"></script>
-<script src="dist/behaviors/command.js"></script>
+<script src="dist/components/dialog/dialog.js"></script>
+<script src="dist/components/command/command.js"></script>
 ```
 
 ```html
@@ -376,7 +376,7 @@ Use `<ui-carousel class="vertical">` when the sequence should snap vertically in
   </combo-box>
 </form-field>
 
-<script src="dist/behaviors/combobox.js"></script>
+<script src="dist/components/combobox/combobox.js"></script>
 ```
 
 ```html
@@ -401,7 +401,7 @@ Use `<ui-carousel class="vertical">` when the sequence should snap vertically in
   <button type="button" role="menuitem" class="danger">Delete workspace</button>
 </popover-panel>
 
-<script src="dist/behaviors/popover.js"></script>
+<script src="dist/components/popover/popover.js"></script>
 ```
 
 Menus and utility popovers share the same `popover-panel` primitive. Add `role="menu"` only when the content truly behaves like a menu.
@@ -437,8 +437,8 @@ Menus and utility popovers share the same `popover-panel` primitive. Add `role="
   </popover-panel>
 </menu-bar>
 
-<script src="dist/behaviors/popover.js"></script>
-<script src="dist/behaviors/menubar.js"></script>
+<script src="dist/components/popover/popover.js"></script>
+<script src="dist/components/menubar/menubar.js"></script>
 ```
 
 ```html
@@ -465,8 +465,8 @@ Menus and utility popovers share the same `popover-panel` primitive. Add `role="
   <a href="#">Pricing</a>
 </nav>
 
-<script src="dist/behaviors/popover.js"></script>
-<script src="dist/behaviors/navigation-menu.js"></script>
+<script src="dist/components/popover/popover.js"></script>
+<script src="dist/components/navigation-menu/navigation-menu.js"></script>
 ```
 
 ```html
@@ -498,7 +498,7 @@ Menus and utility popovers share the same `popover-panel` primitive. Add `role="
   </resizable-pane>
 </resizable-group>
 
-<script src="dist/behaviors/resizable.js"></script>
+<script src="dist/components/resizable/resizable.js"></script>
 ```
 
 Vertical groups resize along the block axis, so they need a definite block size such as `style="block-size: 32rem;"` or a parent layout that already constrains height.

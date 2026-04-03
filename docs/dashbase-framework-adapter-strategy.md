@@ -212,12 +212,12 @@ const tabsContract = {
     { name: "change", source: "tab-list" },
   ],
   behavior: {
-    shim: "dist/behaviors/tabs.js",
+    shim: "dist/components/tabs/tabs.js",
     defaultMode: "shim-backed",
   },
   imports: {
-    css: ["dist/components/tabs.css"],
-    js: ["dist/behaviors/tabs.js"],
+    css: ["dist/components/tabs/tabs.css"],
+    js: ["dist/components/tabs/tabs.js"],
   },
 } satisfies ComponentContract;
 ```
@@ -292,7 +292,7 @@ const comboboxContract = {
     { name: "change", source: "input", detail: "{ value: string }" },
   ],
   behavior: {
-    shim: "dist/behaviors/combobox.js",
+    shim: "dist/components/combobox/combobox.js",
     defaultMode: "shim-backed",
     overrides: {
       react: {
@@ -303,8 +303,8 @@ const comboboxContract = {
     controller: "controllers/combobox-controller.ts",
   },
   imports: {
-    css: ["dist/components/combobox.css", "dist/components/popover.css"],
-    js: ["dist/behaviors/combobox.js"],
+    css: ["dist/components/combobox/combobox.css", "dist/components/popover/popover.css"],
+    js: ["dist/components/combobox/combobox.js"],
   },
 } satisfies ComponentContract;
 ```
