@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { dirname, resolve, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = fileURLToPath(new URL("..", import.meta.url));
+const ROOT = fileURLToPath(new URL("../..", import.meta.url));
 const COMPOSE_FRAGMENT_PATTERN = /(^[ \t]*)<compose-fragment\b([^>]*?)(?:\/>|>\s*<\/compose-fragment>)/im;
 const ATTRIBUTE_PATTERN = /([:@A-Za-z0-9_-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
 const SUPPORTED_MARKER_TYPES = ["fragment", "example"];

@@ -2,7 +2,7 @@ import { access, readdir, readFile } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = fileURLToPath(new URL("..", import.meta.url));
+const ROOT = fileURLToPath(new URL("../..", import.meta.url));
 const COMPONENTS_DIR = join(ROOT, "src/components");
 const CONTRACT_SUFFIX = ".contract.json";
 const CONTRACT_SCHEMA_VERSION = 1;

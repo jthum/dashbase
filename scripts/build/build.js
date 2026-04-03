@@ -8,7 +8,7 @@
  * 3. Emits readable + minified component assets side by side
  * 4. Creates optional bundled dist/bundles/dashbase.css
  *
- * Usage: bun run scripts/build.js
+ * Usage: bun run scripts/build/build.js
  */
 
 import { readdir, mkdir, copyFile, rm } from "node:fs/promises";
@@ -17,7 +17,7 @@ import { gzipSync } from "node:zlib";
 import { validateContracts } from "./validate-examples.js";
 import { generatePatternManifest } from "./generate-pattern-manifest.js";
 
-const ROOT = new URL("..", import.meta.url).pathname;
+const ROOT = new URL("../..", import.meta.url).pathname;
 const BASELINE_DIR = join(ROOT, "src/baseline");
 const COMPONENTS_DIR = join(ROOT, "src/components");
 const DIST = join(ROOT, "dist");

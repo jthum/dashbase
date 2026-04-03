@@ -1,9 +1,9 @@
 import { access, readdir, readFile } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolvePatternFragment, resolvePatternHtml } from "./pattern-composition.js";
+import { resolvePatternFragment, resolvePatternHtml } from "../patterns/pattern-composition.js";
 
-const ROOT = fileURLToPath(new URL("..", import.meta.url));
+const ROOT = fileURLToPath(new URL("../..", import.meta.url));
 const COMPONENTS_DIR = join(ROOT, "src/components");
 const PATTERNS_DIR = join(ROOT, "src/patterns");
 const CONTRACT_FILE_NAME = "pattern.contract.json";

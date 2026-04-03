@@ -2,7 +2,7 @@ import { access, readFile, readdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = fileURLToPath(new URL("..", import.meta.url));
+const ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 const GENERATED_DIR = join(ROOT, "generated/vue");
 const transpiler = new Bun.Transpiler({ loader: "ts" });
 

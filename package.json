@@ -9,19 +9,19 @@
     "dist/"
   ],
   "scripts": {
-    "validate:component-contracts": "bun run scripts/component-contracts.js",
-    "validate:pattern-contracts": "bun run scripts/pattern-contracts.js",
-    "validate:contracts": "bun run scripts/validate-examples.js",
-    "validate:examples": "bun run scripts/validate-examples.js",
-    "generate:pattern-manifest": "bun run scripts/generate-pattern-manifest.js",
-    "generate:react": "bun run scripts/generate-react.ts",
-    "validate:react": "bun run scripts/validate-react.ts",
-    "generate:svelte": "bun run scripts/generate-svelte.ts",
-    "validate:svelte": "bun run scripts/validate-svelte.ts",
-    "generate:vue": "bun run scripts/generate-vue.ts",
-    "validate:vue": "bun run scripts/validate-vue.ts",
-    "build": "bun run scripts/build.js",
-    "dev": "bun run scripts/build.js --watch"
+    "validate:component-contracts": "bun run scripts/contracts/component-contracts.js",
+    "validate:pattern-contracts": "bun run scripts/contracts/pattern-contracts.js",
+    "validate:contracts": "bun run scripts/build/validate-examples.js",
+    "validate:examples": "bun run scripts/build/validate-examples.js",
+    "generate:pattern-manifest": "bun run scripts/build/generate-pattern-manifest.js",
+    "generate:react": "bun run scripts/targets/react/generate.ts",
+    "validate:react": "bun run scripts/targets/react/validate.ts",
+    "generate:svelte": "bun run scripts/targets/svelte/generate.ts",
+    "validate:svelte": "bun run scripts/targets/svelte/validate.ts",
+    "generate:vue": "bun run scripts/targets/vue/generate.ts",
+    "validate:vue": "bun run scripts/targets/vue/validate.ts",
+    "build": "bun run scripts/build/build.js",
+    "dev": "bun run scripts/build/build.js --watch"
   },
   "keywords": [
     "css",

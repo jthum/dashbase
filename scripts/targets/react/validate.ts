@@ -2,7 +2,7 @@ import { readdir, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = fileURLToPath(new URL("..", import.meta.url));
+const ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 const GENERATED_DIR = join(ROOT, "generated/react");
 const TMP_DIR = join(ROOT, ".tmp/react");
 

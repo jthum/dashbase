@@ -1,16 +1,16 @@
 import { readdir, readFile } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { validateComponentContracts } from "./component-contracts.js";
+import { validateComponentContracts } from "../contracts/component-contracts.js";
 import {
   validatePatternContracts,
   loadPatternContracts,
   getPatternAllowedTokens,
   getPatternDefaultBindings,
-} from "./pattern-contracts.js";
-import { resolvePatternHtml } from "./pattern-composition.js";
+} from "../contracts/pattern-contracts.js";
+import { resolvePatternHtml } from "../patterns/pattern-composition.js";
 
-const ROOT = fileURLToPath(new URL("..", import.meta.url));
+const ROOT = fileURLToPath(new URL("../..", import.meta.url));
 const COMPONENTS_DIR = join(ROOT, "src/components");
 const PATTERNS_DIR = join(ROOT, "src/patterns");
 const EXAMPLES_DIR = join(ROOT, "src/examples");
