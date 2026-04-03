@@ -1,0 +1,35 @@
+{
+  "name": "@dashbase/svelte",
+  "private": true,
+  "type": "module",
+  "svelte": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./manual": "./manual.ts",
+    "./manifest": "./manifest.ts",
+    "./runtime": "./runtime.ts",
+    "./button": "./components/button/index.ts",
+    "./button/manual": "./components/button/manual.ts",
+    "./carousel": "./components/carousel/index.ts",
+    "./carousel/manual": "./components/carousel/manual.ts",
+    "./combobox": "./components/combobox/index.ts",
+    "./combobox/manual": "./components/combobox/manual.ts",
+    "./combobox/examples": "./components/combobox/examples.svelte",
+    "./popover": "./components/popover/index.ts",
+    "./popover/manual": "./components/popover/manual.ts",
+    "./tabs": "./components/tabs/index.ts",
+    "./tabs/manual": "./components/tabs/manual.ts",
+    "./tabs/examples": "./components/tabs/examples.svelte",
+    "./patterns/app/dashboard-shell/default": "./patterns/app/dashboard-shell/default/index.ts",
+    "./patterns/app/dashboard-shell/default/manual": "./patterns/app/dashboard-shell/default/manual.ts",
+    "./patterns/auth/login-box/minimal": "./patterns/auth/login-box/minimal/index.ts",
+    "./patterns/auth/login-box/minimal/manual": "./patterns/auth/login-box/minimal/manual.ts",
+    "./patterns/auth/login-screen/split": "./patterns/auth/login-screen/split/index.ts",
+    "./patterns/auth/login-screen/split/manual": "./patterns/auth/login-screen/split/manual.ts",
+    "./patterns/forms/form-field/select-with-helper-error": "./patterns/forms/form-field/select-with-helper-error/index.ts",
+    "./patterns/forms/form-field/select-with-helper-error/manual": "./patterns/forms/form-field/select-with-helper-error/manual.ts"
+  },
+  "peerDependencies": {
+    "svelte": ">=5"
+  }
+}

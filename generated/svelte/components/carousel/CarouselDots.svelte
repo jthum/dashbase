@@ -1,0 +1,22 @@
+<script module lang="ts">
+  import "../../../../dist/components/carousel/carousel.css";
+  import "../../../../dist/components/carousel/carousel.js";
+</script>
+
+<script lang="ts">
+  import type { Snippet } from "svelte";
+  import { cx, type DashbaseCustomElementProps } from "../../runtime.ts";
+
+  interface Props extends DashbaseCustomElementProps {
+    children?: Snippet;
+  }
+
+  let { class: className = "", children, ...rest }: Props = $props();
+</script>
+
+<carousel-dots
+  {...rest}
+  class={cx(className)}
+>
+  {@render children?.()}
+</carousel-dots>

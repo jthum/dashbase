@@ -1,0 +1,18 @@
+.surface {
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 92%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 68%, transparent)
+      );
+    }
+
+    .surface > * {
+      margin: 0 0 var(--space-md);
+    }
+
+    .surface > :last-child {
+      margin-bottom: 0;
+    }

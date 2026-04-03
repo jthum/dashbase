@@ -1,0 +1,90 @@
+.dashboard-shell {
+      display: grid;
+      min-block-size: 100vh;
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 88%, transparent),
+        color-mix(in oklch, var(--bg-default) 96%, transparent)
+      );
+    }
+
+    @media (min-width: 64rem) {
+      .dashboard-shell {
+        grid-template-columns: 15rem minmax(0, 1fr);
+      }
+    }
+
+    .shell-sidebar {
+      padding: var(--space-xl);
+      border-inline-end: var(--border-width) solid var(--border-default);
+      background: color-mix(in oklch, var(--bg-subtle) 84%, transparent);
+    }
+
+    .shell-sidebar nav ul {
+      display: grid;
+      gap: var(--space-xs);
+      list-style: none;
+      padding: 0;
+      margin: var(--space-xl) 0 0;
+    }
+
+    .shell-sidebar a {
+      display: block;
+      padding: var(--space-sm) var(--space-md);
+      color: inherit;
+      text-decoration: none;
+      border-radius: var(--radius-lg);
+    }
+
+    .shell-sidebar a:hover,
+    .shell-sidebar a:focus-visible,
+    .shell-sidebar a[aria-current="page"] {
+      background: var(--bg-default);
+      outline: none;
+    }
+
+    .shell-main {
+      display: grid;
+      gap: var(--space-xl);
+      padding: var(--space-xl);
+    }
+
+    .shell-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-lg);
+    }
+
+    .shell-copy {
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .shell-copy > * {
+      margin: 0;
+    }
+
+    .shell-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .metrics-grid {
+      display: grid;
+      gap: var(--space-lg);
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    }
+
+    .metric {
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    .metric strong {
+      font-size: var(--text-2xl);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-tight);
+    }
