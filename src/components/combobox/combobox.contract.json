@@ -13,16 +13,21 @@
   },
   "root": {
     "tag": "combo-box",
-    "selector": "combo-box"
+    "selector": "combo-box",
+    "exportName": "Combobox"
   },
   "anatomy": [
     {
       "name": "input",
+      "tag": "input",
+      "exportName": "ComboboxInput",
       "selector": "input[role=\"combobox\"]",
       "required": true
     },
     {
       "name": "panel",
+      "tag": "popover-panel",
+      "exportName": "ComboboxPanel",
       "selector": "popover-panel[popover][role=\"listbox\"]",
       "required": true,
       "children": [
@@ -32,11 +37,15 @@
     },
     {
       "name": "option",
+      "tag": "button",
+      "exportName": "ComboboxOption",
       "selector": "button[role=\"option\"]",
       "required": true
     },
     {
       "name": "empty",
+      "tag": "combobox-empty",
+      "exportName": "ComboboxEmpty",
       "selector": "combobox-empty",
       "required": false
     }

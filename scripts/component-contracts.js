@@ -250,6 +250,15 @@ function validateAnatomy({ anatomy, contractPath, errors }) {
 
     const name = ensureString({ value: item.name, field: `${fieldBase}.name`, errors });
     ensureString({ value: item.selector, field: `${fieldBase}.selector`, errors });
+    if (item.tag !== undefined) {
+      ensureString({ value: item.tag, field: `${fieldBase}.tag`, errors });
+    }
+    if (item.exportName !== undefined) {
+      ensureString({ value: item.exportName, field: `${fieldBase}.exportName`, errors });
+      if (item.tag === undefined) {
+        errors.push(`${contractPath}: ${fieldBase}.exportName requires ${fieldBase}.tag`);
+      }
+    }
 
     if (typeof item.required !== "boolean") {
       errors.push(`${contractPath}: ${fieldBase}.required must be a boolean`);
@@ -351,6 +360,9 @@ async function validateContractEntry(entry) {
   } else {
     ensureString({ value: contract.root.tag, field: "root.tag", errors });
     ensureString({ value: contract.root.selector, field: "root.selector", errors });
+    if (contract.root.exportName !== undefined) {
+      ensureString({ value: contract.root.exportName, field: "root.exportName", errors });
+    }
   }
 
   const anatomyEntries = validateAnatomy({ anatomy: contract.anatomy, contractPath, errors });

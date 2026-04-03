@@ -13,11 +13,14 @@
   },
   "root": {
     "tag": "ui-carousel",
-    "selector": "ui-carousel"
+    "selector": "ui-carousel",
+    "exportName": "Carousel"
   },
   "anatomy": [
     {
       "name": "group",
+      "tag": "item-group",
+      "exportName": "CarouselGroup",
       "selector": "item-group",
       "required": true,
       "children": [
@@ -26,11 +29,15 @@
     },
     {
       "name": "item",
+      "tag": "ui-item",
+      "exportName": "CarouselItem",
       "selector": "item-group > *",
       "required": true
     },
     {
       "name": "controls",
+      "tag": "control-bar",
+      "exportName": "CarouselControls",
       "selector": "control-bar",
       "required": true,
       "children": [
@@ -41,16 +48,22 @@
     },
     {
       "name": "prev-button",
+      "tag": "button",
+      "exportName": "CarouselPrevButton",
       "selector": "[data-carousel-prev]",
       "required": true
     },
     {
       "name": "next-button",
+      "tag": "button",
+      "exportName": "CarouselNextButton",
       "selector": "[data-carousel-next]",
       "required": true
     },
     {
       "name": "dots",
+      "tag": "carousel-dots",
+      "exportName": "CarouselDots",
       "selector": "carousel-dots",
       "required": false,
       "children": [
@@ -59,6 +72,8 @@
     },
     {
       "name": "dot",
+      "tag": "button",
+      "exportName": "CarouselDot",
       "selector": "carousel-dots > button",
       "required": false
     }

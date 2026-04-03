@@ -12,11 +12,14 @@
   },
   "root": {
     "tag": "button",
-    "selector": "button"
+    "selector": "button",
+    "exportName": "Button"
   },
   "anatomy": [
     {
       "name": "root",
+      "tag": "button",
+      "exportName": "Button",
       "selector": "button",
       "required": true
     }

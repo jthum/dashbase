@@ -13,11 +13,14 @@
   },
   "root": {
     "tag": "ui-tabs",
-    "selector": "ui-tabs"
+    "selector": "ui-tabs",
+    "exportName": "Tabs"
   },
   "anatomy": [
     {
       "name": "list",
+      "tag": "tab-list",
+      "exportName": "TabsList",
       "selector": "tab-list[role=\"tablist\"]",
       "required": true,
       "children": [
@@ -26,11 +29,15 @@
     },
     {
       "name": "tab",
+      "tag": "button",
+      "exportName": "TabsTrigger",
       "selector": "[role=\"tab\"]",
       "required": true
     },
     {
       "name": "panel",
+      "tag": "tab-panel",
+      "exportName": "TabsContent",
       "selector": "tab-panel[role=\"tabpanel\"]",
       "required": true
     }

@@ -15,21 +15,28 @@
   },
   "root": {
     "tag": "popover-panel",
-    "selector": "popover-panel[popover]"
+    "selector": "popover-panel[popover]",
+    "exportName": "PopoverPanel"
   },
   "anatomy": [
     {
       "name": "header",
+      "tag": "panel-header",
+      "exportName": "PopoverHeader",
       "selector": "panel-header",
       "required": false
     },
     {
       "name": "content",
+      "tag": "panel-content",
+      "exportName": "PopoverContent",
       "selector": "panel-content",
       "required": false
     },
     {
       "name": "footer",
+      "tag": "panel-footer",
+      "exportName": "PopoverFooter",
       "selector": "panel-footer",
       "required": false
     },

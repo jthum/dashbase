@@ -122,11 +122,14 @@ type ComponentContract = {
   category: "presentational" | "interactive";
   root: {
     tag: string;
+    exportName?: string;
     role?: string;
     class?: string[];
   };
   anatomy: Array<{
     name: string;
+    tag?: string;
+    exportName?: string;
     selector: string;
     required: boolean;
     children?: string[];
@@ -164,6 +167,10 @@ type ComponentContract = {
 ```
 
 This is a contract format, not a user-facing DSL.
+
+The current proof of concept uses those optional `exportName` and `tag` fields
+to generate React wrappers into `generated/react/` via
+`scripts/generate-react-poc.ts`, with no additional npm dependencies.
 
 ---
 
