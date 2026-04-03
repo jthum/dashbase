@@ -16,6 +16,8 @@ Requirements:
 - Treat patterns as reusable recipes, not as new primitive components
 - Keep pattern-specific CSS minimal and scoped to the pattern folder
 - Make dependency metadata explicit so the pattern can be indexed and tracked
+- Prefer author-time composition through `<compose-fragment ... />` when copying
+  a canonical component or pattern snippet would otherwise create drift
 
 Output expectations:
 
@@ -25,6 +27,7 @@ Output expectations:
 4. Optional pattern-local CSS or JS only when composition alone is not enough
 5. Clear dependency metadata listing which Dashbase components and patterns are used
 6. Short explanation of the pattern's purpose, scope, and intended use cases
+7. A canonical `@fragment pattern` block in the source HTML for generators
 
 Naming expectations:
 
@@ -39,6 +42,11 @@ Contract expectations:
 - Declare `dependencies.components` for every composed component
 - Declare `dependencies.patterns` if this pattern composes other patterns
 - If `docs.examples` references source snippets, mark them with `<!-- @example name:start -->` and `<!-- @example name:end -->`
+- Mark the canonical pattern body with `<!-- @fragment pattern:start -->` and `<!-- @fragment pattern:end -->`
+- Mark reusable CSS or HTML fragments with `@fragment` markers, then reference
+  them via `<compose-fragment source=\"path/to/file.html#fragment-id\" />`
+- Additional attributes on `<compose-fragment>` act as author-time template
+  values for `{{token}}` placeholders inside the referenced fragment
 
 The goal is not just to make a pretty demo. The goal is to build a pattern
 catalog that can scale, stay searchable, and remain useful to both humans and

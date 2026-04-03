@@ -1,6 +1,7 @@
 import { access, readdir, readFile } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolvePatternFragment, resolvePatternHtml } from "./pattern-composition.js";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const COMPONENTS_DIR = join(ROOT, "src/components");
@@ -277,6 +278,15 @@ async function validatePatternEntry(entry, knownSlugs) {
     errors,
     htmlPath,
   });
+
+  if (htmlPath) {
+    try {
+      await resolvePatternFragment(entry, "pattern");
+      await resolvePatternHtml(entry);
+    } catch (error) {
+      errors.push(`${contractPath}: ${error.message}`);
+    }
+  }
 
   return errors;
 }

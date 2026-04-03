@@ -1,12 +1,13 @@
 {
-  "generatedAt": "2026-04-03T15:53:27.269Z",
-  "count": 3,
+  "generatedAt": "2026-04-03T16:32:56.444Z",
+  "count": 4,
   "categories": {
     "app": [
       "app/dashboard-shell/default"
     ],
     "auth": [
-      "auth/login-box/minimal"
+      "auth/login-box/minimal",
+      "auth/login-screen/split"
     ],
     "forms": [
       "forms/form-field/select-with-helper-error"
@@ -70,6 +71,32 @@
           "label"
         ],
         "patterns": []
+      }
+    },
+    {
+      "name": "Login Screen",
+      "title": "Login Screen / Split",
+      "slug": "auth/login-screen/split",
+      "category": "auth",
+      "family": "login-screen",
+      "variant": "split",
+      "scope": "page",
+      "summary": "A page-level authentication shell that pairs contextual onboarding copy with the canonical login-box panel on larger viewports.",
+      "tags": [
+        "auth",
+        "login",
+        "page",
+        "split-layout",
+        "workspace"
+      ],
+      "files": {
+        "html": "src/patterns/auth/login-screen/split/pattern.html"
+      },
+      "dependencies": {
+        "components": [],
+        "patterns": [
+          "auth/login-box/minimal"
+        ]
       }
     },
     {

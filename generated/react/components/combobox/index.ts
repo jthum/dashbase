@@ -3,4 +3,4 @@ import "../../../../dist/components/input/input.css";
 import "../../../../dist/components/popover/popover.css";
 import "../../../../dist/components/combobox/combobox.css";
 import "../../../../dist/components/combobox/combobox.js";
-export * from "./manual";
+export * from "./manual.tsx";

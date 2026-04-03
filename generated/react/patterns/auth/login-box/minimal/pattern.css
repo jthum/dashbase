@@ -1,0 +1,25 @@
+.meta {
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    .meta > * {
+      margin: 0;
+    }
+
+    .login-form {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .inline-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .login-actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }

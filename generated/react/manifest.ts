@@ -1,4 +1,4 @@
-import type { DashbaseAssetManifest } from "./runtime";
+import type { DashbaseAssetManifest } from "./runtime.ts";
 
 export const dashbaseReactPocManifest = {
   button: {
@@ -41,5 +41,50 @@ export const dashbaseReactPocManifest = {
     js: [
     "dist/components/tabs/tabs.js"
 ],
+  },
+} as const satisfies Record<string, DashbaseAssetManifest>;
+
+export const dashbaseReactPocPatternManifest = {
+  "app/dashboard-shell/default": {
+    css: [
+    "./pattern.css",
+    "dist/components/badge/badge.css",
+    "dist/components/button/button.css",
+    "dist/components/card/card.css"
+],
+    js: [],
+  },
+  "auth/login-box/minimal": {
+    css: [
+    "./pattern.css",
+    "dist/components/button/button.css",
+    "dist/components/card/card.css",
+    "dist/components/checkbox/checkbox.css",
+    "dist/components/form-field/form-field.css",
+    "dist/components/input/input.css",
+    "dist/components/label/label.css"
+],
+    js: [],
+  },
+  "auth/login-screen/split": {
+    css: [
+    "./pattern.css",
+    "dist/components/button/button.css",
+    "dist/components/card/card.css",
+    "dist/components/checkbox/checkbox.css",
+    "dist/components/form-field/form-field.css",
+    "dist/components/input/input.css",
+    "dist/components/label/label.css"
+],
+    js: [],
+  },
+  "forms/form-field/select-with-helper-error": {
+    css: [
+    "./pattern.css",
+    "dist/components/form-field/form-field.css",
+    "dist/components/label/label.css",
+    "dist/components/select/select.css"
+],
+    js: [],
   },
 } as const satisfies Record<string, DashbaseAssetManifest>;

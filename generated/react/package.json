@@ -20,7 +20,15 @@
     "./popover/manual": "./components/popover/manual.tsx",
     "./tabs": "./components/tabs/index.ts",
     "./tabs/manual": "./components/tabs/manual.tsx",
-    "./tabs/examples": "./components/tabs/examples.tsx"
+    "./tabs/examples": "./components/tabs/examples.tsx",
+    "./patterns/app/dashboard-shell/default": "./patterns/app/dashboard-shell/default/index.ts",
+    "./patterns/app/dashboard-shell/default/manual": "./patterns/app/dashboard-shell/default/manual.tsx",
+    "./patterns/auth/login-box/minimal": "./patterns/auth/login-box/minimal/index.ts",
+    "./patterns/auth/login-box/minimal/manual": "./patterns/auth/login-box/minimal/manual.tsx",
+    "./patterns/auth/login-screen/split": "./patterns/auth/login-screen/split/index.ts",
+    "./patterns/auth/login-screen/split/manual": "./patterns/auth/login-screen/split/manual.tsx",
+    "./patterns/forms/form-field/select-with-helper-error": "./patterns/forms/form-field/select-with-helper-error/index.ts",
+    "./patterns/forms/form-field/select-with-helper-error/manual": "./patterns/forms/form-field/select-with-helper-error/manual.tsx"
   },
   "peerDependencies": {
     "react": ">=18"

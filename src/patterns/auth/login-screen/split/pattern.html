@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase Pattern — Login Screen / Split</title>
+  <link rel="stylesheet" href="../../../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../../../../components/card/card.css">
+  <link rel="stylesheet" href="../../../../components/button/button.css">
+  <link rel="stylesheet" href="../../../../components/input/input.css">
+  <link rel="stylesheet" href="../../../../components/label/label.css">
+  <link rel="stylesheet" href="../../../../components/checkbox/checkbox.css">
+  <link rel="stylesheet" href="../../../../components/form-field/form-field.css">
+
+  <style>
+    body {
+      margin: 0;
+    }
+
+    /* @fragment pattern-styles:start */
+    .login-screen {
+      display: grid;
+      min-block-size: 100vh;
+      background:
+        radial-gradient(circle at top left, color-mix(in oklch, var(--color-primary) 10%, transparent), transparent 28%),
+        linear-gradient(180deg, color-mix(in oklch, var(--bg-raised) 90%, transparent), var(--bg-default));
+    }
+
+    @media (min-width: 70rem) {
+      .login-screen {
+        grid-template-columns: minmax(0, 1.1fr) minmax(24rem, 28rem);
+      }
+    }
+
+    .intro-panel {
+      display: grid;
+      align-content: center;
+      gap: var(--space-lg);
+      padding: min(14vh, var(--space-5xl)) var(--space-2xl);
+    }
+
+    .intro-panel > * {
+      margin: 0;
+    }
+
+    .intro-panel small {
+      color: var(--text-muted);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+    }
+
+    .intro-panel ul {
+      display: grid;
+      gap: var(--space-sm);
+      margin: 0;
+      padding-inline-start: 1.25rem;
+    }
+
+    .form-panel {
+      display: grid;
+      align-content: center;
+      padding: min(12vh, var(--space-5xl)) var(--space-xl);
+      background: color-mix(in oklch, var(--bg-default) 94%, transparent);
+      border-inline-start: var(--border-width) solid color-mix(in oklch, var(--border-default) 80%, transparent);
+    }
+
+    <compose-fragment source="../../login-box/minimal/pattern.html#pattern-styles" />
+    /* @fragment pattern-styles:end */
+  </style>
+</head>
+<body>
+  <!-- @fragment pattern:start -->
+  <main class="login-screen">
+    <section class="intro-panel" aria-labelledby="login-screen-title">
+      <small>Team workspace</small>
+      <h1 id="login-screen-title">Move approvals, launches, and follow-up work through one shared operating system.</h1>
+      <p>Dashbase keeps requests, evidence, and accountable next steps in the same surface so teams stop losing context between meetings, tickets, and exported decks.</p>
+      <ul>
+        <li>Review release readiness with live evidence attached</li>
+        <li>Share status updates without rebuilding the same report twice</li>
+        <li>Keep finance, legal, and operations aligned on the same artifact</li>
+      </ul>
+    </section>
+
+    <section class="form-panel" aria-label="Sign in">
+      <compose-fragment source="../../login-box/minimal/pattern.html#panel" />
+    </section>
+  </main>
+  <!-- @fragment pattern:end -->
+</body>
+</html>

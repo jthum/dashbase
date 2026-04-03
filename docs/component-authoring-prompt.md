@@ -39,6 +39,8 @@ Output expectations:
    - ARIA/state expectations
    - emitted events
    - whether future framework adapters would be thin wrappers or controller-backed
+8. If the component should expose reusable author-time pattern fragments, add a
+   colocated `.fragments.html` file or `@fragment` markers in its source HTML
 
 Contract expectations:
 

@@ -78,7 +78,9 @@ The readable files stay inspectable on purpose. Use the plain `.css` / `.js` fil
 Dashbase patterns are higher-level native HTML compositions such as `Form Field`,
 `Login Box`, or `Dashboard Shell`. They live under `src/patterns/<category>/<family>/<variant>/`
 with a `pattern.contract.json` file and can depend on components or other
-patterns. Pattern metadata is indexed into `generated/patterns/patterns.manifest.json`
+patterns. Author-time pattern sources can reference reusable fragments through
+`<compose-fragment ... />`, and the build resolves those references back into
+plain HTML. Pattern metadata is indexed into `generated/patterns/patterns.manifest.json`
 for future registries, search, and adapter generation.
 
 To use Dashbase in your project, include the base stylesheet followed by the components you need.

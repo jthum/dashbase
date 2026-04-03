@@ -27,4 +27,19 @@ Current pilot components:
   - Manual entry: `@dashbase/react/tabs/manual`
   - Generated examples: `@dashbase/react/tabs/examples`
 
+Current pilot patterns:
+
+- `app/dashboard-shell/default`
+  - Auto entry: `@dashbase/react/patterns/app/dashboard-shell/default`
+  - Manual entry: `@dashbase/react/patterns/app/dashboard-shell/default/manual`
+- `auth/login-box/minimal`
+  - Auto entry: `@dashbase/react/patterns/auth/login-box/minimal`
+  - Manual entry: `@dashbase/react/patterns/auth/login-box/minimal/manual`
+- `auth/login-screen/split`
+  - Auto entry: `@dashbase/react/patterns/auth/login-screen/split`
+  - Manual entry: `@dashbase/react/patterns/auth/login-screen/split/manual`
+- `forms/form-field/select-with-helper-error`
+  - Auto entry: `@dashbase/react/patterns/forms/form-field/select-with-helper-error`
+  - Manual entry: `@dashbase/react/patterns/forms/form-field/select-with-helper-error/manual`
+
 These files are a generated adapter proof of concept, not the final published package format.

@@ -1,2 +1,2 @@
-export * from "./runtime";
-export * from "./manifest";
+export * from "./runtime.ts";
+export * from "./manifest.ts";

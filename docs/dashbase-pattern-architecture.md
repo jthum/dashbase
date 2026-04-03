@@ -80,6 +80,37 @@ The long-term model is:
 That means composition can stay ergonomic without giving up Dashbase's
 HTML-first philosophy.
 
+For the first implementation pass, author-time composition uses
+`<compose-fragment ... />` references plus named source markers.
+
+Example:
+
+```html
+<compose-fragment
+  source="../../../../components/button/button.fragments.html#action-button"
+  tone="primary"
+  type="button"
+  label="Create report"
+/>
+```
+
+Reusable source fragments should be marked with either HTML or CSS markers:
+
+```html
+<!-- @fragment pattern:start -->
+...
+<!-- @fragment pattern:end -->
+```
+
+```css
+/* @fragment panel-styles:start */
+...
+/* @fragment panel-styles:end */
+```
+
+Every pattern should expose a canonical `pattern` fragment so generators can
+target the actual composition rather than the surrounding demo document.
+
 ---
 
 ## Drift Risk
@@ -114,6 +145,7 @@ They should capture:
 - source files
 - dependency metadata
 - small docs/example metadata
+- canonical `pattern` fragment markers in the source HTML
 
 Example shape:
 

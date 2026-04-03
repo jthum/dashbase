@@ -17,6 +17,7 @@
       padding: var(--space-2xl);
     }
 
+    /* @fragment pattern-styles:start */
     .surface {
       padding: var(--space-xl);
       border: var(--border-width) solid var(--border-default);
@@ -35,10 +36,12 @@
     .surface > :last-child {
       margin-bottom: 0;
     }
+    /* @fragment pattern-styles:end */
   </style>
 </head>
 <body>
   <main>
+    <!-- @fragment pattern:start -->
     <section class="surface" aria-labelledby="birth-state-pattern-title">
       <h1 id="birth-state-pattern-title">Form Field / Select With Helper Error</h1>
       <p>Use this when the field needs clear context, required state, helper guidance, and inline validation feedback in a single consistent block.</p>
@@ -57,6 +60,7 @@
         <small id="birth-state-error" class="error">You must select a state before continuing.</small>
       </form-field>
     </section>
+    <!-- @fragment pattern:end -->
   </main>
 </body>
 </html>

@@ -3,6 +3,8 @@ import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateComponentContracts } from "./component-contracts.js";
 import { validatePatternContracts } from "./pattern-contracts.js";
+import { loadPatternContracts } from "./pattern-contracts.js";
+import { resolvePatternHtml } from "./pattern-composition.js";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const COMPONENTS_DIR = join(ROOT, "src/components");
@@ -328,6 +330,13 @@ function appendValidationErrors({
 export async function validateContracts({ log = true } = {}) {
   const contractEntries = await validateComponentContracts({ log: false });
   const patternEntries = await validatePatternContracts({ log: false });
+  const patternContractEntries = await loadPatternContracts();
+  const patternEntryByHtmlPath = new Map(
+    patternContractEntries.map((entry) => [
+      resolve(entry.patternDir, entry.contract.files.html),
+      entry,
+    ]),
+  );
   const componentCatalog = await buildComponentCatalog();
   const allComponents = [...componentCatalog.values()];
   const exampleFiles = (
@@ -338,9 +347,12 @@ export async function validateContracts({ log = true } = {}) {
   let documentationSnippetCount = 0;
 
   for (const examplePath of exampleFiles) {
-    const html = await readFile(examplePath, "utf8");
+    const sourceHtml = await readFile(examplePath, "utf8");
+    const html = patternEntryByHtmlPath.has(examplePath)
+      ? await resolvePatternHtml(patternEntryByHtmlPath.get(examplePath))
+      : sourceHtml;
     const localClasses = extractInlineStyleClasses(html);
-    const loadedComponents = extractLoadedComponentFiles(html, examplePath)
+    const loadedComponents = extractLoadedComponentFiles(sourceHtml, examplePath)
       .map((file) => componentCatalog.get(file))
       .filter(Boolean);
 

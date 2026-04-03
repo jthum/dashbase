@@ -2,4 +2,4 @@
 import "../../../../dist/components/panel/panel.css";
 import "../../../../dist/components/popover/popover.css";
 import "../../../../dist/components/popover/popover.js";
-export * from "./manual";
+export * from "./manual.tsx";
