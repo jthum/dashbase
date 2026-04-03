@@ -18,6 +18,8 @@
     "validate:react": "bun run scripts/validate-react.ts",
     "generate:svelte": "bun run scripts/generate-svelte.ts",
     "validate:svelte": "bun run scripts/validate-svelte.ts",
+    "generate:vue": "bun run scripts/generate-vue.ts",
+    "validate:vue": "bun run scripts/validate-vue.ts",
     "build": "bun run scripts/build.js",
     "dev": "bun run scripts/build.js --watch"
   },

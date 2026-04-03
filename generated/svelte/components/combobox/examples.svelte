@@ -7,7 +7,7 @@
   <h2 id="assigneeCombobox-title">Assignee picker</h2>
   <label for="assignee-picker">Assign reviewer</label>
   <Combobox>
-    <ComboboxInput
+    <input
       id="assignee-picker"
       type="text"
       role="combobox"
@@ -18,10 +18,10 @@
       placeholder="Search teammates…"
     />
     <ComboboxPanel id="assignee-options" popover="auto" role="listbox" aria-label="Reviewer options">
-      <ComboboxOption type="button" role="option" data-value="ava-malik" data-keywords="design accessibility motion">Ava Malik <span>Design systems</span></ComboboxOption>
-      <ComboboxOption type="button" role="option" data-value="rina-shah" data-keywords="qa testing release">Rina Shah <span>Quality assurance</span></ComboboxOption>
-      <ComboboxOption type="button" role="option" data-value="marco-silva" data-keywords="frontend react ui">Marco Silva <span>Frontend</span></ComboboxOption>
-      <ComboboxOption type="button" role="option" data-value="noah-lee" data-keywords="data analytics warehouse">Noah Lee <span>Data platform</span></ComboboxOption>
+      <button type="button" role="option" data-value="ava-malik" data-keywords="design accessibility motion">Ava Malik <span>Design systems</span></button>
+      <button type="button" role="option" data-value="rina-shah" data-keywords="qa testing release">Rina Shah <span>Quality assurance</span></button>
+      <button type="button" role="option" data-value="marco-silva" data-keywords="frontend react ui">Marco Silva <span>Frontend</span></button>
+      <button type="button" role="option" data-value="noah-lee" data-keywords="data analytics warehouse">Noah Lee <span>Data platform</span></button>
       <ComboboxEmpty hidden>No reviewers match that search.</ComboboxEmpty>
     </ComboboxPanel>
   </Combobox>
@@ -33,7 +33,7 @@
   <h2 id="frameworkCombobox-title">Library picker</h2>
   <label for="framework-picker">Reference component library</label>
   <Combobox>
-    <ComboboxInput
+    <input
       id="framework-picker"
       type="text"
       role="combobox"
@@ -44,10 +44,10 @@
       placeholder="Search libraries…"
     />
     <ComboboxPanel id="framework-options" popover="auto" role="listbox" aria-label="Component library options">
-      <ComboboxOption type="button" role="option" data-value="dashbase" data-keywords="semantic css custom elements">Dashbase <kbd>CSS</kbd></ComboboxOption>
-      <ComboboxOption type="button" role="option" data-value="shadcn" data-keywords="react radix tailwind ui">Shadcn UI <kbd>React</kbd></ComboboxOption>
-      <ComboboxOption type="button" role="option" data-value="open-props" data-keywords="tokens primitives theming">Open Props <kbd>Tokens</kbd></ComboboxOption>
-      <ComboboxOption type="button" role="option" data-value="mantine" data-keywords="react component library">Mantine <kbd>React</kbd></ComboboxOption>
+      <button type="button" role="option" data-value="dashbase" data-keywords="semantic css custom elements">Dashbase <kbd>CSS</kbd></button>
+      <button type="button" role="option" data-value="shadcn" data-keywords="react radix tailwind ui">Shadcn UI <kbd>React</kbd></button>
+      <button type="button" role="option" data-value="open-props" data-keywords="tokens primitives theming">Open Props <kbd>Tokens</kbd></button>
+      <button type="button" role="option" data-value="mantine" data-keywords="react component library">Mantine <kbd>React</kbd></button>
       <ComboboxEmpty hidden>No libraries match that search.</ComboboxEmpty>
     </ComboboxPanel>
   </Combobox>

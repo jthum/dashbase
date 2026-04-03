@@ -7,9 +7,9 @@
   <h2 id="horizontalTabs-title">Horizontal tabs</h2>
   <Tabs>
     <TabsList role="tablist" aria-label="Workspace sections">
-      <TabsTrigger role="tab" id="workspace-tab-account" aria-controls="workspace-panel-account" aria-selected="true">Account</TabsTrigger>
-      <TabsTrigger role="tab" id="workspace-tab-billing" aria-controls="workspace-panel-billing" aria-selected="false">Billing</TabsTrigger>
-      <TabsTrigger role="tab" id="workspace-tab-members" aria-controls="workspace-panel-members" aria-selected="false">Members</TabsTrigger>
+      <button role="tab" id="workspace-tab-account" aria-controls="workspace-panel-account" aria-selected="true">Account</button>
+      <button role="tab" id="workspace-tab-billing" aria-controls="workspace-panel-billing" aria-selected="false">Billing</button>
+      <button role="tab" id="workspace-tab-members" aria-controls="workspace-panel-members" aria-selected="false">Members</button>
     </TabsList>
   
     <TabsContent id="workspace-panel-account" role="tabpanel" aria-labelledby="workspace-tab-account">
@@ -25,16 +25,16 @@
     <TabsContent id="workspace-panel-billing" role="tabpanel" aria-labelledby="workspace-tab-billing" hidden>
       <p>Review invoices, seat count, and the current renewal schedule before the next billing cycle.</p>
       <div class="actions">
-        <TabsTrigger>View invoices</TabsTrigger>
-        <TabsTrigger class="ghost">Update card</TabsTrigger>
+        <button>View invoices</button>
+        <button class="ghost">Update card</button>
       </div>
     </TabsContent>
   
     <TabsContent id="workspace-panel-members" role="tabpanel" aria-labelledby="workspace-tab-members" hidden>
       <p>Invite teammates, review permissions, and promote or demote roles without leaving the current page.</p>
       <div class="actions">
-        <TabsTrigger class="primary">Invite teammate</TabsTrigger>
-        <TabsTrigger class="ghost">Export members</TabsTrigger>
+        <button class="primary">Invite teammate</button>
+        <button class="ghost">Export members</button>
       </div>
     </TabsContent>
   </Tabs>
@@ -45,9 +45,9 @@
   <h2 id="verticalTabs-title">Vertical tabs</h2>
   <Tabs class="vertical">
     <TabsList role="tablist" aria-label="Project settings" aria-orientation="vertical">
-      <TabsTrigger role="tab" id="settings-tab-overview" aria-controls="settings-panel-overview" aria-selected="true">Overview</TabsTrigger>
-      <TabsTrigger role="tab" id="settings-tab-security" aria-controls="settings-panel-security" aria-selected="false">Security</TabsTrigger>
-      <TabsTrigger role="tab" id="settings-tab-integrations" aria-controls="settings-panel-integrations" aria-selected="false">Integrations</TabsTrigger>
+      <button role="tab" id="settings-tab-overview" aria-controls="settings-panel-overview" aria-selected="true">Overview</button>
+      <button role="tab" id="settings-tab-security" aria-controls="settings-panel-security" aria-selected="false">Security</button>
+      <button role="tab" id="settings-tab-integrations" aria-controls="settings-panel-integrations" aria-selected="false">Integrations</button>
     </TabsList>
   
     <TabsContent id="settings-panel-overview" role="tabpanel" aria-labelledby="settings-tab-overview">

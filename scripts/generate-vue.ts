@@ -9,7 +9,7 @@ import {
 import { resolvePatternFragment } from "./pattern-composition.js";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
-const OUTPUT_DIR = join(ROOT, "generated/svelte");
+const OUTPUT_DIR = join(ROOT, "generated/vue");
 const COMPONENTS_OUTPUT_DIR = join(OUTPUT_DIR, "components");
 const PATTERNS_OUTPUT_DIR = join(OUTPUT_DIR, "patterns");
 const COMPONENTS_DIR = join(ROOT, "src/components");
@@ -143,15 +143,7 @@ type GeneratorTarget = {
 
 type ResolvedDocExample = ContractDocExample & {
   exportName: string;
-  svelteSnippet: string;
-};
-
-const NATIVE_SVELTE_ATTR_TYPES: Record<string, string> = {
-  a: "HTMLAnchorAttributes",
-  button: "HTMLButtonAttributes",
-  input: "HTMLInputAttributes",
-  select: "HTMLSelectAttributes",
-  textarea: "HTMLTextareaAttributes",
+  vueSnippet: string;
 };
 
 function toPascalCase(value: string) {
@@ -316,15 +308,7 @@ function dedupeStrings(values: string[]) {
   return unique;
 }
 
-function getSvelteAttrBaseType(tag: string) {
-  return NATIVE_SVELTE_ATTR_TYPES[tag] ?? "DashbaseCustomElementProps";
-}
-
-function isNativeAttributeType(tag: string) {
-  return tag in NATIVE_SVELTE_ATTR_TYPES;
-}
-
-function renderSvelteValueType(values: string[] | undefined) {
+function renderValueType(values: string[] | undefined) {
   if (!values || values.length === 0) {
     return "string";
   }
@@ -342,12 +326,8 @@ function getRenderableAttrVariants(target: GeneratorTarget) {
   return target.variants.filter((variant) => variant.type === "attribute" && variant.attribute && !consumedAttributeNames.has(variant.attribute));
 }
 
-function renderSveltePropsType(target: GeneratorTarget) {
-  const baseType = getSvelteAttrBaseType(target.tag);
-  const lines = [
-    `interface Props extends ${isNativeAttributeType(target.tag) ? `Omit<${baseType}, "children">` : baseType} {`,
-    "  children?: Snippet;",
-  ];
+function renderVuePropsType(target: GeneratorTarget) {
+  const lines = ["interface Props {"];
 
   for (const variant of getRenderableClassVariants(target)) {
     lines.push(`  ${toCamelCase(variant.name)}?: boolean;`);
@@ -360,7 +340,7 @@ function renderSveltePropsType(target: GeneratorTarget) {
     }
 
     if (prop.kind === "attribute") {
-      lines.push(`  ${toCamelCase(prop.name)}?: ${renderSvelteValueType(Array.isArray(prop.values) ? prop.values : undefined)};`);
+      lines.push(`  ${toCamelCase(prop.name)}?: ${renderValueType(Array.isArray(prop.values) ? prop.values : undefined)};`);
     }
   }
 
@@ -368,7 +348,7 @@ function renderSveltePropsType(target: GeneratorTarget) {
   return lines.join("\n");
 }
 
-function renderSvelteStaticAttributeLines(target: GeneratorTarget) {
+function renderVueStaticAttributeLines(target: GeneratorTarget) {
   const consumedAttributeNames = getConsumedAttributeNames(target.contractProps);
   const lines: string[] = [];
 
@@ -390,7 +370,7 @@ function renderSvelteStaticAttributeLines(target: GeneratorTarget) {
     }
 
     if (variant.values && variant.values.length > 0) {
-      lines.push(`  ${variant.attribute}={${toCamelCase(variant.name)}}`);
+      lines.push(`  :${variant.attribute}="${toCamelCase(variant.name)}"`);
     } else {
       lines.push(`  ${variant.attribute}`);
     }
@@ -398,15 +378,15 @@ function renderSvelteStaticAttributeLines(target: GeneratorTarget) {
 
   for (const prop of target.contractProps) {
     if (prop.kind === "attribute" && prop.attribute) {
-      lines.push(`  ${prop.attribute}={${toCamelCase(prop.name)}}`);
+      lines.push(`  :${prop.attribute}="${toCamelCase(prop.name)}"`);
     }
   }
 
   return lines;
 }
 
-function renderSvelteClassExpression(target: GeneratorTarget) {
-  const entries = ["className"];
+function renderVueClassExpression(target: GeneratorTarget) {
+  const entries = ["attrs.class"];
 
   for (const variant of getRenderableClassVariants(target)) {
     entries.push(`${toCamelCase(variant.name)} && ${JSON.stringify(variant.value)}`);
@@ -424,8 +404,8 @@ function renderSvelteClassExpression(target: GeneratorTarget) {
   return `cx(${entries.join(", ")})`;
 }
 
-function renderSvelteDestructure(target: GeneratorTarget) {
-  const parts = ['class: className = ""', "children"];
+function renderVueDestructure(target: GeneratorTarget) {
+  const parts: string[] = [];
 
   for (const variant of getRenderableClassVariants(target)) {
     parts.push(`${toCamelCase(variant.name)} = false`);
@@ -435,15 +415,16 @@ function renderSvelteDestructure(target: GeneratorTarget) {
     parts.push(toCamelCase(prop.name));
   }
 
-  parts.push("...rest");
-  return `let { ${parts.join(", ")} }: Props = $props();`;
+  return parts.length > 0
+    ? `const { ${parts.join(", ")} } = defineProps<Props>();`
+    : "defineProps<Props>();";
 }
 
-function renderSvelteComponentMarkup(target: GeneratorTarget) {
+function renderVueComponentMarkup(target: GeneratorTarget) {
   const lines = [`<${target.tag}`];
-  lines.push(...renderSvelteStaticAttributeLines(target));
-  lines.push("  {...rest}");
-  lines.push(`  class={${renderSvelteClassExpression(target)}}`);
+  lines.push('  v-bind="omitClass(attrs)"');
+  lines.push(...renderVueStaticAttributeLines(target));
+  lines.push(`  :class="${renderVueClassExpression(target)}"`);
 
   if (["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"].includes(target.tag)) {
     lines[lines.length - 1] += " />";
@@ -451,12 +432,12 @@ function renderSvelteComponentMarkup(target: GeneratorTarget) {
   }
 
   lines.push(">");
-  lines.push("  {@render children?.()}");
+  lines.push("  <slot />");
   lines.push(`</${target.tag}>`);
   return lines;
 }
 
-function renderSvelteComponentFile(
+function renderVueComponentFile(
   target: GeneratorTarget,
   assets: DashbaseAssetManifest,
   outputFile: string,
@@ -465,29 +446,33 @@ function renderSvelteComponentFile(
   const lines: string[] = [];
 
   if (autoImports && (assets.css.length > 0 || assets.js.length > 0)) {
-    lines.push("<script module lang=\"ts\">");
+    lines.push("<script setup lang=\"ts\">");
     for (const asset of [...assets.css, ...assets.js]) {
       lines.push(`  import ${JSON.stringify(toAssetImportSpecifier(outputFile, asset))};`);
     }
-    lines.push("</script>");
-    lines.push("");
+  } else {
+    lines.push("<script setup lang=\"ts\">");
   }
 
-  lines.push("<script lang=\"ts\">");
-  lines.push("  import type { Snippet } from \"svelte\";");
-  if (isNativeAttributeType(target.tag)) {
-    lines.push(`  import type { ${getSvelteAttrBaseType(target.tag)} } from "svelte/elements";`);
-  }
-  lines.push('  import { cx, type DashbaseCustomElementProps } from "../../runtime.ts";');
+  lines.push('  import { useAttrs } from "vue";');
+  lines.push('  import { cx, omitClass } from "../../runtime.ts";');
   lines.push("");
-  for (const line of renderSveltePropsType(target).split("\n")) {
+  lines.push("  defineOptions({ inheritAttrs: false });");
+  lines.push("");
+  for (const line of renderVuePropsType(target).split("\n")) {
     lines.push(`  ${line}`);
   }
   lines.push("");
-  lines.push(`  ${renderSvelteDestructure(target)}`);
+  lines.push(`  ${renderVueDestructure(target)}`);
+  lines.push("  defineSlots<{ default?: () => any }>();");
+  lines.push("  const attrs = useAttrs();");
   lines.push("</script>");
   lines.push("");
-  lines.push(...renderSvelteComponentMarkup(target));
+  lines.push("<template>");
+  for (const line of renderVueComponentMarkup(target)) {
+    lines.push(`  ${line}`);
+  }
+  lines.push("</template>");
   lines.push("");
   return lines.join("\n");
 }
@@ -498,7 +483,7 @@ function renderComponentManualIndex(
   assets: DashbaseAssetManifest,
 ) {
   const lines = [
-    `/* Generated by scripts/generate-svelte.ts for ${contract.name}. */`,
+    `/* Generated by scripts/generate-vue.ts for ${contract.name}. */`,
     'import type { DashbaseAssetManifest } from "../../runtime.ts";',
     "",
     `export const ${getAssetsConstName(contract.slug)} = {`,
@@ -515,7 +500,7 @@ function renderComponentManualIndex(
       continue;
     }
     exported.add(target.exportName);
-    lines.push(`export { default as ${target.exportName} } from "./${target.exportName}Manual.svelte";`);
+    lines.push(`export { default as ${target.exportName} } from "./${target.exportName}Manual.vue";`);
   }
 
   lines.push("");
@@ -523,7 +508,7 @@ function renderComponentManualIndex(
 }
 
 function renderComponentAutoIndex(contract: ComponentContract, targets: GeneratorTarget[]) {
-  const lines = [`/* Generated by scripts/generate-svelte.ts for ${contract.name}. */`];
+  const lines = [`/* Generated by scripts/generate-vue.ts for ${contract.name}. */`];
 
   const exported = new Set<string>();
   for (const target of targets) {
@@ -531,7 +516,7 @@ function renderComponentAutoIndex(contract: ComponentContract, targets: Generato
       continue;
     }
     exported.add(target.exportName);
-    lines.push(`export { default as ${target.exportName} } from "./${target.exportName}.svelte";`);
+    lines.push(`export { default as ${target.exportName} } from "./${target.exportName}.vue";`);
   }
   lines.push("");
   return lines.join("\n");
@@ -539,25 +524,26 @@ function renderComponentAutoIndex(contract: ComponentContract, targets: Generato
 
 function renderRuntimeFile() {
   return [
-    'import type { Snippet } from "svelte";',
-    "",
     "export type DashbaseAssetManifest = {",
     "  css: string[];",
     "  js: string[];",
     "};",
     "",
-    "export type DashbaseCustomElementProps = {",
-    "  class?: string;",
-    "  children?: Snippet;",
-    "  [key: string]: unknown;",
-    "};",
-    "",
-    "export function cx(...values: Array<string | false | null | undefined | Record<string, boolean | null | undefined>>) {",
+    "export function cx(...values: Array<unknown>) {",
     "  const parts: string[] = [];",
     "  for (const value of values) {",
     "    if (!value) continue;",
     "    if (typeof value === \"string\") {",
     "      if (value.trim()) parts.push(value);",
+      "      continue;",
+    "    }",
+    "    if (Array.isArray(value)) {",
+    "      const nested = cx(...value);",
+    "      if (nested) parts.push(nested);",
+    "      continue;",
+    "    }",
+    "    if (typeof value !== \"object\") {",
+    "      parts.push(String(value));",
     "      continue;",
     "    }",
     "    for (const [key, enabled] of Object.entries(value)) {",
@@ -567,11 +553,16 @@ function renderRuntimeFile() {
     "  return parts.join(\" \");",
     "}",
     "",
+    "export function omitClass(source: Record<string, unknown>) {",
+    "  const { class: _class, ...rest } = source;",
+    "  return rest;",
+    "}",
+    "",
   ].join("\n");
 }
 
 function renderPackageIndexFile(contracts: ComponentContract[], patterns: PatternContract[]) {
-  const lines = ["/* Generated by scripts/generate-svelte.ts. */"];
+  const lines = ["/* Generated by scripts/generate-vue.ts. */"];
   for (const contract of contracts) {
     lines.push(`export * from "./components/${contract.slug}/index.ts";`);
   }
@@ -585,7 +576,7 @@ function renderPackageIndexFile(contracts: ComponentContract[], patterns: Patter
 }
 
 function renderPackageManualFile(contracts: ComponentContract[], patterns: PatternContract[]) {
-  const lines = ["/* Generated by scripts/generate-svelte.ts. */"];
+  const lines = ["/* Generated by scripts/generate-vue.ts. */"];
   for (const contract of contracts) {
     lines.push(`export * from "./components/${contract.slug}/manual.ts";`);
   }
@@ -605,7 +596,7 @@ function renderManifestFile(
   const lines = [
     'import type { DashbaseAssetManifest } from "./runtime.ts";',
     "",
-    "export const dashbaseSvelteManifest = {",
+    "export const dashbaseVueManifest = {",
   ];
 
   for (const contract of contracts) {
@@ -617,7 +608,7 @@ function renderManifestFile(
 
   lines.push("} as const satisfies Record<string, DashbaseAssetManifest>;");
   lines.push("");
-  lines.push("export const dashbaseSveltePatternManifest = {");
+  lines.push("export const dashbaseVuePatternManifest = {");
 
   for (const pattern of patternManifests) {
     lines.push(`  ${JSON.stringify(pattern.slug)}: {`);
@@ -646,7 +637,7 @@ function renderPackageJson(
     exports[`./${contract.slug}`] = `./components/${contract.slug}/index.ts`;
     exports[`./${contract.slug}/manual`] = `./components/${contract.slug}/manual.ts`;
     if ((contract.docs?.examples ?? []).length > 0) {
-      exports[`./${contract.slug}/examples`] = `./components/${contract.slug}/examples.svelte`;
+      exports[`./${contract.slug}/examples`] = `./components/${contract.slug}/examples.vue`;
     }
   }
 
@@ -657,13 +648,13 @@ function renderPackageJson(
 
   return JSON.stringify(
     {
-      name: "@dashbase/svelte",
+      name: "@dashbase/vue",
       private: true,
       type: "module",
-      svelte: "./index.ts",
+      module: "./index.ts",
       exports,
       peerDependencies: {
-        svelte: ">=5",
+        vue: ">=3.5",
       },
     },
     null,
@@ -673,9 +664,9 @@ function renderPackageJson(
 
 function renderPackageReadme(contracts: ComponentContract[], patterns: PatternContract[]) {
   const lines = [
-    "# Dashbase Svelte",
+    "# Dashbase Vue",
     "",
-    "This folder is generated by `scripts/generate-svelte.ts`.",
+    "This folder is generated by `scripts/generate-vue.ts`.",
     "",
     "Use the default entrypoints for automatic CSS and behavior-shim imports, or the matching `/manual` entrypoints when you want to manage Dashbase assets yourself.",
     "",
@@ -685,10 +676,10 @@ function renderPackageReadme(contracts: ComponentContract[], patterns: PatternCo
 
   for (const contract of contracts) {
     lines.push(`- \`${contract.name}\``);
-    lines.push(`  - Auto entry: \`@dashbase/svelte/${contract.slug}\``);
-    lines.push(`  - Manual entry: \`@dashbase/svelte/${contract.slug}/manual\``);
+    lines.push(`  - Auto entry: \`@dashbase/vue/${contract.slug}\``);
+    lines.push(`  - Manual entry: \`@dashbase/vue/${contract.slug}/manual\``);
     if ((contract.docs?.examples ?? []).length > 0) {
-      lines.push(`  - Generated examples: \`@dashbase/svelte/${contract.slug}/examples\``);
+      lines.push(`  - Generated examples: \`@dashbase/vue/${contract.slug}/examples\``);
     }
   }
 
@@ -698,8 +689,8 @@ function renderPackageReadme(contracts: ComponentContract[], patterns: PatternCo
 
   for (const pattern of patterns) {
     lines.push(`- \`${pattern.title}\``);
-    lines.push(`  - Auto entry: \`@dashbase/svelte/patterns/${pattern.slug}\``);
-    lines.push(`  - Manual entry: \`@dashbase/svelte/patterns/${pattern.slug}/manual\``);
+    lines.push(`  - Auto entry: \`@dashbase/vue/patterns/${pattern.slug}\``);
+    lines.push(`  - Manual entry: \`@dashbase/vue/patterns/${pattern.slug}/manual\``);
   }
 
   lines.push("");
@@ -729,7 +720,7 @@ function isCustomElementTag(tag: string) {
   return tag.includes("-");
 }
 
-function transformHtmlSnippetToSvelte(contract: ComponentContract, htmlSnippet: string) {
+function transformHtmlSnippetToVue(contract: ComponentContract, htmlSnippet: string) {
   const tagMap = new Map<string, string>([
     [contract.root.tag, contract.root.exportName ?? contract.name],
   ]);
@@ -749,26 +740,29 @@ function transformHtmlSnippetToSvelte(contract: ComponentContract, htmlSnippet: 
   return output;
 }
 
-function renderSvelteExampleFile(contract: ComponentContract, examples: ResolvedDocExample[]) {
+function renderVueExampleFile(contract: ComponentContract, examples: ResolvedDocExample[]) {
   const exportNames = getGeneratorTargets(contract).map((target) => target.exportName).join(", ");
   const lines = [
-    `<!-- Generated by scripts/generate-svelte.ts for ${contract.name}. -->`,
-    "<script lang=\"ts\">",
+    `<!-- Generated by scripts/generate-vue.ts for ${contract.name}. -->`,
+    "<script setup lang=\"ts\">",
     `  import { ${exportNames} } from "./index.ts";`,
     "</script>",
     "",
+    "<template>",
   ];
 
   for (const example of examples) {
-    lines.push(`<section aria-labelledby="${toCamelCase(example.id)}-title">`);
-    lines.push(`  <h2 id="${toCamelCase(example.id)}-title">${example.title}</h2>`);
-    for (const line of example.svelteSnippet.split("\n")) {
-      lines.push(`  ${line}`);
+    lines.push(`  <section aria-labelledby="${toCamelCase(example.id)}-title">`);
+    lines.push(`    <h2 id="${toCamelCase(example.id)}-title">${example.title}</h2>`);
+    for (const line of example.vueSnippet.split("\n")) {
+      lines.push(`    ${line}`);
     }
-    lines.push("</section>");
+    lines.push("  </section>");
     lines.push("");
   }
 
+  lines.push("</template>");
+  lines.push("");
   return lines.join("\n");
 }
 
@@ -783,16 +777,16 @@ function renderComponentReadme(contract: ComponentContract, examples: ResolvedDo
     "",
     "Default entrypoint with automatic CSS and behavior asset imports:",
     "",
-    "```svelte",
-    `<script lang="ts">`,
-    `  import { ${exportNames} } from "@dashbase/svelte/${contract.slug}";`,
+    "```vue",
+    `<script setup lang="ts">`,
+    `import { ${exportNames} } from "@dashbase/vue/${contract.slug}";`,
     `</script>`,
     "```",
     "",
     "Manual entrypoint when you want to control asset loading yourself:",
     "",
     "```ts",
-    `import { ${exportNames}, ${getAssetsConstName(contract.slug)} } from "@dashbase/svelte/${contract.slug}/manual";`,
+    `import { ${exportNames}, ${getAssetsConstName(contract.slug)} } from "@dashbase/vue/${contract.slug}/manual";`,
     "```",
     "",
   ];
@@ -800,7 +794,7 @@ function renderComponentReadme(contract: ComponentContract, examples: ResolvedDo
   if (examples.length > 0) {
     lines.push("## Generated Examples");
     lines.push("");
-    lines.push(`- \`@dashbase/svelte/${contract.slug}/examples\``);
+    lines.push(`- \`@dashbase/vue/${contract.slug}/examples\``);
     lines.push("");
   }
 
@@ -810,7 +804,7 @@ function renderComponentReadme(contract: ComponentContract, examples: ResolvedDo
     for (const prop of contract.props ?? []) {
       const valueType = prop.kind === "class-group" && prop.values && !Array.isArray(prop.values)
         ? Object.keys(prop.values).map((value) => JSON.stringify(value)).join(" | ")
-        : renderSvelteValueType(Array.isArray(prop.values) ? prop.values : undefined);
+        : renderValueType(Array.isArray(prop.values) ? prop.values : undefined);
       lines.push(`- \`${toCamelCase(prop.name)}?: ${valueType}\``);
     }
     lines.push("");
@@ -822,12 +816,14 @@ function renderComponentReadme(contract: ComponentContract, examples: ResolvedDo
     for (const example of examples) {
       lines.push(`### ${example.title}`);
       lines.push("");
-      lines.push("```svelte");
-      lines.push("<script lang=\"ts\">");
-      lines.push(`  import { ${exportNames} } from "@dashbase/svelte/${contract.slug}";`);
+      lines.push("```vue");
+      lines.push("<script setup lang=\"ts\">");
+      lines.push(`import { ${exportNames} } from "@dashbase/vue/${contract.slug}";`);
       lines.push("</script>");
       lines.push("");
-      lines.push(example.svelteSnippet);
+      lines.push("<template>");
+      lines.push(example.vueSnippet);
+      lines.push("</template>");
       lines.push("```");
       lines.push("");
     }
@@ -863,7 +859,7 @@ async function resolveDocExamples(entry: ContractEntry) {
     return {
       ...example,
       exportName: toPascalCase(example.id),
-      svelteSnippet: transformHtmlSnippetToSvelte(entry.contract, htmlSnippet),
+      vueSnippet: transformHtmlSnippetToVue(entry.contract, htmlSnippet),
     };
   });
 }
@@ -880,7 +876,7 @@ function patternHasAdapterBindings(contract: PatternContract) {
   return (contract.props ?? []).length > 0 || (contract.slots ?? []).length > 0;
 }
 
-function transformPatternTokensToSvelte(markup: string, contract: PatternContract) {
+function transformPatternTokensToVue(markup: string, contract: PatternContract) {
   const bindingNames = new Set([
     ...(contract.props ?? []).map((prop) => prop.name),
     ...(contract.slots ?? []).map((slot) => slot.name),
@@ -891,8 +887,8 @@ function transformPatternTokensToSvelte(markup: string, contract: PatternContrac
   for (const name of bindingNames) {
     const escapedName = escapeRegExp(name);
     output = output.replace(
-      new RegExp(`=([\"'])\\s*\\{\\{\\s*${escapedName}\\s*\\}\\}\\s*\\1`, "g"),
-      `={${toCamelCase(name)}}`,
+      new RegExp(`([A-Za-z0-9:_-]+)=([\"'])\\s*\\{\\{\\s*${escapedName}\\s*\\}\\}\\s*\\2`, "g"),
+      `:$1="${toCamelCase(name)}"`,
     );
   }
 
@@ -900,7 +896,7 @@ function transformPatternTokensToSvelte(markup: string, contract: PatternContrac
     const escapedName = escapeRegExp(name);
     output = output.replace(
       new RegExp(`\\{\\{\\s*${escapedName}\\s*\\}\\}`, "g"),
-      `{${toCamelCase(name)}}`,
+      `{{ ${toCamelCase(name)} }}`,
     );
   }
 
@@ -911,9 +907,6 @@ function renderPatternPropsInterface(contract: PatternContract) {
   const lines = [`interface ${getPatternPropsTypeName(contract)} {`];
   for (const prop of contract.props ?? []) {
     lines.push(`  ${toCamelCase(prop.name)}?: string;`);
-  }
-  for (const slot of contract.slots ?? []) {
-    lines.push(`  ${toCamelCase(slot.name)}?: Snippet;`);
   }
   lines.push("}");
   return lines.join("\n");
@@ -1004,28 +997,23 @@ function renderPatternSnippetWithSlots(markup: string, contract: PatternContract
   let output = markup;
 
   for (const slot of contract.slots ?? []) {
-    const token = `{${toCamelCase(slot.name)}}`;
+    const token = `{{ ${toCamelCase(slot.name)} }}`;
     const fallback = (slot.defaultHtml ?? "").trim();
     if (fallback.length === 0) {
-      output = output.replaceAll(token, `{@render ${toCamelCase(slot.name)}?.()}`);
+      output = output.replaceAll(token, `<slot name="${toCamelCase(slot.name)}" />`);
       continue;
     }
 
-    const defaultMarkup = transformPatternTokensToSvelte(fallback, contract)
-      .split("\n")
-      .map((line) => `  ${line}`)
-      .join("\n");
-
     output = output.replaceAll(
       token,
-      `{#if ${toCamelCase(slot.name)}}\n  {@render ${toCamelCase(slot.name)}()}\n{:else}\n${defaultMarkup}\n{/if}`,
+      `<slot name="${toCamelCase(slot.name)}">${transformPatternTokensToVue(fallback, contract)}</slot>`,
     );
   }
 
   return output;
 }
 
-function renderPatternSvelteFile(
+function renderPatternVueFile(
   entry: PatternEntry,
   markup: string,
   assets: DashbaseAssetManifest,
@@ -1034,19 +1022,15 @@ function renderPatternSvelteFile(
 ) {
   const lines: string[] = [];
 
+  lines.push("<script setup lang=\"ts\">");
+
   if (autoImports && (assets.css.length > 0 || assets.js.length > 0)) {
-    lines.push("<script module lang=\"ts\">");
     for (const asset of [...assets.css, ...assets.js]) {
       lines.push(`  import ${JSON.stringify(toAssetImportSpecifier(outputFile, asset))};`);
     }
-    lines.push("</script>");
-    lines.push("");
   }
 
   if (patternHasAdapterBindings(entry.contract)) {
-    lines.push("<script lang=\"ts\">");
-    lines.push('  import type { Snippet } from "svelte";');
-    lines.push("");
     for (const line of renderPatternPropsInterface(entry.contract).split("\n")) {
       lines.push(`  ${line}`);
     }
@@ -1054,14 +1038,30 @@ function renderPatternSvelteFile(
 
     const destructureParts = [
       ...(entry.contract.props ?? []).map((prop) => `${toCamelCase(prop.name)} = ${JSON.stringify(prop.default)}`),
-      ...(entry.contract.slots ?? []).map((slot) => toCamelCase(slot.name)),
     ];
-    lines.push(`  let { ${destructureParts.join(", ")} }: ${getPatternPropsTypeName(entry.contract)} = $props();`);
-    lines.push("</script>");
-    lines.push("");
+    if (destructureParts.length > 0) {
+      lines.push(`  const { ${destructureParts.join(", ")} } = defineProps<${getPatternPropsTypeName(entry.contract)}>();`);
+    } else {
+      lines.push(`  defineProps<${getPatternPropsTypeName(entry.contract)}>();`);
+    }
   }
 
-  lines.push(renderPatternSnippetWithSlots(markup, entry.contract));
+  if ((entry.contract.slots ?? []).length > 0) {
+    lines.push("");
+    lines.push("  defineSlots<{");
+    for (const slot of entry.contract.slots ?? []) {
+      lines.push(`    ${toCamelCase(slot.name)}?: () => any;`);
+    }
+    lines.push("  }>();");
+  }
+
+  lines.push("</script>");
+  lines.push("");
+  lines.push("<template>");
+  for (const line of renderPatternSnippetWithSlots(markup, entry.contract).split("\n")) {
+    lines.push(`  ${line}`);
+  }
+  lines.push("</template>");
   lines.push("");
   return lines.join("\n");
 }
@@ -1069,7 +1069,7 @@ function renderPatternSvelteFile(
 function renderPatternManualIndex(entry: PatternEntry, assets: DashbaseAssetManifest) {
   const exportName = getPatternExportName(entry.contract);
   return [
-    `/* Generated by scripts/generate-svelte.ts for ${entry.contract.title}. */`,
+    `/* Generated by scripts/generate-vue.ts for ${entry.contract.title}. */`,
     'import type { DashbaseAssetManifest } from "../../../../runtime.ts";',
     "",
     `export const ${getAssetsConstName(entry.contract.slug)} = {`,
@@ -1077,7 +1077,7 @@ function renderPatternManualIndex(entry: PatternEntry, assets: DashbaseAssetMani
     `  js: ${JSON.stringify(assets.js, null, 2)},`,
     "} as const satisfies DashbaseAssetManifest;",
     "",
-    `export { default as ${exportName} } from "./${exportName}Manual.svelte";`,
+    `export { default as ${exportName} } from "./${exportName}Manual.vue";`,
     "",
   ].join("\n");
 }
@@ -1085,16 +1085,16 @@ function renderPatternManualIndex(entry: PatternEntry, assets: DashbaseAssetMani
 function renderPatternAutoIndex(entry: PatternEntry) {
   const exportName = getPatternExportName(entry.contract);
   return [
-    `/* Generated by scripts/generate-svelte.ts for ${entry.contract.title}. */`,
-    `export { default as ${exportName} } from "./${exportName}.svelte";`,
+    `/* Generated by scripts/generate-vue.ts for ${entry.contract.title}. */`,
+    `export { default as ${exportName} } from "./${exportName}.vue";`,
     "",
   ].join("\n");
 }
 
 function renderPatternReadme(entry: PatternEntry) {
   const exportName = getPatternExportName(entry.contract);
-  const autoImportPath = `@dashbase/svelte/patterns/${entry.contract.slug}`;
-  const manualImportPath = `@dashbase/svelte/patterns/${entry.contract.slug}/manual`;
+  const autoImportPath = `@dashbase/vue/patterns/${entry.contract.slug}`;
+  const manualImportPath = `@dashbase/vue/patterns/${entry.contract.slug}/manual`;
   const lines = [
     `# ${entry.contract.title}`,
     "",
@@ -1102,9 +1102,9 @@ function renderPatternReadme(entry: PatternEntry) {
     "",
     "## Imports",
     "",
-    "```svelte",
-    `<script lang="ts">`,
-    `  import { ${exportName} } from "${autoImportPath}";`,
+    "```vue",
+    `<script setup lang="ts">`,
+    `import { ${exportName} } from "${autoImportPath}";`,
     `</script>`,
     "```",
     "",
@@ -1131,25 +1131,27 @@ function renderPatternReadme(entry: PatternEntry) {
   }
 
   if ((entry.contract.slots ?? []).length > 0) {
-    lines.push("## Snippet Props");
+    lines.push("## Named Slots");
     lines.push("");
     for (const slot of entry.contract.slots ?? []) {
       const fallbackText = (slot.defaultHtml ?? "").trim() ? "Includes fallback markup." : "No fallback markup.";
-      lines.push(`- \`${toCamelCase(slot.name)}?: Snippet\` ${slot.description ?? ""} ${fallbackText}`);
+      lines.push(`- \`${toCamelCase(slot.name)}\` ${slot.description ?? ""} ${fallbackText}`);
     }
     lines.push("");
-    lines.push("Use Svelte 5 snippets inside the pattern component to supply those regions.");
+    lines.push("Use Vue named slots to supply those regions.");
     lines.push("");
   }
 
   lines.push("## Usage");
   lines.push("");
-  lines.push("```svelte");
-  lines.push("<script lang=\"ts\">");
+  lines.push("```vue");
+  lines.push("<script setup lang=\"ts\">");
   lines.push(`  import { ${exportName} } from "${autoImportPath}";`);
   lines.push("</script>");
   lines.push("");
+  lines.push("<template>");
   lines.push(`<${exportName} />`);
+  lines.push("</template>");
   lines.push("```");
   lines.push("");
   return lines.join("\n");
@@ -1164,7 +1166,7 @@ async function writeTextFile(filePath: string, source: string) {
   await writeFile(filePath, source, "utf8");
 }
 
-async function generateSvelte() {
+async function generateVue() {
   const contracts = (await loadComponentContracts()) as ContractEntry[];
   const patternContracts = (await loadPatternContracts()) as PatternEntry[];
   const componentAssetCatalog = await buildComponentAssetCatalog(contracts);
@@ -1186,12 +1188,12 @@ async function generateSvelte() {
 
     for (const target of targets) {
       await writeTextFile(
-        join(componentDir, `${target.exportName}.svelte`),
-        renderSvelteComponentFile(target, assets, join(componentDir, `${target.exportName}.svelte`), true),
+        join(componentDir, `${target.exportName}.vue`),
+        renderVueComponentFile(target, assets, join(componentDir, `${target.exportName}.vue`), true),
       );
       await writeTextFile(
-        join(componentDir, `${target.exportName}Manual.svelte`),
-        renderSvelteComponentFile(target, assets, join(componentDir, `${target.exportName}Manual.svelte`), false),
+        join(componentDir, `${target.exportName}Manual.vue`),
+        renderVueComponentFile(target, assets, join(componentDir, `${target.exportName}Manual.vue`), false),
       );
     }
 
@@ -1200,7 +1202,7 @@ async function generateSvelte() {
     await writeTextFile(join(componentDir, "README.md"), renderComponentReadme(entry.contract, examples));
 
     if (examples.length > 0) {
-      await writeTextFile(join(componentDir, "examples.svelte"), renderSvelteExampleFile(entry.contract, examples));
+      await writeTextFile(join(componentDir, "examples.vue"), renderVueExampleFile(entry.contract, examples));
     }
   }
 
@@ -1212,7 +1214,7 @@ async function generateSvelte() {
       allowedTokens: getPatternAllowedTokens(entry.contract),
     });
     const resolvedPatternStyles = await resolveOptionalPatternStyles(entry);
-    const svelteSnippet = transformPatternTokensToSvelte(resolvedPatternSnippet, entry.contract);
+    const vueSnippet = transformPatternTokensToVue(resolvedPatternSnippet, entry.contract);
 
     if (resolvedPatternStyles && resolvedPatternStyles.trim().length > 0) {
       await writeTextFile(join(patternDir, "pattern.css"), resolvedPatternStyles);
@@ -1222,12 +1224,12 @@ async function generateSvelte() {
     }
 
     await writeTextFile(
-      join(patternDir, `${exportName}.svelte`),
-      renderPatternSvelteFile(entry, svelteSnippet, assets, join(patternDir, `${exportName}.svelte`), true),
+      join(patternDir, `${exportName}.vue`),
+      renderPatternVueFile(entry, vueSnippet, assets, join(patternDir, `${exportName}.vue`), true),
     );
     await writeTextFile(
-      join(patternDir, `${exportName}Manual.svelte`),
-      renderPatternSvelteFile(entry, svelteSnippet, assets, join(patternDir, `${exportName}Manual.svelte`), false),
+      join(patternDir, `${exportName}Manual.vue`),
+      renderPatternVueFile(entry, vueSnippet, assets, join(patternDir, `${exportName}Manual.vue`), false),
     );
     await writeTextFile(join(patternDir, "index.ts"), renderPatternAutoIndex(entry));
     await writeTextFile(join(patternDir, "manual.ts"), renderPatternManualIndex(entry, assets));
@@ -1243,10 +1245,10 @@ async function generateSvelte() {
   await writeTextFile(join(OUTPUT_DIR, "package.json"), renderPackageJson(contracts.map((entry) => entry.contract), patternContracts.map((entry) => entry.contract)));
   await writeTextFile(join(OUTPUT_DIR, "README.md"), renderPackageReadme(contracts.map((entry) => entry.contract), patternContracts.map((entry) => entry.contract)));
 
-  console.log(`Generated package-style Svelte target for ${contracts.length} component contracts and ${patternContracts.length} patterns in ${join("generated", "svelte")}.`);
+  console.log(`Generated package-style Vue target for ${contracts.length} component contracts and ${patternContracts.length} patterns in ${join("generated", "vue")}.`);
 }
 
-generateSvelte().catch((error) => {
+generateVue().catch((error) => {
   console.error(error);
   process.exit(1);
 });

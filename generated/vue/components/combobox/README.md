@@ -6,31 +6,32 @@ Builds a searchable combobox from a semantic input plus a popover listbox, with 
 
 Default entrypoint with automatic CSS and behavior asset imports:
 
-```svelte
-<script lang="ts">
-  import { Combobox, ComboboxInput, ComboboxPanel, ComboboxOption, ComboboxEmpty } from "@dashbase/svelte/combobox";
+```vue
+<script setup lang="ts">
+import { Combobox, ComboboxInput, ComboboxPanel, ComboboxOption, ComboboxEmpty } from "@dashbase/vue/combobox";
 </script>
 ```
 
 Manual entrypoint when you want to control asset loading yourself:
 
 ```ts
-import { Combobox, ComboboxInput, ComboboxPanel, ComboboxOption, ComboboxEmpty, comboboxAssets } from "@dashbase/svelte/combobox/manual";
+import { Combobox, ComboboxInput, ComboboxPanel, ComboboxOption, ComboboxEmpty, comboboxAssets } from "@dashbase/vue/combobox/manual";
 ```
 
 ## Generated Examples
 
-- `@dashbase/svelte/combobox/examples`
+- `@dashbase/vue/combobox/examples`
 
 ## Usage
 
 ### Assignee picker
 
-```svelte
-<script lang="ts">
-  import { Combobox, ComboboxInput, ComboboxPanel, ComboboxOption, ComboboxEmpty } from "@dashbase/svelte/combobox";
+```vue
+<script setup lang="ts">
+import { Combobox, ComboboxInput, ComboboxPanel, ComboboxOption, ComboboxEmpty } from "@dashbase/vue/combobox";
 </script>
 
+<template>
 <label for="assignee-picker">Assign reviewer</label>
 <Combobox>
   <input
@@ -53,15 +54,17 @@ import { Combobox, ComboboxInput, ComboboxPanel, ComboboxOption, ComboboxEmpty, 
 </Combobox>
 <small data-hint>Try searching by name, team, or specialty.</small>
 
+</template>
 ```
 
 ### Library picker
 
-```svelte
-<script lang="ts">
-  import { Combobox, ComboboxInput, ComboboxPanel, ComboboxOption, ComboboxEmpty } from "@dashbase/svelte/combobox";
+```vue
+<script setup lang="ts">
+import { Combobox, ComboboxInput, ComboboxPanel, ComboboxOption, ComboboxEmpty } from "@dashbase/vue/combobox";
 </script>
 
+<template>
 <label for="framework-picker">Reference component library</label>
 <Combobox>
   <input
@@ -84,4 +87,5 @@ import { Combobox, ComboboxInput, ComboboxPanel, ComboboxOption, ComboboxEmpty, 
 </Combobox>
 <small data-hint>Keywords are searchable even when they are not visible in the label.</small>
 
+</template>
 ```

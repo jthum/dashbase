@@ -6,21 +6,21 @@ Uses ui-tabs, tab-list, and tab-panel anatomy with ARIA roles, authored hidden p
 
 Default entrypoint with automatic CSS and behavior asset imports:
 
-```svelte
-<script lang="ts">
-  import { Tabs, TabsList, TabsTrigger, TabsContent } from "@dashbase/svelte/tabs";
+```vue
+<script setup lang="ts">
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@dashbase/vue/tabs";
 </script>
 ```
 
 Manual entrypoint when you want to control asset loading yourself:
 
 ```ts
-import { Tabs, TabsList, TabsTrigger, TabsContent, tabsAssets } from "@dashbase/svelte/tabs/manual";
+import { Tabs, TabsList, TabsTrigger, TabsContent, tabsAssets } from "@dashbase/vue/tabs/manual";
 ```
 
 ## Generated Examples
 
-- `@dashbase/svelte/tabs/examples`
+- `@dashbase/vue/tabs/examples`
 
 ## Adapter Props
 
@@ -30,11 +30,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent, tabsAssets } from "@dashbase/
 
 ### Horizontal tabs
 
-```svelte
-<script lang="ts">
-  import { Tabs, TabsList, TabsTrigger, TabsContent } from "@dashbase/svelte/tabs";
+```vue
+<script setup lang="ts">
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@dashbase/vue/tabs";
 </script>
 
+<template>
 <Tabs>
   <TabsList role="tablist" aria-label="Workspace sections">
     <button role="tab" id="workspace-tab-account" aria-controls="workspace-panel-account" aria-selected="true">Account</button>
@@ -69,15 +70,17 @@ import { Tabs, TabsList, TabsTrigger, TabsContent, tabsAssets } from "@dashbase/
   </TabsContent>
 </Tabs>
 
+</template>
 ```
 
 ### Vertical tabs
 
-```svelte
-<script lang="ts">
-  import { Tabs, TabsList, TabsTrigger, TabsContent } from "@dashbase/svelte/tabs";
+```vue
+<script setup lang="ts">
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@dashbase/vue/tabs";
 </script>
 
+<template>
 <Tabs class="vertical">
   <TabsList role="tablist" aria-label="Project settings" aria-orientation="vertical">
     <button role="tab" id="settings-tab-overview" aria-controls="settings-panel-overview" aria-selected="true">Overview</button>
@@ -98,4 +101,5 @@ import { Tabs, TabsList, TabsTrigger, TabsContent, tabsAssets } from "@dashbase/
   </TabsContent>
 </Tabs>
 
+</template>
 ```
