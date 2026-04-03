@@ -26,7 +26,9 @@ The same model can extend upward to **patterns**: higher-level native HTML
 compositions authored under `src/patterns/` with their own contracts and
 dependency metadata. Patterns should remain plain HTML in the shipped output,
 but may use author-time composition references in the future so they can stay
-linked to canonical component structure.
+linked to canonical component structure. Pattern contracts may also expose a
+small adapter-facing `props` and `slots` surface so generated targets can ship
+ergonomic wrappers without changing the HTML-first source model.
 
 Framework-specific overrides should be optional, not mandatory.
 

@@ -62,6 +62,7 @@ export function AuthLoginScreenSplit() {
                     <div className="login-actions">
                       <button className="primary" type="submit">Sign in</button>
                       <button className="ghost" type="button">Forgot password?</button>
+                      
                     </div>
                   </footer>
                 </article>

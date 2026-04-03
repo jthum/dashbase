@@ -81,7 +81,10 @@ with a `pattern.contract.json` file and can depend on components or other
 patterns. Author-time pattern sources can reference reusable fragments through
 `<compose-fragment ... />`, and the build resolves those references back into
 plain HTML. Pattern metadata is indexed into `generated/patterns/patterns.manifest.json`
-for future registries, search, and adapter generation.
+for future registries, search, and adapter generation. Pattern contracts can
+also expose a small adapter-facing `props` and `slots` surface so generated
+targets like React can offer ergonomic wrappers while the canonical source
+stays plain HTML.
 
 To use Dashbase in your project, include the base stylesheet followed by the components you need.
 

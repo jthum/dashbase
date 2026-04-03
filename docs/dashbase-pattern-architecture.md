@@ -111,6 +111,27 @@ Reusable source fragments should be marked with either HTML or CSS markers:
 Every pattern should expose a canonical `pattern` fragment so generators can
 target the actual composition rather than the surrounding demo document.
 
+Patterns may also expose adapter-facing placeholders inside those canonical
+fragments. Today, the source-level placeholder syntax is:
+
+```html
+{{title}}
+{{helper}}
+{{footerNote}}
+```
+
+Those placeholders are author-time only. The build can resolve them with
+contract defaults for validation and indexing, while framework generators can
+surface them as adapter props or slots.
+
+Use this split:
+
+- `props`: string-like adapter inputs that map cleanly to text or attribute values
+- `slots`: richer adapter content regions that can accept HTML or framework nodes
+
+Patterns should stay readable in plain HTML even when they expose placeholders.
+The canonical fragment is still the source of truth.
+
 ---
 
 ## Drift Risk
@@ -144,6 +165,8 @@ They should capture:
 - summary
 - source files
 - dependency metadata
+- optional adapter-facing `props` with defaults
+- optional adapter-facing `slots` with default HTML fallbacks
 - small docs/example metadata
 - canonical `pattern` fragment markers in the source HTML
 
@@ -170,6 +193,17 @@ type PatternContract = {
     components: string[];
     patterns?: string[];
   };
+  props?: Array<{
+    name: string;
+    type: "string";
+    default: string;
+    description?: string;
+  }>;
+  slots?: Array<{
+    name: string;
+    defaultHtml?: string;
+    description?: string;
+  }>;
   docs?: {
     examples?: Array<{
       id: string;
@@ -181,6 +215,14 @@ type PatternContract = {
 ```
 
 This is not a runtime DSL. It is search, generation, and registry metadata.
+
+For now, `props` and `slots` are intentionally small:
+
+- `props` are string-valued and good for labels, helper text, headings, placeholders, and other adapter-friendly text substitutions
+- `slots` are named content regions that generators can expose as rich child content in framework targets
+
+That keeps the source HTML honest while still giving generated adapters a more
+ergonomic API surface.
 
 ---
 

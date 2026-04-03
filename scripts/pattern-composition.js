@@ -20,7 +20,7 @@ function parseAttributes(attributeSource) {
 
   for (const match of attributeSource.matchAll(ATTRIBUTE_PATTERN)) {
     const [, name, doubleQuoted, singleQuoted, bare] = match;
-    attrs[name.toLowerCase()] = doubleQuoted ?? singleQuoted ?? bare ?? "";
+    attrs[name] = doubleQuoted ?? singleQuoted ?? bare ?? "";
   }
 
   return attrs;
@@ -88,13 +88,16 @@ function applyTemplateParams(source, params) {
   });
 }
 
-function assertNoUnresolvedTokens(source, context) {
-  const unresolvedMatch = source.match(/\{\{\s*([A-Za-z0-9_-]+)\s*\}\}/);
-  if (!unresolvedMatch) {
-    return;
-  }
+function assertNoUnresolvedTokens(source, context, allowedTokens = new Set()) {
+  for (const match of source.matchAll(/\{\{\s*([A-Za-z0-9_-]+)\s*\}\}/g)) {
+    const token = match[1];
 
-  throw new Error(`${context}: unresolved template token ${unresolvedMatch[0]}`);
+    if (allowedTokens.has(token)) {
+      continue;
+    }
+
+    throw new Error(`${context}: unresolved template token ${match[0]}`);
+  }
 }
 
 function parseSourceReference(reference, currentFilePath) {
@@ -121,8 +124,9 @@ function parseSourceReference(reference, currentFilePath) {
   };
 }
 
-async function resolveSource(source, currentFilePath, stack = []) {
-  let output = source;
+async function resolveSource(source, currentFilePath, options = {}, stack = []) {
+  const { params = {}, allowedTokens = new Set() } = options;
+  let output = applyTemplateParams(source, params);
 
   while (true) {
     const match = COMPOSE_FRAGMENT_PATTERN.exec(output);
@@ -150,35 +154,39 @@ async function resolveSource(source, currentFilePath, stack = []) {
     const templateParams = { ...attrs };
     delete templateParams.source;
 
-    const interpolatedFragment = applyTemplateParams(rawFragment, templateParams);
+    const interpolatedFragment = applyTemplateParams(rawFragment, {
+      ...params,
+      ...templateParams,
+    });
     const resolvedFragment = await resolveSource(
       interpolatedFragment,
       filePath,
+      { params, allowedTokens },
       [...stack, fragmentKey],
     );
     const cleanedFragment = dedent(stripMarkers(resolvedFragment));
 
-    assertNoUnresolvedTokens(cleanedFragment, `${formatPath(filePath)}#${fragmentId}`);
+    assertNoUnresolvedTokens(cleanedFragment, `${formatPath(filePath)}#${fragmentId}`, allowedTokens);
 
     const replacement = indentBlock(cleanedFragment, indent);
     output = `${output.slice(0, match.index)}${replacement}${output.slice(match.index + fullMatch.length)}`;
   }
 
   const cleanedOutput = stripMarkers(output);
-  assertNoUnresolvedTokens(cleanedOutput, formatPath(currentFilePath));
+  assertNoUnresolvedTokens(cleanedOutput, formatPath(currentFilePath), allowedTokens);
   return cleanedOutput;
 }
 
-export async function resolvePatternHtml(entry) {
+export async function resolvePatternHtml(entry, options = {}) {
   const htmlPath = resolve(entry.patternDir, entry.contract.files.html);
   const source = await readFile(htmlPath, "utf8");
-  return resolveSource(source, htmlPath);
+  return resolveSource(source, htmlPath, options);
 }
 
-export async function resolvePatternFragment(entry, fragmentId = "pattern") {
+export async function resolvePatternFragment(entry, fragmentId = "pattern", options = {}) {
   const htmlPath = resolve(entry.patternDir, entry.contract.files.html);
   const source = await readFile(htmlPath, "utf8");
   const fragment = extractMarkedFragment(source, fragmentId);
-  const resolved = await resolveSource(fragment, htmlPath, [`${htmlPath}#${fragmentId}`]);
+  const resolved = await resolveSource(fragment, htmlPath, options, [`${htmlPath}#${fragmentId}`]);
   return dedent(stripMarkers(resolved));
 }

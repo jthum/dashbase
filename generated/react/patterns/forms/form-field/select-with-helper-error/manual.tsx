@@ -12,15 +12,28 @@ export const formsFormFieldSelectWithHelperErrorAssets = {
   js: [],
 } as const satisfies DashbaseAssetManifest;
 
-export function FormsFormFieldSelectWithHelperError() {
+export type FormsFormFieldSelectWithHelperErrorProps = {
+  title?: string;
+  description?: string;
+  label?: string;
+  helper?: string;
+  error?: string;
+};
+
+export function FormsFormFieldSelectWithHelperError(props: FormsFormFieldSelectWithHelperErrorProps) {
+  const title = props.title ?? "Form Field / Select With Helper Error";
+  const description = props.description ?? "Use this when the field needs clear context, required state, helper guidance, and inline validation feedback in a single consistent block.";
+  const label = props.label ?? "State of birth";
+  const helper = props.helper ?? "Select the state in which you were born, not the state in which you currently reside.";
+  const error = props.error ?? "You must select a state before continuing.";
   return (
     <>
       <section className="surface" aria-labelledby="birth-state-pattern-title">
-            <h1 id="birth-state-pattern-title">Form Field / Select With Helper Error</h1>
-            <p>Use this when the field needs clear context, required state, helper guidance, and inline validation feedback in a single consistent block.</p>
+            <h1 id="birth-state-pattern-title">{title}</h1>
+            <p>{description}</p>
       
             <form-field>
-              <label className="required" htmlFor="birth-state">State of birth</label>
+              <label className="required" htmlFor="birth-state">{label}</label>
               <select id="birth-state" required aria-describedby="birth-state-help birth-state-error">
                 <option value="">Choose a state</option>
                 <option>Andhra Pradesh</option>
@@ -29,8 +42,8 @@ export function FormsFormFieldSelectWithHelperError() {
                 <option>Tamil Nadu</option>
                 <option>Telangana</option>
               </select>
-              <small id="birth-state-help">Select the state in which you were born, not the state in which you currently reside.</small>
-              <small id="birth-state-error" className="error">You must select a state before continuing.</small>
+              <small id="birth-state-help">{helper}</small>
+              <small id="birth-state-error" className="error">{error}</small>
             </form-field>
           </section>
     </>

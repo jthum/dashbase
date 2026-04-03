@@ -9,6 +9,7 @@ const PATTERNS_DIR = join(ROOT, "src/patterns");
 const CONTRACT_FILE_NAME = "pattern.contract.json";
 const CONTRACT_SCHEMA_VERSION = 1;
 const PATTERN_SCOPES = new Set(["field", "section", "page"]);
+const PATTERN_PROP_TYPES = new Set(["string"]);
 
 function isObject(value) {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -87,6 +88,102 @@ function ensureStringArray({ value, field, errors, required = true }) {
   }
 
   return valid;
+}
+
+function validateProps({ props, contractPath, errors }) {
+  if (props === undefined) {
+    return [];
+  }
+
+  if (!Array.isArray(props)) {
+    errors.push(`${contractPath}: props must be an array`);
+    return [];
+  }
+
+  const seenNames = new Set();
+  const validProps = [];
+
+  for (const [index, prop] of props.entries()) {
+    const fieldBase = `props[${index}]`;
+
+    if (!isObject(prop)) {
+      errors.push(`${contractPath}: ${fieldBase} must be an object`);
+      continue;
+    }
+
+    const name = ensureString({ value: prop.name, field: `${fieldBase}.name`, errors });
+    const type = ensureString({ value: prop.type, field: `${fieldBase}.type`, errors });
+    const defaultValue = ensureString({ value: prop.default, field: `${fieldBase}.default`, errors });
+
+    if (name) {
+      if (seenNames.has(name)) {
+        errors.push(`${contractPath}: prop names must be unique (${name})`);
+      }
+
+      seenNames.add(name);
+    }
+
+    if (type && !PATTERN_PROP_TYPES.has(type)) {
+      errors.push(`${contractPath}: ${fieldBase}.type must be one of ${[...PATTERN_PROP_TYPES].join(", ")}`);
+    }
+
+    ensureString({ value: prop.description, field: `${fieldBase}.description`, errors, required: false });
+
+    if (name && type && defaultValue !== null) {
+      validProps.push({ name, type, default: defaultValue });
+    }
+  }
+
+  return validProps;
+}
+
+function validateSlots({ slots, contractPath, errors }) {
+  if (slots === undefined) {
+    return [];
+  }
+
+  if (!Array.isArray(slots)) {
+    errors.push(`${contractPath}: slots must be an array`);
+    return [];
+  }
+
+  const seenNames = new Set();
+  const validSlots = [];
+
+  for (const [index, slot] of slots.entries()) {
+    const fieldBase = `slots[${index}]`;
+
+    if (!isObject(slot)) {
+      errors.push(`${contractPath}: ${fieldBase} must be an object`);
+      continue;
+    }
+
+    const name = ensureString({ value: slot.name, field: `${fieldBase}.name`, errors });
+    const defaultHtml = slot.defaultHtml === undefined
+      ? null
+      : typeof slot.defaultHtml === "string"
+        ? slot.defaultHtml
+        : (() => {
+          errors.push(`${contractPath}: ${fieldBase}.defaultHtml must be a string`);
+          return null;
+        })();
+
+    if (name) {
+      if (seenNames.has(name)) {
+        errors.push(`${contractPath}: slot names must be unique (${name})`);
+      }
+
+      seenNames.add(name);
+      validSlots.push({
+        name,
+        defaultHtml: defaultHtml ?? "",
+      });
+    }
+
+    ensureString({ value: slot.description, field: `${fieldBase}.description`, errors, required: false });
+  }
+
+  return validSlots;
 }
 
 function ensureLocalFilePath({ value, field, patternDir, errors }) {
@@ -186,6 +283,17 @@ async function validatePatternEntry(entry, knownSlugs) {
   const scope = ensureString({ value: contract.scope, field: "scope", errors });
   ensureString({ value: contract.summary, field: "summary", errors });
   ensureStringArray({ value: contract.tags, field: "tags", errors });
+  const props = validateProps({ props: contract.props, contractPath, errors });
+  const slots = validateSlots({ slots: contract.slots, contractPath, errors });
+
+  const bindingNames = new Set();
+  for (const binding of [...props, ...slots]) {
+    if (bindingNames.has(binding.name)) {
+      errors.push(`${contractPath}: binding names must be unique across props and slots (${binding.name})`);
+    }
+
+    bindingNames.add(binding.name);
+  }
 
   if (scope && !PATTERN_SCOPES.has(scope)) {
     errors.push(`${contractPath}: scope must be one of ${[...PATTERN_SCOPES].join(", ")}`);
@@ -281,8 +389,12 @@ async function validatePatternEntry(entry, knownSlugs) {
 
   if (htmlPath) {
     try {
-      await resolvePatternFragment(entry, "pattern");
-      await resolvePatternHtml(entry);
+      const options = {
+        params: getPatternDefaultBindings(contract),
+        allowedTokens: getPatternAllowedTokens(contract),
+      };
+      await resolvePatternFragment(entry, "pattern", options);
+      await resolvePatternHtml(entry, options);
     } catch (error) {
       errors.push(`${contractPath}: ${error.message}`);
     }
@@ -317,6 +429,20 @@ export async function loadPatternContracts() {
   }
 
   return entries;
+}
+
+export function getPatternAllowedTokens(contract) {
+  return new Set([
+    ...(contract.props ?? []).map((prop) => prop.name),
+    ...(contract.slots ?? []).map((slot) => slot.name),
+  ]);
+}
+
+export function getPatternDefaultBindings(contract) {
+  return Object.fromEntries([
+    ...(contract.props ?? []).map((prop) => [prop.name, prop.default]),
+    ...(contract.slots ?? []).map((slot) => [slot.name, slot.defaultHtml ?? ""]),
+  ]);
 }
 
 export async function validatePatternContracts({ log = true } = {}) {

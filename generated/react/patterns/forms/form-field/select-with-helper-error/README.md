@@ -47,15 +47,23 @@ export function Example() {
 }
 ```
 
+## Adapter Props
+
+- `title?: string` Pattern title shown in the demo surface. Default: "Form Field / Select With Helper Error".
+- `description?: string` Supporting copy shown above the field. Default: "Use this when the field needs clear context, required state, helper guidance, and inline validation feedback in a single consistent block.".
+- `label?: string` Field label. Default: "State of birth".
+- `helper?: string` Helper copy shown below the field. Default: "Select the state in which you were born, not the state in which you currently reside.".
+- `error?: string` Inline validation message. Default: "You must select a state before continuing.".
+
 ## Rendered Structure
 
 ```tsx
 <section className="surface" aria-labelledby="birth-state-pattern-title">
-      <h1 id="birth-state-pattern-title">Form Field / Select With Helper Error</h1>
-      <p>Use this when the field needs clear context, required state, helper guidance, and inline validation feedback in a single consistent block.</p>
+      <h1 id="birth-state-pattern-title">{title}</h1>
+      <p>{description}</p>
 
       <form-field>
-        <label className="required" htmlFor="birth-state">State of birth</label>
+        <label className="required" htmlFor="birth-state">{label}</label>
         <select id="birth-state" required aria-describedby="birth-state-help birth-state-error">
           <option value="">Choose a state</option>
           <option>Andhra Pradesh</option>
@@ -64,8 +72,8 @@ export function Example() {
           <option>Tamil Nadu</option>
           <option>Telangana</option>
         </select>
-        <small id="birth-state-help">Select the state in which you were born, not the state in which you currently reside.</small>
-        <small id="birth-state-error" className="error">You must select a state before continuing.</small>
+        <small id="birth-state-help">{helper}</small>
+        <small id="birth-state-error" className="error">{error}</small>
       </form-field>
     </section>
 ```

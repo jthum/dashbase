@@ -15,40 +15,64 @@ export const authLoginBoxMinimalAssets = {
   js: [],
 } as const satisfies DashbaseAssetManifest;
 
-export function AuthLoginBoxMinimal() {
+export type AuthLoginBoxMinimalProps = {
+  title?: string;
+  description?: string;
+  emailLabel?: string;
+  emailPlaceholder?: string;
+  passwordLabel?: string;
+  passwordPlaceholder?: string;
+  rememberLabel?: string;
+  submitLabel?: string;
+  secondaryLabel?: string;
+  footerNote?: React.ReactNode;
+};
+
+export function AuthLoginBoxMinimal(props: AuthLoginBoxMinimalProps) {
+  const title = props.title ?? "Welcome back";
+  const description = props.description ?? "Sign in to continue managing your Dashbase workspace and recent approvals.";
+  const emailLabel = props.emailLabel ?? "Email";
+  const emailPlaceholder = props.emailPlaceholder ?? "you@example.com";
+  const passwordLabel = props.passwordLabel ?? "Password";
+  const passwordPlaceholder = props.passwordPlaceholder ?? "Enter your password";
+  const rememberLabel = props.rememberLabel ?? "Keep me signed in for 30 days";
+  const submitLabel = props.submitLabel ?? "Sign in";
+  const secondaryLabel = props.secondaryLabel ?? "Forgot password?";
+  const footerNote = props.footerNote;
   return (
     <>
       <article className="card" aria-labelledby="login-box-title">
             <header>
               <div className="meta">
-                <h1 id="login-box-title">Welcome back</h1>
-                <p>Sign in to continue managing your Dashbase workspace and recent approvals.</p>
+                <h1 id="login-box-title">{title}</h1>
+                <p>{description}</p>
               </div>
             </header>
       
             <card-content>
               <form className="login-form">
                 <form-field>
-                  <label className="required" htmlFor="login-email">Email</label>
-                  <input id="login-email" type="email" placeholder="you@example.com" required autoComplete="email" />
+                  <label className="required" htmlFor="login-email">{emailLabel}</label>
+                  <input id="login-email" type="email" placeholder={emailPlaceholder} required autoComplete="email" />
                 </form-field>
       
                 <form-field>
-                  <label className="required" htmlFor="login-password">Password</label>
-                  <input id="login-password" type="password" placeholder="Enter your password" required autoComplete="current-password" />
+                  <label className="required" htmlFor="login-password">{passwordLabel}</label>
+                  <input id="login-password" type="password" placeholder={passwordPlaceholder} required autoComplete="current-password" />
                 </form-field>
       
                 <div className="inline-group">
                   <input type="checkbox" id="remember-session" />
-                  <label htmlFor="remember-session">Keep me signed in for 30 days</label>
+                  <label htmlFor="remember-session">{rememberLabel}</label>
                 </div>
               </form>
             </card-content>
       
             <footer>
               <div className="login-actions">
-                <button className="primary" type="submit">Sign in</button>
-                <button className="ghost" type="button">Forgot password?</button>
+                <button className="primary" type="submit">{submitLabel}</button>
+                <button className="ghost" type="button">{secondaryLabel}</button>
+                {footerNote}
               </div>
             </footer>
           </article>

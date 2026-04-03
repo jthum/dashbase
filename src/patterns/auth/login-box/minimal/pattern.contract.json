@@ -18,6 +18,69 @@
   "files": {
     "html": "./pattern.html"
   },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "default": "Welcome back",
+      "description": "Heading shown at the top of the login panel."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "default": "Sign in to continue managing your Dashbase workspace and recent approvals.",
+      "description": "Supporting copy shown under the heading."
+    },
+    {
+      "name": "emailLabel",
+      "type": "string",
+      "default": "Email",
+      "description": "Label for the email field."
+    },
+    {
+      "name": "emailPlaceholder",
+      "type": "string",
+      "default": "you@example.com",
+      "description": "Placeholder text for the email field."
+    },
+    {
+      "name": "passwordLabel",
+      "type": "string",
+      "default": "Password",
+      "description": "Label for the password field."
+    },
+    {
+      "name": "passwordPlaceholder",
+      "type": "string",
+      "default": "Enter your password",
+      "description": "Placeholder text for the password field."
+    },
+    {
+      "name": "rememberLabel",
+      "type": "string",
+      "default": "Keep me signed in for 30 days",
+      "description": "Copy next to the remember-session checkbox."
+    },
+    {
+      "name": "submitLabel",
+      "type": "string",
+      "default": "Sign in",
+      "description": "Primary action label."
+    },
+    {
+      "name": "secondaryLabel",
+      "type": "string",
+      "default": "Forgot password?",
+      "description": "Secondary action label."
+    }
+  ],
+  "slots": [
+    {
+      "name": "footerNote",
+      "defaultHtml": "",
+      "description": "Optional content rendered below the action buttons."
+    }
+  ],
   "dependencies": {
     "components": [
       "button",

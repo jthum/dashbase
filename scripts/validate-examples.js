@@ -2,8 +2,12 @@ import { readdir, readFile } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateComponentContracts } from "./component-contracts.js";
-import { validatePatternContracts } from "./pattern-contracts.js";
-import { loadPatternContracts } from "./pattern-contracts.js";
+import {
+  validatePatternContracts,
+  loadPatternContracts,
+  getPatternAllowedTokens,
+  getPatternDefaultBindings,
+} from "./pattern-contracts.js";
 import { resolvePatternHtml } from "./pattern-composition.js";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
@@ -349,7 +353,10 @@ export async function validateContracts({ log = true } = {}) {
   for (const examplePath of exampleFiles) {
     const sourceHtml = await readFile(examplePath, "utf8");
     const html = patternEntryByHtmlPath.has(examplePath)
-      ? await resolvePatternHtml(patternEntryByHtmlPath.get(examplePath))
+      ? await resolvePatternHtml(patternEntryByHtmlPath.get(examplePath), {
+        params: getPatternDefaultBindings(patternEntryByHtmlPath.get(examplePath).contract),
+        allowedTokens: getPatternAllowedTokens(patternEntryByHtmlPath.get(examplePath).contract),
+      })
       : sourceHtml;
     const localClasses = extractInlineStyleClasses(html);
     const loadedComponents = extractLoadedComponentFiles(sourceHtml, examplePath)

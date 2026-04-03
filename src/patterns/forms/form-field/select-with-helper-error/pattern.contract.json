@@ -18,6 +18,38 @@
   "files": {
     "html": "./pattern.html"
   },
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "default": "Form Field / Select With Helper Error",
+      "description": "Pattern title shown in the demo surface."
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "default": "Use this when the field needs clear context, required state, helper guidance, and inline validation feedback in a single consistent block.",
+      "description": "Supporting copy shown above the field."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "State of birth",
+      "description": "Field label."
+    },
+    {
+      "name": "helper",
+      "type": "string",
+      "default": "Select the state in which you were born, not the state in which you currently reside.",
+      "description": "Helper copy shown below the field."
+    },
+    {
+      "name": "error",
+      "type": "string",
+      "default": "You must select a state before continuing.",
+      "description": "Inline validation message."
+    }
+  ],
   "dependencies": {
     "components": [
       "form-field",

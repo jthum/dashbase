@@ -37,7 +37,7 @@ async function validateReactPoc() {
   const entrypoints = await collectEntryPoints(GENERATED_DIR);
   const result = await Bun.build({
     entrypoints,
-    external: ["react", "react/jsx-runtime"],
+    external: ["react", "react/jsx-runtime", "react/jsx-dev-runtime"],
     outdir: TMP_DIR,
     target: "browser",
   });

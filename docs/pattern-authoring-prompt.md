@@ -41,12 +41,16 @@ Contract expectations:
 - Use `slug`, `family`, `variant`, `category`, `scope`, and `tags` for indexing
 - Declare `dependencies.components` for every composed component
 - Declare `dependencies.patterns` if this pattern composes other patterns
+- Add a `props` block when generated adapters should expose ergonomic string inputs such as titles, helper text, placeholders, button labels, or other copy
+- Add a `slots` block when generated adapters should expose richer content regions such as footer notes, banners, or supporting actions
 - If `docs.examples` references source snippets, mark them with `<!-- @example name:start -->` and `<!-- @example name:end -->`
 - Mark the canonical pattern body with `<!-- @fragment pattern:start -->` and `<!-- @fragment pattern:end -->`
 - Mark reusable CSS or HTML fragments with `@fragment` markers, then reference
   them via `<compose-fragment source=\"path/to/file.html#fragment-id\" />`
 - Additional attributes on `<compose-fragment>` act as author-time template
   values for `{{token}}` placeholders inside the referenced fragment
+- Tokens such as `{{title}}` or `{{footerNote}}` should be declared by the pattern contract; use `props` for simple string substitutions and `slots` for richer content regions
+- Give every declared `prop` a sensible default so validation, manifests, and generated adapter docs can resolve the canonical pattern without guessing
 
 The goal is not just to make a pretty demo. The goal is to build a pattern
 catalog that can scale, stay searchable, and remain useful to both humans and
