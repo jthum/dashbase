@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Card Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="./card.css">
+  <link rel="stylesheet" href="../button/button.css">
+  <link rel="stylesheet" href="../badge/badge.css">
+  <link rel="stylesheet" href="../select/select.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 72rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .card-grid {
+      display: grid;
+      gap: var(--space-lg);
+      grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    }
+
+    .card-grid > :is(.card, ui-card) {
+      block-size: 100%;
+    }
+
+    .metric {
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    .metric strong {
+      font-size: var(--text-2xl);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-tight);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .list {
+      display: grid;
+      gap: var(--space-sm);
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-md);
+      color: var(--text-muted);
+    }
+
+    .list strong {
+      color: var(--text-default);
+      font-weight: 600;
+    }
+
+    .media {
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at 20% 20%, color-mix(in oklch, var(--color-primary) 28%, transparent), transparent 34%),
+        linear-gradient(135deg, color-mix(in oklch, var(--color-primary) 12%, var(--bg-subtle)), var(--bg-subtle));
+      border: var(--border-width) solid color-mix(in oklch, var(--border-default) 70%, transparent);
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Card Component</h1>
+    <p>Dashbase cards use either a presentational <code>&lt;ui-card&gt;</code> host or a semantic host with <code>class="card"</code>. The card shell is flush by default, so padded content lives inside <code>&lt;card-content&gt;</code> or native semantic regions. Use <code>.simple</code> for anatomy-free cards that just need shell padding.</p>
+
+    <hr>
+
+    <section>
+      <h2>Article Cards</h2>
+      <p>Use <code>&lt;article&gt;</code> when the card is a self-contained piece of content that could stand on its own.</p>
+
+      <div class="card-grid">
+        <article class="card" aria-labelledby="report-card-title">
+          <header style="--card-header-bg: var(--bg-subtle); --card-header-border: var(--border-default);">
+            <ui-badge class="primary">Weekly Report</ui-badge>
+            <h3 id="report-card-title">Product health is trending up</h3>
+            <p>Activation rose 12% week-over-week, with the sharpest gains coming from onboarding changes.</p>
+          </header>
+          <card-content>
+            <div class="metric">
+              <small>Active teams</small>
+              <strong>1,284</strong>
+            </div>
+            <ul class="list">
+              <li><span>New signups</span> <strong>+342</strong></li>
+              <li><span>Trial conversion</span> <strong>8.4%</strong></li>
+              <li><span>Churn</span> <strong>1.9%</strong></li>
+            </ul>
+          </card-content>
+          <footer style="--card-footer-bg: var(--bg-subtle); --card-footer-border: var(--border-default);">
+            <button class="primary">Open report</button>
+            <button class="ghost">Share</button>
+          </footer>
+        </article>
+
+        <article class="card" aria-labelledby="media-card-title">
+          <header>
+            <h3 id="media-card-title">Release preview</h3>
+            <p>The shell has no default padding, so media can sit flush while content stays padded.</p>
+          </header>
+          <div class="media" aria-hidden="true"></div>
+          <card-content>
+            <p>Design polish, faster forms, and a new billing flow are all landing in the next release candidate.</p>
+          </card-content>
+          <footer>
+            <button>Read notes</button>
+          </footer>
+        </article>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Section Cards</h2>
+      <p>Use <code>&lt;section&gt;</code> when the content belongs to the current page rather than standing alone like an article.</p>
+
+      <div class="card-grid">
+        <section class="card" aria-labelledby="profile-settings-title">
+          <header>
+            <h3 id="profile-settings-title">Profile Settings</h3>
+            <p>Review the information other teammates see when they collaborate with you.</p>
+          </header>
+          <card-content>
+            <ul class="list">
+              <li><span>Name</span> <strong>Jayadeep Thum</strong></li>
+              <li><span>Role</span> <strong>Design Engineer</strong></li>
+              <li><span>Timezone</span> <strong>Asia/Kolkata</strong></li>
+            </ul>
+          </card-content>
+          <footer>
+            <button class="outline">Edit profile</button>
+            <button class="ghost">View public page</button>
+          </footer>
+        </section>
+
+        <section class="card" aria-labelledby="minimal-card-title">
+          <header>
+            <ui-badge class="neutral">Minimal</ui-badge>
+            <h3 id="minimal-card-title">Cards can be mostly text</h3>
+            <p>Semantic hosts can still use native <code>&lt;header&gt;</code> and <code>&lt;footer&gt;</code> instead of custom regions.</p>
+          </header>
+          <footer>
+            <button class="link">Learn more</button>
+          </footer>
+        </section>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Presentational Cards</h2>
+      <p>Use <code>&lt;ui-card&gt;</code> when the container is purely visual and no semantic sectioning element fits.</p>
+
+      <div class="card-grid">
+        <ui-card aria-labelledby="metric-card-title">
+          <card-header>
+            <ui-badge class="primary">Live Metric</ui-badge>
+            <h3 id="metric-card-title">Infrastructure load is stable</h3>
+            <p>This container is purely presentational, so it uses <code>&lt;ui-card&gt;</code> rather than a sectioning element.</p>
+          </card-header>
+          <canvas class="media" aria-label="Infrastructure load chart"></canvas>
+          <card-footer style="--card-footer-bg: var(--bg-subtle); --card-footer-border: var(--border-default);">
+            <p>CPU utilization <strong>42%</strong></p>
+            <button class="ghost">Inspect</button>
+          </card-footer>
+        </ui-card>
+
+        <ui-card class="simple">
+          <h3>Simple Card</h3>
+          <p>Use <code>.simple</code> when you want a padded card without structured anatomy.</p>
+          <p><strong>Queued jobs:</strong> 18</p>
+        </ui-card>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

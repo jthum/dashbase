@@ -47,7 +47,7 @@ The DSL is a JSON format that describes **component contracts** — not implemen
 {
   "name": "Button",
   "element": "button",
-  "cssFile": "components/button.css",
+  "cssFile": "components/button/button.css",
   "props": [
     { "name": "variant", "type": "enum", "values": ["primary", "danger", "ghost", "outline"], "mapsTo": "class" },
     { "name": "size", "type": "enum", "values": ["sm", "lg"], "mapsTo": "class" },
@@ -65,8 +65,8 @@ The DSL is a JSON format that describes **component contracts** — not implemen
 {
   "name": "Tabs",
   "element": "tab-list",
-  "cssFile": "components/tabs.css",
-  "jsFile": "js/tabs.js",
+  "cssFile": "components/tabs/tabs.css",
+  "jsFile": "components/tabs/tabs.js",
   "state": [
     { "name": "activeIndex", "type": "number", "default": 0, "exposed": true }
   ],
@@ -85,8 +85,8 @@ The DSL is a JSON format that describes **component contracts** — not implemen
 {
   "name": "Dialog",
   "element": "dialog",
-  "cssFile": "components/dialog.css",
-  "jsFile": "js/dialog.js",
+  "cssFile": "components/dialog/dialog.css",
+  "jsFile": "components/dialog/dialog.js",
   "props": [
     { "name": "open", "type": "boolean", "mapsTo": "attribute", "exposed": true }
   ],

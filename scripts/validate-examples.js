@@ -1,10 +1,11 @@
 import { readdir, readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const COMPONENTS_DIR = join(ROOT, "src/components");
 const EXAMPLES_DIR = join(ROOT, "src/examples");
+const VALIDATION_DIRS = [COMPONENTS_DIR, EXAMPLES_DIR];
 const VALIDATED_MARKDOWN_FILES = [
   join(ROOT, "README.md"),
   join(ROOT, "docs/dashbase-implementation-guidance.md"),
@@ -12,6 +13,26 @@ const VALIDATED_MARKDOWN_FILES = [
 
 function stripComments(source) {
   return source.replace(/\/\*[\s\S]*?\*\//g, "");
+}
+
+async function collectFiles(dir, extension) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const fullPath = join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...await collectFiles(fullPath, extension));
+      continue;
+    }
+
+    if (entry.isFile() && fullPath.endsWith(extension)) {
+      files.push(fullPath);
+    }
+  }
+
+  return files.sort();
 }
 
 function splitTopLevel(input, separator = ",") {
@@ -178,11 +199,21 @@ function extractInlineStyleClasses(htmlSource) {
   return localClasses;
 }
 
-function extractLoadedComponentFiles(htmlSource) {
+function extractLoadedComponentFiles(htmlSource, examplePath) {
   const files = [];
 
-  for (const match of htmlSource.matchAll(/<link\b[^>]+href=["']\.\.\/components\/([^"']+\.css)["']/gi)) {
-    files.push(match[1]);
+  for (const match of htmlSource.matchAll(/<link\b[^>]+href=["']([^"']+\.css)["']/gi)) {
+    const href = match[1];
+    if (/^(?:https?:|data:|\/)/i.test(href)) {
+      continue;
+    }
+
+    const resolvedPath = resolve(dirname(examplePath), href);
+    if (!resolvedPath.startsWith(COMPONENTS_DIR) || !resolvedPath.endsWith(".css")) {
+      continue;
+    }
+
+    files.push(basename(resolvedPath));
   }
 
   return files;
@@ -207,14 +238,12 @@ function extractHtmlCodeBlocks(markdownSource) {
 }
 
 async function buildComponentCatalog() {
-  const componentFiles = (await readdir(COMPONENTS_DIR))
-    .filter((file) => file.endsWith(".css"))
-    .sort();
+  const componentFiles = await collectFiles(COMPONENTS_DIR, ".css");
 
   const catalog = new Map();
 
-  for (const file of componentFiles) {
-    const fullPath = join(COMPONENTS_DIR, file);
+  for (const fullPath of componentFiles) {
+    const file = basename(fullPath);
     const source = await readFile(fullPath, "utf8");
     const selectors = extractFirstRuleSelectors(source);
     const supportedClasses = new Set();
@@ -230,7 +259,7 @@ async function buildComponentCatalog() {
     }
 
     catalog.set(file, {
-      file,
+      file: relative(ROOT, fullPath),
       selectors,
       supportedClasses,
     });
@@ -296,24 +325,23 @@ function appendValidationErrors({
 export async function validateContracts({ log = true } = {}) {
   const componentCatalog = await buildComponentCatalog();
   const allComponents = [...componentCatalog.values()];
-  const exampleFiles = (await readdir(EXAMPLES_DIR))
-    .filter((file) => file.endsWith(".html"))
-    .sort();
+  const exampleFiles = (
+    await Promise.all(VALIDATION_DIRS.map((dir) => collectFiles(dir, ".html")))
+  ).flat().sort();
 
   const errors = [];
   let documentationSnippetCount = 0;
 
-  for (const exampleFile of exampleFiles) {
-    const examplePath = join(EXAMPLES_DIR, exampleFile);
+  for (const examplePath of exampleFiles) {
     const html = await readFile(examplePath, "utf8");
     const localClasses = extractInlineStyleClasses(html);
-    const loadedComponents = extractLoadedComponentFiles(html)
+    const loadedComponents = extractLoadedComponentFiles(html, examplePath)
       .map((file) => componentCatalog.get(file))
       .filter(Boolean);
 
     appendValidationErrors({
       errors,
-      sourcePath: join("src/examples", exampleFile),
+      sourcePath: relative(ROOT, examplePath),
       html,
       components: loadedComponents,
       localClasses,

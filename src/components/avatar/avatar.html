@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Avatar Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="./avatar.css">
+  <link rel="stylesheet" href="../select/select.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 56rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .panel {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--bg-raised);
+    }
+
+    .people {
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .person {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Avatar Component</h1>
+    <p>Dashbase uses a presentational <code>&lt;ui-avatar&gt;</code> shell for profile photos, initials, and compact participant groups. Use inline text for initials or drop an <code>&lt;img&gt;</code> inside for media.</p>
+
+    <section>
+      <h2>Image and Initials</h2>
+
+      <div class="panel people">
+        <div class="person">
+          <ui-avatar aria-label="Taylor Nguyen">
+            <img alt="Taylor Nguyen" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%233b82f6'/%3E%3Ccircle cx='60' cy='44' r='22' fill='%23dbeafe'/%3E%3Cpath d='M26 102c7-20 24-30 34-30s27 10 34 30' fill='%23dbeafe'/%3E%3C/svg%3E">
+          </ui-avatar>
+          <div>
+            <strong>Taylor Nguyen</strong>
+            <p>Product designer</p>
+          </div>
+        </div>
+
+        <div class="person">
+          <ui-avatar aria-label="Jordan Brooks">JB</ui-avatar>
+          <div>
+            <strong>Jordan Brooks</strong>
+            <p>No image available, using initials.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Sizes and Shapes</h2>
+
+      <div class="row panel">
+        <ui-avatar class="small" aria-label="Small avatar">TN</ui-avatar>
+        <ui-avatar aria-label="Default avatar">JB</ui-avatar>
+        <ui-avatar class="large" aria-label="Large avatar">AK</ui-avatar>
+        <ui-avatar class="square" aria-label="Square avatar">ML</ui-avatar>
+        <ui-avatar class="square large subtle" aria-label="Subtle square avatar">+4</ui-avatar>
+        <ui-avatar class="outline" aria-label="Outlined avatar">QA</ui-avatar>
+      </div>
+    </section>
+
+    <section>
+      <h2>Avatar Group</h2>
+
+      <div class="panel">
+        <avatar-group aria-label="Workspace collaborators">
+          <ui-avatar aria-label="Taylor Nguyen">
+            <img alt="Taylor Nguyen" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%230f766e'/%3E%3Ccircle cx='60' cy='44' r='22' fill='%23ccfbf1'/%3E%3Cpath d='M26 102c7-20 24-30 34-30s27 10 34 30' fill='%23ccfbf1'/%3E%3C/svg%3E">
+          </ui-avatar>
+          <ui-avatar aria-label="Jordan Brooks">JB</ui-avatar>
+          <ui-avatar aria-label="Amara Khan">AK</ui-avatar>
+          <ui-avatar aria-label="Morgan Lee">ML</ui-avatar>
+          <ui-avatar class="subtle" aria-label="Four more collaborators">+4</ui-avatar>
+        </avatar-group>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

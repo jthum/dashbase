@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Dialog Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../panel/panel.css">
+  <link rel="stylesheet" href="./dialog.css">
+  <link rel="stylesheet" href="../button/button.css">
+  <link rel="stylesheet" href="../input/input.css">
+  <link rel="stylesheet" href="../select/select.css">
+  <link rel="stylesheet" href="../form-field/form-field.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 56rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Dialog Component</h1>
+    <p>Dashbase styles the native <code>&lt;dialog&gt;</code> element directly. Use dialogs when the surface is semantically a dialog, and reuse the shared panel anatomy for titles, content, and actions. Width can be tuned with <code>.small</code> and <code>.large</code>.</p>
+
+    <hr>
+
+    <section>
+      <h2>Non-Modal Dialog</h2>
+      <p>This uses native <code>show()</code> behavior. The example trigger stays declarative via <code>invoketarget</code> and the tiny Dashbase dialog shim.</p>
+
+      <div class="row">
+        <button invoketarget="settings-panel" invokeaction="show">Open settings dialog</button>
+      </div>
+
+      <dialog id="settings-panel" class="small">
+        <panel-header>
+          <h2>Workspace Settings</h2>
+          <p>Quick preferences that do not need a blocking modal.</p>
+        </panel-header>
+
+        <panel-content>
+          <form-field>
+            <label for="timezone">Timezone</label>
+            <select id="timezone">
+              <option>Asia/Kolkata</option>
+              <option>UTC</option>
+              <option>America/New_York</option>
+            </select>
+          </form-field>
+
+          <form-field>
+            <label for="name">Workspace Name</label>
+            <input id="name" type="text" value="Dashbase" />
+          </form-field>
+        </panel-content>
+
+        <panel-footer>
+          <button invoketarget="settings-panel" invokeaction="close" class="ghost">Close</button>
+          <button class="primary">Save changes</button>
+        </panel-footer>
+      </dialog>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Modal Dialog</h2>
+      <p>This uses native <code>showModal()</code> behavior. The example trigger uses <code>invoketarget</code> and the tiny Dashbase shim so the authoring story stays declarative.</p>
+
+      <div class="row">
+        <button invoketarget="confirm-delete" invokeaction="showModal" class="danger">Delete project</button>
+      </div>
+
+      <dialog id="confirm-delete" class="large">
+        <panel-header>
+          <h2>Delete project?</h2>
+          <p>This action is permanent. Existing deployments, tokens, and logs cannot be recovered once the project is removed.</p>
+        </panel-header>
+
+        <panel-content>
+          <p><strong>Project:</strong> Dashbase</p>
+          <p><strong>Owner:</strong> Jayadeep Thum</p>
+        </panel-content>
+
+        <panel-footer>
+          <button invoketarget="confirm-delete" invokeaction="close" class="ghost">Cancel</button>
+          <button class="danger">Delete permanently</button>
+        </panel-footer>
+      </dialog>
+    </section>
+  </main>
+
+  <script src="./dialog.js"></script>
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

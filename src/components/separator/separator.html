@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Separator Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="./separator.css">
+  <link rel="stylesheet" href="../button/button.css">
+  <link rel="stylesheet" href="../select/select.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 56rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .toolbar [role="separator"] {
+      block-size: 1.5rem;
+    }
+
+    .panel {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--bg-raised);
+    }
+
+    hr {
+      margin-block: var(--space-lg);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Separator Component</h1>
+    <p>Dashbase styles semantic <code>&lt;hr&gt;</code> and presentational elements with <code>role="separator"</code>. Use horizontal separators for thematic breaks and vertical separators inside compact toolbars or split layouts.</p>
+
+    <section>
+      <h2>Horizontal Separators</h2>
+
+      <div class="panel">
+        <p>Semantic <code>&lt;hr&gt;</code> is the right choice when the divider marks a thematic change in content.</p>
+        <hr>
+        <p>For purely visual layout separation, use an element with <code>role="separator"</code>.</p>
+        <div role="separator"></div>
+        <p>A stronger separator is available when you need a clearer break between dense regions.</p>
+        <div role="separator" class="strong"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Vertical Separators</h2>
+
+      <div class="toolbar">
+        <button>Preview</button>
+        <div role="separator" aria-orientation="vertical"></div>
+        <button class="ghost">Share</button>
+        <div role="separator" class="vertical"></div>
+        <button class="ghost">Export</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

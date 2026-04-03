@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Table Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="./table.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 64rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Table Component</h1>
+    <p>Dashbase styles the native <code>&lt;table&gt;</code> element directly. Use semantic sections like <code>&lt;caption&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, and <code>&lt;tfoot&gt;</code>; add table-level variants like <code>.striped</code>, <code>.interactive</code>, and <code>.compact</code> when needed.</p>
+
+    <section class="stack">
+      <div>
+        <h2>Default Table</h2>
+
+        <table>
+          <caption>Workspace usage by environment</caption>
+          <thead>
+            <tr>
+              <th scope="col">Environment</th>
+              <th scope="col">Requests</th>
+              <th scope="col">Errors</th>
+              <th scope="col">Owner</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Production</th>
+              <td>1.2M</td>
+              <td>0.08%</td>
+              <td>Platform</td>
+            </tr>
+            <tr>
+              <th scope="row">Staging</th>
+              <td>184K</td>
+              <td>0.31%</td>
+              <td>Release</td>
+            </tr>
+            <tr>
+              <th scope="row">Preview</th>
+              <td>52K</td>
+              <td>0.11%</td>
+              <td>Growth</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row">Total</th>
+              <td>1.436M</td>
+              <td>0.12%</td>
+              <td>Shared</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div>
+        <h2>Striped + Interactive</h2>
+
+        <table class="striped interactive">
+          <caption>Recent deployment runs</caption>
+          <thead>
+            <tr>
+              <th scope="col">Run</th>
+              <th scope="col">Branch</th>
+              <th scope="col">Duration</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">#812</th>
+              <td>main</td>
+              <td>4m 13s</td>
+              <td>Passed</td>
+            </tr>
+            <tr>
+              <th scope="row">#811</th>
+              <td>release/march</td>
+              <td>6m 04s</td>
+              <td>Passed</td>
+            </tr>
+            <tr>
+              <th scope="row">#810</th>
+              <td>experiment/nav</td>
+              <td>2m 58s</td>
+              <td>Failed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <h2>Compact Density</h2>
+
+        <table class="compact">
+          <caption>Package budget summary</caption>
+          <thead>
+            <tr>
+              <th scope="col">Artifact</th>
+              <th scope="col">Raw</th>
+              <th scope="col">Gzip</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">baseline.css</th>
+              <td>11.40 KB</td>
+              <td>2.99 KB</td>
+            </tr>
+            <tr>
+              <th scope="row">button.css</th>
+              <td>5.12 KB</td>
+              <td>1.26 KB</td>
+            </tr>
+            <tr>
+              <th scope="row">tooltip.css</th>
+              <td>3.23 KB</td>
+              <td>0.95 KB</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

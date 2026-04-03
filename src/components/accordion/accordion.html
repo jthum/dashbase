@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Accordion / Disclosure Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="./accordion.css">
+  <link rel="stylesheet" href="../button/button.css">
+  <link rel="stylesheet" href="../select/select.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 52rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .mini-grid {
+      display: grid;
+      gap: var(--space-sm);
+      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    }
+
+    .mini-grid div {
+      padding: var(--space-md);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--bg-subtle);
+    }
+
+    table {
+      inline-size: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+
+    th,
+    td {
+      padding-block: var(--space-sm);
+      padding-inline: var(--space-sm);
+      border-block-end: var(--border-width) solid var(--border-default);
+      text-align: start;
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Accordion / Disclosure Component</h1>
+    <p>Dashbase styles the native <code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code> pattern as a disclosure first. Plain disclosures work well for FAQ-style content without extra wrappers. For richer content and a more card-like accordion shell, use the optional <code>&lt;accordion-panel&gt;</code> wrapper. Density can be tuned with <code>.small</code> and <code>.large</code>.</p>
+
+    <hr>
+
+    <section>
+      <h2>Plain Disclosures</h2>
+
+      <details open>
+        <summary>How does Dashbase approach interaction?</summary>
+        <p>Dashbase prefers native HTML and CSS first, then adds the smallest possible amount of vanilla JavaScript only when the platform has a real behavior gap.</p>
+      </details>
+
+      <details>
+        <summary>Does this require any JavaScript?</summary>
+        <p>No. The accordion itself is the browser's native disclosure widget. Dashbase is only styling <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code>.</p>
+      </details>
+
+      <details>
+        <summary>Can the content be richer than plain text?</summary>
+        <p>Yes. Content can be text, lists, form fields, or action rows. The native disclosure behavior still works the same way.</p>
+      </details>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Density Variants</h2>
+
+      <details class="small">
+        <summary>Compact disclosure</summary>
+        <p>Use <code>.small</code> when space is tight, such as FAQ lists or dense settings pages.</p>
+      </details>
+
+      <details class="large" open>
+        <summary>Large disclosure</summary>
+        <p>Use <code>.large</code> when the trigger should feel more spacious or match a more editorial layout.</p>
+      </details>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Accordion Panels</h2>
+
+      <details open>
+        <summary>Deployment checklist</summary>
+        <accordion-panel>
+          <p>Use accordions for optional detail, not for hiding critical content users must discover immediately.</p>
+          <ul>
+            <li>Verify examples against component contracts</li>
+            <li>Check light and dark mode</li>
+            <li>Confirm keyboard and focus behavior</li>
+          </ul>
+          <div class="actions">
+            <button class="primary">Review checklist</button>
+            <button class="ghost">Dismiss</button>
+          </div>
+        </accordion-panel>
+      </details>
+
+      <details>
+        <summary>Structured content example</summary>
+        <accordion-panel>
+          <table>
+            <thead>
+              <tr>
+                <th>Area</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Examples</td>
+                <td>Validated</td>
+              </tr>
+              <tr>
+                <td>Dark mode</td>
+                <td>Reviewed</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="mini-grid">
+            <div><strong>19</strong><br>components shipped</div>
+            <div><strong>11.22 KB</strong><br>bundle gzip</div>
+          </div>
+        </accordion-panel>
+      </details>
+    </section>
+  </main>
+
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Pagination Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="./pagination.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 56rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .panel {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--bg-raised);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Pagination Component</h1>
+    <p>Dashbase styles pagination from semantic navigation markup. Use <code>aria-current="page"</code> for the active page and <code>aria-disabled="true"</code> or <code>disabled</code> for unavailable controls.</p>
+
+    <section class="panel">
+      <h2>Default Pagination</h2>
+
+      <nav aria-label="Pagination">
+        <ul>
+          <li><a href="#">Previous</a></li>
+          <li><a href="#">1</a></li>
+          <li><a href="#">2</a></li>
+          <li><a href="#" aria-current="page">3</a></li>
+          <li><a href="#">4</a></li>
+          <li><span>…</span></li>
+          <li><a href="#">12</a></li>
+          <li><a href="#">Next</a></li>
+        </ul>
+      </nav>
+    </section>
+
+    <section class="panel">
+      <h2>Compact Density</h2>
+
+      <nav aria-label="Pagination" class="small">
+        <ul>
+          <li><button type="button" aria-disabled="true">Prev</button></li>
+          <li><button type="button" aria-current="page">1</button></li>
+          <li><button type="button">2</button></li>
+          <li><button type="button">3</button></li>
+          <li><button type="button">Next</button></li>
+        </ul>
+      </nav>
+    </section>
+
+    <section class="panel">
+      <h2>Longer Labels</h2>
+
+      <nav aria-label="Pagination">
+        <ul>
+          <li><a href="#">Previous page</a></li>
+          <li><a href="#">Overview</a></li>
+          <li><a href="#" aria-current="page">Logs</a></li>
+          <li><a href="#">Metrics</a></li>
+          <li><a href="#">Next page</a></li>
+        </ul>
+      </nav>
+    </section>
+  </main>
+
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

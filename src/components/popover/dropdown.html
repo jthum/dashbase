@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Dropdown Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="./popover.css">
+  <link rel="stylesheet" href="../button/button.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 62rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+
+    .surface {
+      min-block-size: 16rem;
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 80%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 60%, transparent)
+      );
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Dropdown Component</h1>
+    <p>Dashbase menus are built on the same <code>&lt;popover-panel popover&gt;</code> primitive as utility popovers. Add <code>role="menu"</code> when the content is truly a menu, and the behavior shim layers roving focus, stateful items, and submenu coordination on top.</p>
+
+    <hr>
+
+    <section>
+      <h2>Action Menu</h2>
+
+      <div class="surface">
+        <button popovertarget="project-menu" aria-haspopup="menu" aria-expanded="false">Project actions</button>
+        <popover-panel id="project-menu" popover="auto" role="menu" aria-label="Project actions">
+          <panel-header aria-hidden="true">
+            <small>Workspace</small>
+          </panel-header>
+          <button type="button" role="menuitem">Profile <kbd>P</kbd></button>
+          <button type="button" role="menuitem">Billing <kbd>B</kbd></button>
+          <button type="button" role="menuitem">Invite teammate</button>
+          <hr>
+          <button type="button" role="menuitem" class="danger">Delete workspace</button>
+        </popover-panel>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Stateful Items</h2>
+
+      <div class="surface">
+        <button popovertarget="preferences-menu" aria-haspopup="menu" aria-expanded="false">Preferences</button>
+        <popover-panel id="preferences-menu" popover="auto" role="menu" aria-label="Preferences">
+          <panel-header aria-hidden="true">
+            <small>Notifications</small>
+          </panel-header>
+          <button type="button" role="menuitemcheckbox" aria-checked="true">Email notifications</button>
+          <button type="button" role="menuitemcheckbox" aria-checked="false">Desktop alerts</button>
+          <button type="button" role="menuitemcheckbox" aria-checked="true">Weekly digest</button>
+          <hr>
+          <panel-header aria-hidden="true">
+            <small>Appearance</small>
+          </panel-header>
+          <button type="button" role="menuitemradio" name="appearance" aria-checked="false">Light</button>
+          <button type="button" role="menuitemradio" name="appearance" aria-checked="false">Dark</button>
+          <button type="button" role="menuitemradio" name="appearance" aria-checked="true">System</button>
+        </popover-panel>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Nested Submenu</h2>
+
+      <div class="surface">
+        <button popovertarget="workspace-menu" aria-haspopup="menu" aria-expanded="false">Workspace menu</button>
+        <popover-panel id="workspace-menu" popover="auto" role="menu" aria-label="Workspace menu">
+          <panel-header aria-hidden="true">
+            <small>Workspace</small>
+          </panel-header>
+          <button type="button" role="menuitem">Members</button>
+          <button type="button" role="menuitem">Billing</button>
+          <button type="button" role="menuitem" popovertarget="theme-menu" aria-haspopup="menu">Theme</button>
+          <popover-panel id="theme-menu" popover="auto" role="menu" class="submenu" aria-label="Theme">
+            <button type="button" role="menuitemradio" name="theme" aria-checked="false">Light</button>
+            <button type="button" role="menuitemradio" name="theme" aria-checked="false">Dark</button>
+            <button type="button" role="menuitemradio" name="theme" aria-checked="true">System</button>
+          </popover-panel>
+          <button type="button" role="menuitem" popovertarget="share-menu" aria-haspopup="menu">Share</button>
+          <popover-panel id="share-menu" popover="auto" role="menu" class="submenu" aria-label="Share options">
+            <button type="button" role="menuitem">Copy link</button>
+            <button type="button" role="menuitem">Invite by email</button>
+            <button type="button" role="menuitem">Export PDF</button>
+          </popover-panel>
+          <hr>
+          <button type="button" role="menuitem" class="danger">Archive workspace</button>
+        </popover-panel>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Aligned End</h2>
+
+      <div class="surface">
+        <div class="row" style="justify-content: flex-end;">
+          <button popovertarget="more-menu" aria-haspopup="menu" aria-expanded="false">More</button>
+          <popover-panel id="more-menu" popover="auto" role="menu" class="align-end" aria-label="More actions">
+            <panel-header aria-hidden="true">
+              <small>Document</small>
+            </panel-header>
+            <a href="#" role="menuitem">Rename <kbd>R</kbd></a>
+            <a href="#" role="menuitem">Duplicate <kbd>D</kbd></a>
+            <a href="#" role="menuitem">Move to folder</a>
+          </popover-panel>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./popover.js"></script>
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

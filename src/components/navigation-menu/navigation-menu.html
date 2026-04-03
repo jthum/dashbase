@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Navigation Menu Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../panel/panel.css">
+  <link rel="stylesheet" href="../popover/popover.css">
+  <link rel="stylesheet" href="./navigation-menu.css">
+  <link rel="stylesheet" href="../button/button.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 68rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .surface {
+      display: grid;
+      gap: var(--space-xl);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 85%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 55%, transparent)
+      );
+    }
+
+    .surface > * {
+      min-inline-size: 0;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: var(--space-md);
+      max-inline-size: 60ch;
+    }
+
+    .hero-copy > * {
+      margin: 0;
+    }
+
+    .navigation-grid {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    @media (min-width: 52rem) {
+      .navigation-grid {
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      }
+    }
+
+    .feature-link {
+      display: grid;
+      gap: var(--space-sm);
+      min-inline-size: 0;
+      padding: var(--space-lg);
+      color: inherit;
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 90%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 65%, transparent)
+      );
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      text-decoration: none;
+      transition:
+        border-color var(--duration-fast) var(--easing-default),
+        background-color var(--duration-fast) var(--easing-default);
+    }
+
+    .feature-link:hover,
+    .feature-link:focus-visible {
+      border-color: var(--border-control);
+      outline: none;
+    }
+
+    .feature-link > * {
+      margin: 0;
+    }
+
+    .feature-link small {
+      color: var(--text-muted);
+      font-size: var(--text-xs);
+      letter-spacing: var(--tracking-widest);
+      text-transform: uppercase;
+    }
+
+    .link-list {
+      display: grid;
+      gap: var(--space-sm);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .link-list a {
+      display: grid;
+      gap: var(--space-2xs);
+      padding: var(--space-sm) var(--space-md);
+      color: inherit;
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      transition: background-color var(--duration-fast) var(--easing-default);
+    }
+
+    .link-list a:hover,
+    .link-list a:focus-visible {
+      background-color: var(--bg-subtle);
+      outline: none;
+    }
+
+    .link-list span {
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .resource-grid {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    @media (min-width: 46rem) {
+      .resource-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .resource-grid a {
+      display: grid;
+      gap: var(--space-xs);
+      padding: var(--space-md);
+      color: inherit;
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      background: var(--bg-default);
+      transition:
+        border-color var(--duration-fast) var(--easing-default),
+        background-color var(--duration-fast) var(--easing-default);
+    }
+
+    .resource-grid a:hover,
+    .resource-grid a:focus-visible {
+      background-color: var(--bg-subtle);
+      border-color: var(--border-control);
+      outline: none;
+    }
+
+    .resource-grid a > * {
+      margin: 0;
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Navigation Menu Component</h1>
+    <p>Dashbase navigation menus style semantic <code>&lt;nav&gt;</code> directly when it contains anchored <code>&lt;popover-panel popover&gt;</code> children. The behavior shim only coordinates top-level roving focus and panel switching.</p>
+
+    <hr>
+
+    <section>
+      <h2>Product Navigation</h2>
+
+      <div class="surface">
+        <nav aria-label="Product navigation">
+          <a href="#">Overview</a>
+
+          <button type="button" popovertarget="products-panel" aria-expanded="false">
+            Products
+          </button>
+          <popover-panel id="products-panel" popover="auto" class="wide">
+            <panel-header>
+              <h3>Explore the platform</h3>
+              <p>Browse the surfaces most teams start with when they adopt Dashbase in production.</p>
+            </panel-header>
+
+            <panel-content class="navigation-grid">
+              <a href="#" class="feature-link">
+                <small>Featured</small>
+                <strong>Workspace shell</strong>
+                <p>Build cohesive dashboards with semantic layout, menus, drawers, and dialogs.</p>
+              </a>
+
+              <ul class="link-list">
+                <li>
+                  <a href="#">
+                    <strong>Analytics</strong>
+                    <span>Reporting surfaces, filters, and data-heavy patterns.</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <strong>Collaboration</strong>
+                    <span>Comments, activity views, and lightweight review flows.</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <strong>Automation</strong>
+                    <span>Rules, approval states, and action-heavy workspace tools.</span>
+                  </a>
+                </li>
+              </ul>
+            </panel-content>
+          </popover-panel>
+
+          <button type="button" popovertarget="solutions-panel" aria-expanded="false">
+            Solutions
+          </button>
+          <popover-panel id="solutions-panel" popover="auto">
+            <panel-header>
+              <h3>Common implementation paths</h3>
+              <p>Use one anchored panel to point people toward deeper documentation and templates.</p>
+            </panel-header>
+
+            <panel-content class="resource-grid">
+              <a href="#">
+                <strong>Admin Console</strong>
+                <p>Bring together access controls, settings, and audit surfaces.</p>
+              </a>
+              <a href="#">
+                <strong>Internal Tools</strong>
+                <p>Ship fast UIs that stay semantic and maintainable.</p>
+              </a>
+              <a href="#">
+                <strong>Knowledge Hubs</strong>
+                <p>Combine navigation, cards, search, and disclosure patterns.</p>
+              </a>
+              <a href="#">
+                <strong>Data Workflows</strong>
+                <p>Present tables, filters, and stateful forms without class soup.</p>
+              </a>
+            </panel-content>
+          </popover-panel>
+
+          <a href="#">Pricing</a>
+
+          <button type="button" popovertarget="resources-panel" aria-expanded="false">
+            Resources
+          </button>
+          <popover-panel id="resources-panel" popover="auto" class="align-end">
+            <panel-header>
+              <h3>Learn the system</h3>
+              <p>Documentation, implementation guidance, and references for the platform-native approach.</p>
+            </panel-header>
+
+            <panel-content class="resource-grid">
+              <a href="#">
+                <strong>Component Guide</strong>
+                <p>Principles, layering, variants, and authoring rules.</p>
+              </a>
+              <a href="#">
+                <strong>Overlay Architecture</strong>
+                <p>Dialogs, popovers, menus, and context menus on shared primitives.</p>
+              </a>
+              <a href="#">
+                <strong>Examples</strong>
+                <p>Reference markup for forms, navigation, overlays, and data displays.</p>
+              </a>
+              <a href="#">
+                <strong>Changelog</strong>
+                <p>Track pre-1.0 changes while the system is still free to evolve quickly.</p>
+              </a>
+            </panel-content>
+          </popover-panel>
+        </nav>
+
+        <div class="hero-copy">
+          <h3>Use Left and Right to move across the root navigation.</h3>
+          <p>When a panel is already open, moving across the root items will switch panels without leaving the keyboard. Unlike menubar menus, the panels can contain richer content because they are not constrained to strict <code>role="menu"</code> semantics.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../popover/popover.js"></script>
+  <script src="./navigation-menu.js"></script>
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

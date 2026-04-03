@@ -18,14 +18,22 @@ Requirements:
 - Use design tokens and existing component variables, never hardcoded colors or spacing
 - Keep variants as variable reassignment only unless escaping the pattern is truly necessary
 - Keep JavaScript tiny and behavior-focused; never recreate platform behavior without a strong reason
+- Make the component contract explicit enough that a future generator could build framework adapters from it
 
 Output expectations:
 
-1. Component CSS in one file under `src/components/`
-2. Optional behavior shim under `src/behaviors/` only if the platform has a real behavior gap
-3. Example page under `src/examples/`
+1. Component CSS in the component's own folder under `src/components/{component-name}/`
+2. Optional behavior shim in that same component folder only if the platform has a real behavior gap
+3. Example page in that same component folder if it is component-owned, or in `src/examples/` if it is a cross-component demo
 4. README snippet only if the component is part of the public front-door story
 5. Short explanation of semantics, state model, and why the chosen primitive is correct
+6. Identify the adapter-facing contract:
+   - root element
+   - anatomy elements
+   - variant/modifier surface
+   - ARIA/state expectations
+   - emitted events
+   - whether future framework adapters would be thin wrappers or controller-backed
 
 Overlay-specific rules:
 

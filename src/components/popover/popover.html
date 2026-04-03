@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Popover Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../panel/panel.css">
+  <link rel="stylesheet" href="./popover.css">
+  <link rel="stylesheet" href="../button/button.css">
+  <link rel="stylesheet" href="../input/input.css">
+  <link rel="stylesheet" href="../form-field/form-field.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 56rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Popover Component</h1>
+    <p>Dashbase uses <code>&lt;popover-panel popover&gt;</code> for anchored, non-dialog utility surfaces. These panels share anatomy with dialogs while the browser handles the overlay mechanics.</p>
+
+    <div class="actions">
+      <button popovertarget="filters-panel" aria-expanded="false">Open filters</button>
+      <button popovertarget="account-panel" popovertargetaction="toggle" aria-expanded="false" class="ghost">Account summary</button>
+    </div>
+
+    <popover-panel id="filters-panel" popover="auto" class="wide">
+      <panel-header>
+        <h2>Quick filters</h2>
+        <p>Temporary controls that should not block the rest of the page.</p>
+      </panel-header>
+
+      <panel-content>
+        <form-field>
+          <label for="owner-filter">Owner</label>
+          <input id="owner-filter" type="text" placeholder="Search by owner" />
+        </form-field>
+
+        <form-field>
+          <label for="status-filter">Status</label>
+          <input id="status-filter" type="text" placeholder="Active, paused, archived" />
+        </form-field>
+      </panel-content>
+
+      <panel-footer>
+        <button popovertarget="filters-panel" popovertargetaction="hide" class="ghost">Close</button>
+        <button class="primary">Apply</button>
+      </panel-footer>
+    </popover-panel>
+
+    <popover-panel id="account-panel" popover="auto" class="align-end">
+      <panel-header>
+        <h2>Account</h2>
+        <p>Signed in as jayadeep@example.com</p>
+      </panel-header>
+
+      <panel-content>
+        <p>Current workspace: Dashbase</p>
+        <p>Two pending invites and one billing reminder need attention.</p>
+      </panel-content>
+
+      <panel-footer>
+        <button popovertarget="account-panel" popovertargetaction="hide" class="ghost">Dismiss</button>
+        <button class="danger">Log out</button>
+      </panel-footer>
+    </popover-panel>
+  </main>
+
+  <script src="./popover.js"></script>
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

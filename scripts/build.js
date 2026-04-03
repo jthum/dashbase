@@ -10,14 +10,13 @@
  */
 
 import { readdir, mkdir, copyFile, rm } from "node:fs/promises";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import { gzipSync } from "node:zlib";
 import { validateContracts } from "./validate-examples.js";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const BASELINE_DIR = join(ROOT, "src/baseline");
 const COMPONENTS_DIR = join(ROOT, "src/components");
-const BEHAVIORS_DIR = join(ROOT, "src/behaviors");
 const DIST = join(ROOT, "dist");
 const DIST_COMPONENTS = join(DIST, "components");
 const DIST_BEHAVIORS = join(DIST, "behaviors");
@@ -36,6 +35,26 @@ function getSizeMetrics(content) {
 
 function formatSize(bytes) {
   return `${(bytes / 1024).toFixed(2)} KB`;
+}
+
+async function collectFiles(dir, extension) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const fullPath = join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...await collectFiles(fullPath, extension));
+      continue;
+    }
+
+    if (entry.isFile() && fullPath.endsWith(extension)) {
+      files.push(fullPath);
+    }
+  }
+
+  return files.sort();
 }
 
 /**
@@ -85,11 +104,10 @@ async function build() {
   let componentSizes = [];
 
   try {
-    const componentFiles = await readdir(COMPONENTS_DIR);
-    const cssFiles = componentFiles.filter((f) => f.endsWith(".css")).sort();
+    const cssFiles = await collectFiles(COMPONENTS_DIR, ".css");
 
-    for (const file of cssFiles) {
-      const src = join(COMPONENTS_DIR, file);
+    for (const src of cssFiles) {
+      const file = basename(src);
       const dest = join(DIST_COMPONENTS, file);
       await copyFile(src, dest);
       console.log(`  ✓ dist/components/${file}`);
@@ -104,11 +122,10 @@ async function build() {
 
   // 2b. Copy optional behavior shims
   try {
-    const behaviorFiles = await readdir(BEHAVIORS_DIR);
-    const jsFiles = behaviorFiles.filter((f) => f.endsWith(".js")).sort();
+    const jsFiles = await collectFiles(COMPONENTS_DIR, ".js");
 
-    for (const file of jsFiles) {
-      const src = join(BEHAVIORS_DIR, file);
+    for (const src of jsFiles) {
+      const file = basename(src);
       const dest = join(DIST_BEHAVIORS, file);
       await copyFile(src, dest);
       console.log(`  ✓ dist/behaviors/${file}`);

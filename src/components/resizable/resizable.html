@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Resizable Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="./resizable.css">
+  <link rel="stylesheet" href="../button/button.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 72rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .pane-stack {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .pane-stack > * {
+      margin: 0;
+    }
+
+    .muted {
+      color: var(--text-muted);
+    }
+
+    .nav-list {
+      display: grid;
+      gap: var(--space-xs);
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .nav-list a {
+      display: block;
+      padding: var(--space-sm) var(--space-md);
+      color: inherit;
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      transition: background-color var(--duration-fast) var(--easing-default);
+    }
+
+    .nav-list a:hover,
+    .nav-list a:focus-visible {
+      background-color: var(--bg-subtle);
+      outline: none;
+    }
+
+    .canvas {
+      min-block-size: 20rem;
+      padding: var(--space-xl);
+      border: var(--border-width) dashed var(--border-default);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at top left, color-mix(in oklch, var(--color-primary-subtle) 55%, transparent), transparent 45%),
+        linear-gradient(180deg, var(--bg-default), color-mix(in oklch, var(--bg-subtle) 58%, transparent));
+    }
+
+    .canvas > * {
+      margin: 0;
+    }
+
+    .token-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+
+    .token-card {
+      display: grid;
+      gap: var(--space-xs);
+      padding: var(--space-md);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--bg-default);
+    }
+
+    .token-card > * {
+      margin: 0;
+    }
+
+    .console-log {
+      display: grid;
+      gap: var(--space-sm);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+    }
+
+    .console-log code {
+      display: block;
+      padding: var(--space-sm) var(--space-md);
+      color: var(--text-default);
+      background: color-mix(in oklch, var(--bg-subtle) 65%, transparent);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-md);
+      white-space: pre-wrap;
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Resizable Component</h1>
+    <p>Dashbase uses <code>&lt;resizable-group&gt;</code>, <code>&lt;resizable-pane&gt;</code>, and <code>&lt;resizable-handle&gt;</code> for split-pane layouts. Handles are draggable and keyboard-accessible, and panes resize by adjusting their shared layout rather than relying on floating overlays.</p>
+
+    <hr>
+
+    <section>
+      <h2>Horizontal Workspace Split</h2>
+
+      <resizable-group class="horizontal">
+        <resizable-pane style="--pane-size: 28%;">
+          <div class="pane-stack">
+            <h3>Project files</h3>
+            <p class="muted">Resizable sidebars work well for navigation trees, inspectors, and supporting context.</p>
+            <ul class="nav-list">
+              <li><a href="#">src/components/popover/popover.css</a></li>
+              <li><a href="#">src/components/navigation-menu/navigation-menu.css</a></li>
+              <li><a href="#">src/components/menubar/menubar.html</a></li>
+              <li><a href="#">docs/dashbase-overlay-architecture.md</a></li>
+              <li><a href="#">README.md</a></li>
+            </ul>
+          </div>
+        </resizable-pane>
+
+        <resizable-handle aria-label="Resize file list and canvas"></resizable-handle>
+
+        <resizable-pane>
+          <div class="pane-stack">
+            <h3>Canvas preview</h3>
+            <p class="muted">Drag the separator or focus it and use Arrow keys, Home, and End.</p>
+            <div class="canvas">
+              <h4>Navigation experiment</h4>
+              <p>Compare overlay behavior, accessibility, and panel anatomy without leaving the workspace.</p>
+            </div>
+          </div>
+        </resizable-pane>
+      </resizable-group>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Vertical Stack</h2>
+
+      <resizable-group class="vertical" style="block-size: 32rem;">
+        <resizable-pane style="--pane-size: 52%;">
+          <div class="pane-stack">
+            <h3>Inspector</h3>
+            <div class="token-grid">
+              <article class="token-card">
+                <strong>Surface</strong>
+                <p class="muted">`--bg-raised` with a bordered container and subtle shadow.</p>
+              </article>
+              <article class="token-card">
+                <strong>Handle</strong>
+                <p class="muted">Focus-visible and active states inherit from the Dashbase focus tokens.</p>
+              </article>
+              <article class="token-card">
+                <strong>Layout</strong>
+                <p class="muted">Each pane keeps its own overflow and can contain rich content.</p>
+              </article>
+              <article class="token-card">
+                <strong>Semantics</strong>
+                <p class="muted">Custom elements are used here because HTML has no native split-pane primitive.</p>
+              </article>
+            </div>
+          </div>
+        </resizable-pane>
+
+        <resizable-handle aria-label="Resize inspector and console"></resizable-handle>
+
+        <resizable-pane>
+          <div class="pane-stack">
+            <h3>Console</h3>
+            <div class="console-log">
+              <code>[build] dashbase.css 20.41 KB gzip</code>
+              <code>[a11y] menuitemradio states verified</code>
+              <code>[specimen] navigation-menu parity updated</code>
+              <code>[resize] use Up/Down to change pane sizes from the keyboard</code>
+            </div>
+          </div>
+        </resizable-pane>
+      </resizable-group>
+    </section>
+  </main>
+
+  <script src="./resizable.js"></script>
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

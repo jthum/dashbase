@@ -42,7 +42,8 @@ Dashbase uses a layered architecture to ensure style consistency and easy overri
 ## 📂 Project Structure
 
 - **`/src/baseline`**: The foundational design system (reset, tokens, primitives, base).
-- **`/src/components`**: Semantic component styles.
+- **`/src/components`**: One folder per component, containing its CSS plus any related behavior shims, examples, contracts, or future overrides.
+- **`/src/examples`**: Cross-component demos and shared example helpers.
 - **`/themes`**: Token overrides for alternate visual systems.
 - **`/scripts`**: Build tooling.
 - **`/dist`**: Generated output after running the build.

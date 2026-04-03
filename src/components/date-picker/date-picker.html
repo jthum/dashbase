@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Date Picker Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../input/input.css">
+  <link rel="stylesheet" href="../form-field/form-field.css">
+  <link rel="stylesheet" href="../button/button.css">
+  <link rel="stylesheet" href="../panel/panel.css">
+  <link rel="stylesheet" href="../popover/popover.css">
+  <link rel="stylesheet" href="../calendar/calendar.css">
+  <link rel="stylesheet" href="./date-picker.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 64rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .surface {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 88%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 56%, transparent)
+      );
+    }
+
+    .surface > * {
+      margin: 0;
+    }
+
+    .grid {
+      display: grid;
+      gap: var(--space-xl);
+    }
+
+    @media (min-width: 48rem) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .selection {
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+      min-block-size: 1.5em;
+    }
+
+    hr {
+      border: none;
+      border-top: var(--border-width) solid var(--border-default);
+      margin-block: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Date Picker Component</h1>
+    <p>Dashbase composes <code>&lt;date-picker&gt;</code> from a semantic text input, a small trigger button, and an anchored <code>&lt;popover-panel&gt;</code> containing <code>&lt;calendar-view&gt;</code>. The picker stays light by reusing the calendar’s month/year controls, range selection, and optional time inputs.</p>
+
+    <hr>
+
+    <section class="surface">
+      <h2>Single Date + Range Pickers</h2>
+      <p>Single-date pickers close as soon as a date is chosen. Range and time pickers stay open so you can complete the full selection before pressing Done.</p>
+
+      <div class="grid">
+        <form-field>
+          <label for="launch-date">Launch date</label>
+          <date-picker id="launch-picker">
+            <input id="launch-date" type="text" placeholder="Select launch date" readonly />
+            <input type="hidden" name="launch_date" data-date-picker-hidden="value" />
+            <button type="button" aria-label="Open launch date picker">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 1.75V3.25M12 1.75V3.25M2 5.25H14M3.25 2.75H12.75C13.3023 2.75 13.75 3.19772 13.75 3.75V13C13.75 13.5523 13.3023 14 12.75 14H3.25C2.69772 14 2.25 13.5523 2.25 13V3.75C2.25 3.19772 2.69772 2.75 3.25 2.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <popover-panel id="launch-panel" popover="auto" aria-label="Launch date picker">
+              <calendar-view
+                aria-label="Launch date"
+                data-month="2026-04"
+                data-selected="2026-04-18"
+                data-time
+                data-time-value="09:30"
+              ></calendar-view>
+              <panel-footer>
+                <button type="button" class="ghost" data-date-picker-clear>Clear</button>
+                <button type="button" class="primary" data-date-picker-close>Done</button>
+              </panel-footer>
+            </popover-panel>
+          </date-picker>
+          <small data-hint>Uses the richer calendar with an optional time field.</small>
+          <p id="launch-selection" class="selection" aria-live="polite">Launch date: </p>
+        </form-field>
+
+        <form-field>
+          <label for="booking-window">Booking window</label>
+          <date-picker id="booking-picker">
+            <input id="booking-window" type="text" placeholder="Select booking window" readonly />
+            <input type="hidden" name="booking_start" data-date-picker-hidden="start" />
+            <input type="hidden" name="booking_end" data-date-picker-hidden="end" />
+            <button type="button" aria-label="Open booking window picker">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 1.75V3.25M12 1.75V3.25M2 5.25H14M3.25 2.75H12.75C13.3023 2.75 13.75 3.19772 13.75 3.75V13C13.75 13.5523 13.3023 14 12.75 14H3.25C2.69772 14 2.25 13.5523 2.25 13V3.75C2.25 3.19772 2.69772 2.75 3.25 2.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <popover-panel id="booking-panel" popover="auto" aria-label="Booking window picker">
+              <calendar-view
+                aria-label="Booking window"
+                data-mode="range"
+                data-month="2026-04"
+                data-range-start="2026-04-09"
+                data-range-end="2026-04-13"
+                data-time
+                data-time-start="10:00"
+                data-time-end="15:30"
+                data-min="2026-04-04"
+                data-max="2026-04-27"
+                data-disabled="2026-04-10,2026-04-11,2026-04-17,2026-04-18,2026-04-24"
+              ></calendar-view>
+              <panel-footer>
+                <button type="button" class="ghost" data-date-picker-clear>Clear</button>
+                <button type="button" class="primary" data-date-picker-close>Done</button>
+              </panel-footer>
+            </popover-panel>
+          </date-picker>
+          <small data-hint>Range mode keeps the popover open until the end date and times are ready.</small>
+          <p id="booking-selection" class="selection" aria-live="polite">Booking window: </p>
+        </form-field>
+      </div>
+    </section>
+  </main>
+
+  <script src="../calendar/calendar.js"></script>
+  <script src="./date-picker.js"></script>
+  <script src="../../examples/theme-controls.js"></script>
+  <script>
+    const launchPicker = document.getElementById("launch-picker");
+    const bookingPicker = document.getElementById("booking-picker");
+    const launchSelection = document.getElementById("launch-selection");
+    const bookingSelection = document.getElementById("booking-selection");
+
+    function updateLaunchSelection() {
+      const input = launchPicker.querySelector('input[type="text"]');
+      if (!(launchSelection instanceof HTMLElement) || !(input instanceof HTMLInputElement)) {
+        return;
+      }
+
+      launchSelection.textContent = `Launch date: ${input.value || "none selected"}`;
+    }
+
+    function updateBookingSelection() {
+      const input = bookingPicker.querySelector('input[type="text"]');
+      if (!(bookingSelection instanceof HTMLElement) || !(input instanceof HTMLInputElement)) {
+        return;
+      }
+
+      bookingSelection.textContent = `Booking window: ${input.value || "none selected"}`;
+    }
+
+    launchPicker?.addEventListener("change", updateLaunchSelection);
+    bookingPicker?.addEventListener("change", updateBookingSelection);
+    updateLaunchSelection();
+    updateBookingSelection();
+  </script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase — Hover Card Component</title>
+  <link rel="stylesheet" href="../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../panel/panel.css">
+  <link rel="stylesheet" href="../popover/popover.css">
+  <link rel="stylesheet" href="./hover-card.css">
+  <link rel="stylesheet" href="../avatar/avatar.css">
+  <link rel="stylesheet" href="../badge/badge.css">
+  <link rel="stylesheet" href="../button/button.css">
+  <link rel="stylesheet" href="../../examples/theme-controls.css">
+
+  <style>
+    main {
+      max-width: 62rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    main > section {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .surface {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 80%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 60%, transparent)
+      );
+    }
+
+    .inline-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    .people {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .person {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      padding: var(--space-md);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--bg-default);
+    }
+
+    .person-link {
+      color: inherit;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .person-link:hover,
+    .person-link:focus-visible {
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+    }
+
+    .person-summary {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .person-meta {
+      display: grid;
+      gap: var(--space-2xs);
+    }
+
+    .person-meta > * {
+      margin: 0;
+    }
+
+    .repo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      min-block-size: 2.25rem;
+      padding-inline: var(--space-sm);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-full);
+      background: var(--bg-default);
+      color: inherit;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .repo-link:hover,
+    .repo-link:focus-visible {
+      background: var(--bg-subtle);
+      text-decoration: none;
+    }
+
+    .hover-card-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .hover-card-title {
+      display: grid;
+      gap: var(--space-2xs);
+    }
+
+    .hover-card-title > * {
+      margin: 0;
+    }
+
+    .hover-card-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Hover Card Component</h1>
+    <p>Dashbase hover cards reuse <code>&lt;popover-panel&gt;</code> for richer previews that open on hover or keyboard focus. Use <code>data-hovercard</code> on the invoker, keep the card content informative rather than critical, and let the behavior shim handle delayed open and close.</p>
+
+    <section>
+      <h2>Profile Preview</h2>
+
+      <div class="surface people">
+        <div class="person">
+          <div class="person-summary">
+            <ui-avatar aria-label="Taylor Nguyen">
+              <img alt="Taylor Nguyen" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%233b82f6'/%3E%3Ccircle cx='60' cy='44' r='22' fill='%23dbeafe'/%3E%3Cpath d='M26 102c7-20 24-30 34-30s27 10 34 30' fill='%23dbeafe'/%3E%3C/svg%3E">
+            </ui-avatar>
+
+            <div class="person-meta">
+              <a href="#" class="person-link" data-hovercard="taylor-card" aria-expanded="false">Taylor Nguyen</a>
+              <p>Product designer</p>
+            </div>
+          </div>
+
+          <ui-badge class="neutral">Core team</ui-badge>
+        </div>
+
+        <div class="person">
+          <div class="person-summary">
+            <ui-avatar aria-label="Jordan Brooks">JB</ui-avatar>
+
+            <div class="person-meta">
+              <a href="#" class="person-link" data-hovercard="jordan-card" aria-expanded="false">Jordan Brooks</a>
+              <p>Design systems</p>
+            </div>
+          </div>
+
+          <ui-badge class="success">Available</ui-badge>
+        </div>
+      </div>
+
+      <popover-panel id="taylor-card" popover="manual" class="hover-card">
+        <panel-header>
+          <div class="hover-card-header">
+            <ui-avatar aria-hidden="true">
+              <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%233b82f6'/%3E%3Ccircle cx='60' cy='44' r='22' fill='%23dbeafe'/%3E%3Cpath d='M26 102c7-20 24-30 34-30s27 10 34 30' fill='%23dbeafe'/%3E%3C/svg%3E">
+            </ui-avatar>
+
+            <div class="hover-card-title">
+              <h2>Taylor Nguyen</h2>
+              <p>Product designer in Bengaluru</p>
+            </div>
+          </div>
+        </panel-header>
+
+        <panel-content>
+          <p>Leading the system refresh for Dashbase, with a focus on semantic markup and calmer admin workflows.</p>
+
+          <div class="hover-card-metrics">
+            <ui-badge class="primary">12 active specs</ui-badge>
+            <ui-badge class="neutral">Joined 2023</ui-badge>
+          </div>
+        </panel-content>
+
+        <panel-footer>
+          <button class="ghost">View profile</button>
+          <button class="primary">Message</button>
+        </panel-footer>
+      </popover-panel>
+
+      <popover-panel id="jordan-card" popover="manual" class="hover-card">
+        <panel-header>
+          <div class="hover-card-header">
+            <ui-avatar aria-hidden="true">JB</ui-avatar>
+
+            <div class="hover-card-title">
+              <h2>Jordan Brooks</h2>
+              <p>Design systems engineer</p>
+            </div>
+          </div>
+        </panel-header>
+
+        <panel-content>
+          <p>Owns component polish, review tooling, and accessibility checks across Dashbase and Specimen.</p>
+
+          <div class="hover-card-metrics">
+            <ui-badge class="success">4 reviews pending</ui-badge>
+            <ui-badge class="neutral">UTC-5</ui-badge>
+          </div>
+        </panel-content>
+
+        <panel-footer>
+          <button class="ghost">Open profile</button>
+        </panel-footer>
+      </popover-panel>
+    </section>
+
+    <section>
+      <h2>Repository Preview</h2>
+
+      <div class="surface inline-list">
+        <a href="#" class="repo-link" data-hovercard="repo-card" aria-expanded="false">
+          dashbase/main
+        </a>
+      </div>
+
+      <popover-panel id="repo-card" popover="manual" class="hover-card align-end">
+        <panel-header>
+          <div class="hover-card-title">
+            <h2>dashbase</h2>
+            <p>Semantic-first CSS component library</p>
+          </div>
+        </panel-header>
+
+        <panel-content>
+          <p>Modern CSS, tiny behavior shims, and readable HTML for application interfaces.</p>
+
+          <div class="hover-card-metrics">
+            <ui-badge class="primary">34 components</ui-badge>
+            <ui-badge class="success">Build passing</ui-badge>
+            <ui-badge class="neutral">MIT</ui-badge>
+          </div>
+        </panel-content>
+
+        <panel-footer>
+          <button class="ghost">Open repo</button>
+          <button class="primary">View docs</button>
+        </panel-footer>
+      </popover-panel>
+    </section>
+  </main>
+
+  <script src="./hover-card.js"></script>
+  <script src="../../examples/theme-controls.js"></script>
+</body>
+</html>

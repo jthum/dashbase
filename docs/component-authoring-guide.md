@@ -140,9 +140,14 @@ If it passes the rubric, follow this strict naming law:
 - **Structural Elements (Descriptive):** For containers that describe relationships between children, use plain descriptive names: `<form-field>`, `<input-group>`, `<tab-list>`.
 - **Presentational Elements (`ui-*`):** For visual patterns that have no semantic document meaning (painted rectangles), explicitly mark them as UI polyfills: `<ui-badge>` (numerical counts), `<ui-status>` (live state labels), `<ui-tag>` (taxonomy categories).
 
-### 10. One element, one file
+### 10. One component, one home
 
-Each component gets its own CSS file in `src/components/`.
+Each component gets its own folder in `src/components/{component-name}/`.
+
+Put the component's canonical CSS there, and colocate any future behavior shim,
+contract, example page, override, or support files that belong to that
+component.
+
 The file targets the native element directly or a semantic class.
 All rules must be inside `@layer components { }`.
 
@@ -242,4 +247,4 @@ See `docs/dashbase-overlay-architecture.md` for the full model.
 
 ## Reference Implementation
 
-See `src/components/button.css` — it follows all of the above rules.
+See [button.css](/home/jthum/Documents/Code/dashbase/src/components/button/button.css) — it follows all of the above rules.

@@ -499,7 +499,7 @@ tailwind.config.js    ← configured to scan src/ for @apply
 ```bash
 # Tailwind CLI compiles @apply → vanilla CSS
 npx tailwindcss -i src/base.css -o dist/base.css
-npx tailwindcss -i src/components/button.css -o dist/components/button.css
+npx tailwindcss -i src/components/button/button.css -o dist/components/button.css
 # ... per component, or via a build script
 ```
 
@@ -618,7 +618,7 @@ Tasks:
 Order: `button` → `input` → `textarea` → `checkbox` → `radio` → `select` → `form-field` → `input-group` → `fieldset`
 
 For each component:
-- [ ] Author `src/components/{name}.css` using `@apply`
+- [ ] Author `src/components/{name}/{name}.css` using `@apply`
 - [ ] Compile to `dist/components/{name}.css`
 - [ ] Write a minimal HTML test page using only semantic elements
 - [ ] Verify: renders reasonably in Chrome, Firefox, Safari (not pixel-perfect — functionally consistent)
