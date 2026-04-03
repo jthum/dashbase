@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase Pattern — Form Field / Select With Helper Error</title>
+  <link rel="stylesheet" href="../../../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../../../../components/label/label.css">
+  <link rel="stylesheet" href="../../../../components/select/select.css">
+  <link rel="stylesheet" href="../../../../components/form-field/form-field.css">
+
+  <style>
+    main {
+      max-width: 32rem;
+      margin-inline: auto;
+      padding: var(--space-2xl);
+    }
+
+    .surface {
+      padding: var(--space-xl);
+      border: var(--border-width) solid var(--border-default);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--bg-raised) 92%, transparent),
+        color-mix(in oklch, var(--bg-subtle) 68%, transparent)
+      );
+    }
+
+    .surface > * {
+      margin: 0 0 var(--space-md);
+    }
+
+    .surface > :last-child {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="surface" aria-labelledby="birth-state-pattern-title">
+      <h1 id="birth-state-pattern-title">Form Field / Select With Helper Error</h1>
+      <p>Use this when the field needs clear context, required state, helper guidance, and inline validation feedback in a single consistent block.</p>
+
+      <form-field>
+        <label class="required" for="birth-state">State of birth</label>
+        <select id="birth-state" required aria-describedby="birth-state-help birth-state-error">
+          <option value="">Choose a state</option>
+          <option>Andhra Pradesh</option>
+          <option>Karnataka</option>
+          <option>Maharashtra</option>
+          <option>Tamil Nadu</option>
+          <option>Telangana</option>
+        </select>
+        <small id="birth-state-help">Select the state in which you were born, not the state in which you currently reside.</small>
+        <small id="birth-state-error" class="error">You must select a state before continuing.</small>
+      </form-field>
+    </section>
+  </main>
+</body>
+</html>

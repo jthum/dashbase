@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "name": "Login Box",
+  "title": "Login Box / Minimal",
+  "slug": "auth/login-box/minimal",
+  "category": "auth",
+  "family": "login-box",
+  "variant": "minimal",
+  "scope": "section",
+  "summary": "A compact authentication panel with semantic fields, remembered-session toggle, and primary/secondary actions.",
+  "tags": [
+    "auth",
+    "login",
+    "form",
+    "card",
+    "credentials"
+  ],
+  "files": {
+    "html": "./pattern.html"
+  },
+  "dependencies": {
+    "components": [
+      "button",
+      "card",
+      "checkbox",
+      "form-field",
+      "input",
+      "label"
+    ],
+    "patterns": []
+  }
+}

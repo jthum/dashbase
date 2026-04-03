@@ -1,0 +1,104 @@
+{
+  "generatedAt": "2026-04-03T15:53:27.269Z",
+  "count": 3,
+  "categories": {
+    "app": [
+      "app/dashboard-shell/default"
+    ],
+    "auth": [
+      "auth/login-box/minimal"
+    ],
+    "forms": [
+      "forms/form-field/select-with-helper-error"
+    ]
+  },
+  "patterns": [
+    {
+      "name": "Dashboard Shell",
+      "title": "Dashboard Shell / Default",
+      "slug": "app/dashboard-shell/default",
+      "category": "app",
+      "family": "dashboard-shell",
+      "variant": "default",
+      "scope": "page",
+      "summary": "A page-level shell with a compact sidebar, page header, primary action row, and a grid of content cards.",
+      "tags": [
+        "dashboard",
+        "shell",
+        "app",
+        "layout",
+        "workspace"
+      ],
+      "files": {
+        "html": "src/patterns/app/dashboard-shell/default/pattern.html"
+      },
+      "dependencies": {
+        "components": [
+          "badge",
+          "button",
+          "card"
+        ],
+        "patterns": []
+      }
+    },
+    {
+      "name": "Login Box",
+      "title": "Login Box / Minimal",
+      "slug": "auth/login-box/minimal",
+      "category": "auth",
+      "family": "login-box",
+      "variant": "minimal",
+      "scope": "section",
+      "summary": "A compact authentication panel with semantic fields, remembered-session toggle, and primary/secondary actions.",
+      "tags": [
+        "auth",
+        "login",
+        "form",
+        "card",
+        "credentials"
+      ],
+      "files": {
+        "html": "src/patterns/auth/login-box/minimal/pattern.html"
+      },
+      "dependencies": {
+        "components": [
+          "button",
+          "card",
+          "checkbox",
+          "form-field",
+          "input",
+          "label"
+        ],
+        "patterns": []
+      }
+    },
+    {
+      "name": "Form Field",
+      "title": "Form Field / Select With Helper Error",
+      "slug": "forms/form-field/select-with-helper-error",
+      "category": "forms",
+      "family": "form-field",
+      "variant": "select-with-helper-error",
+      "scope": "field",
+      "summary": "Composes a required label, semantic select, helper copy, and inline error messaging into a reusable field-level pattern.",
+      "tags": [
+        "form",
+        "field",
+        "select",
+        "validation",
+        "helper-text"
+      ],
+      "files": {
+        "html": "src/patterns/forms/form-field/select-with-helper-error/pattern.html"
+      },
+      "dependencies": {
+        "components": [
+          "form-field",
+          "label",
+          "select"
+        ],
+        "patterns": []
+      }
+    }
+  ]
+}

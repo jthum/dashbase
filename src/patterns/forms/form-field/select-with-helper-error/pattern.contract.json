@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "name": "Form Field",
+  "title": "Form Field / Select With Helper Error",
+  "slug": "forms/form-field/select-with-helper-error",
+  "category": "forms",
+  "family": "form-field",
+  "variant": "select-with-helper-error",
+  "scope": "field",
+  "summary": "Composes a required label, semantic select, helper copy, and inline error messaging into a reusable field-level pattern.",
+  "tags": [
+    "form",
+    "field",
+    "select",
+    "validation",
+    "helper-text"
+  ],
+  "files": {
+    "html": "./pattern.html"
+  },
+  "dependencies": {
+    "components": [
+      "form-field",
+      "label",
+      "select"
+    ],
+    "patterns": []
+  }
+}

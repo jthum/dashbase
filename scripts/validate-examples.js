@@ -2,11 +2,13 @@ import { readdir, readFile } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateComponentContracts } from "./component-contracts.js";
+import { validatePatternContracts } from "./pattern-contracts.js";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const COMPONENTS_DIR = join(ROOT, "src/components");
+const PATTERNS_DIR = join(ROOT, "src/patterns");
 const EXAMPLES_DIR = join(ROOT, "src/examples");
-const VALIDATION_DIRS = [COMPONENTS_DIR, EXAMPLES_DIR];
+const VALIDATION_DIRS = [COMPONENTS_DIR, PATTERNS_DIR, EXAMPLES_DIR];
 const VALIDATED_MARKDOWN_FILES = [
   join(ROOT, "README.md"),
   join(ROOT, "docs/dashbase-implementation-guidance.md"),
@@ -325,6 +327,7 @@ function appendValidationErrors({
 
 export async function validateContracts({ log = true } = {}) {
   const contractEntries = await validateComponentContracts({ log: false });
+  const patternEntries = await validatePatternContracts({ log: false });
   const componentCatalog = await buildComponentCatalog();
   const allComponents = [...componentCatalog.values()];
   const exampleFiles = (
@@ -387,7 +390,7 @@ export async function validateContracts({ log = true } = {}) {
 
   if (log) {
     console.log(
-      `Validated ${contractEntries.length} component contracts, ${exampleFiles.length} example files, and ${documentationSnippetCount} documentation snippets against component CSS.`,
+      `Validated ${contractEntries.length} component contracts, ${patternEntries.length} pattern contracts, ${exampleFiles.length} HTML files, and ${documentationSnippetCount} documentation snippets against component CSS.`,
     );
   }
 }

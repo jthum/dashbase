@@ -22,6 +22,12 @@ as the canonical implementation surface.
 Framework adapters should be generated from **component contracts**, with the
 existing browser behavior shim as the default implementation path.
 
+The same model can extend upward to **patterns**: higher-level native HTML
+compositions authored under `src/patterns/` with their own contracts and
+dependency metadata. Patterns should remain plain HTML in the shipped output,
+but may use author-time composition references in the future so they can stay
+linked to canonical component structure.
+
 Framework-specific overrides should be optional, not mandatory.
 
 This matters because many Dashbase behaviors are already more expressive than a

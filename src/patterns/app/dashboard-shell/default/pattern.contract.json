@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "name": "Dashboard Shell",
+  "title": "Dashboard Shell / Default",
+  "slug": "app/dashboard-shell/default",
+  "category": "app",
+  "family": "dashboard-shell",
+  "variant": "default",
+  "scope": "page",
+  "summary": "A page-level shell with a compact sidebar, page header, primary action row, and a grid of content cards.",
+  "tags": [
+    "dashboard",
+    "shell",
+    "app",
+    "layout",
+    "workspace"
+  ],
+  "files": {
+    "html": "./pattern.html"
+  },
+  "dependencies": {
+    "components": [
+      "badge",
+      "button",
+      "card"
+    ],
+    "patterns": []
+  }
+}

@@ -2,6 +2,10 @@
 
 Use this prompt as a starting point when drafting or reviewing new Dashbase components.
 
+If you are authoring a higher-level composition such as a `Form Field`,
+`Login Box`, or `Dashboard Shell`, use
+[pattern-authoring-prompt.md](./pattern-authoring-prompt.md) instead.
+
 ---
 
 Design and implement a Dashbase component that follows the project architecture exactly.

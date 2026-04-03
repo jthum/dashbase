@@ -1,7 +1,8 @@
 /**
  * Dashbase Build Script
  *
- * 0. Validates example HTML and current docs snippets against component contracts
+ * 0. Validates example HTML and current docs snippets against component + pattern contracts
+ * 0.5. Generates the pattern manifest
  * 1. Resolves @import in baseline.css (inline the imports)
  * 2. Copies individual component files to dist/components/<component>/
  * 3. Emits readable + minified component assets side by side
@@ -14,6 +15,7 @@ import { readdir, mkdir, copyFile, rm } from "node:fs/promises";
 import { dirname, join, relative } from "node:path";
 import { gzipSync } from "node:zlib";
 import { validateContracts } from "./validate-examples.js";
+import { generatePatternManifest } from "./generate-pattern-manifest.js";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const BASELINE_DIR = join(ROOT, "src/baseline");
@@ -119,6 +121,8 @@ async function build() {
 
   await validateContracts({ log: false });
   console.log("  ✓ examples + docs");
+  await generatePatternManifest({ log: false });
+  console.log("  ✓ generated/patterns/patterns.manifest.json");
 
   // Clean and create dist
   await rm(DIST, { recursive: true, force: true });

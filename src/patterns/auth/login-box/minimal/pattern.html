@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashbase Pattern — Login Box / Minimal</title>
+  <link rel="stylesheet" href="../../../../baseline/baseline.css">
+  <link rel="stylesheet" href="../../../../../themes/default.css" id="theme-stylesheet">
+  <link rel="stylesheet" href="../../../../components/card/card.css">
+  <link rel="stylesheet" href="../../../../components/button/button.css">
+  <link rel="stylesheet" href="../../../../components/input/input.css">
+  <link rel="stylesheet" href="../../../../components/label/label.css">
+  <link rel="stylesheet" href="../../../../components/checkbox/checkbox.css">
+  <link rel="stylesheet" href="../../../../components/form-field/form-field.css">
+
+  <style>
+    main {
+      max-width: 28rem;
+      margin-inline: auto;
+      padding: min(12vh, var(--space-4xl)) var(--space-xl);
+    }
+
+    .meta {
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    .meta > * {
+      margin: 0;
+    }
+
+    .login-form {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .inline-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .login-actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <article class="card" aria-labelledby="login-box-title">
+      <header>
+        <div class="meta">
+          <h1 id="login-box-title">Welcome back</h1>
+          <p>Sign in to continue managing your Dashbase workspace and recent approvals.</p>
+        </div>
+      </header>
+
+      <card-content>
+        <form class="login-form">
+          <form-field>
+            <label class="required" for="login-email">Email</label>
+            <input id="login-email" type="email" placeholder="you@example.com" required autocomplete="email">
+          </form-field>
+
+          <form-field>
+            <label class="required" for="login-password">Password</label>
+            <input id="login-password" type="password" placeholder="Enter your password" required autocomplete="current-password">
+          </form-field>
+
+          <div class="inline-group">
+            <input type="checkbox" id="remember-session">
+            <label for="remember-session">Keep me signed in for 30 days</label>
+          </div>
+        </form>
+      </card-content>
+
+      <footer>
+        <div class="login-actions">
+          <button class="primary" type="submit">Sign in</button>
+          <button class="ghost" type="button">Forgot password?</button>
+        </div>
+      </footer>
+    </article>
+  </main>
+</body>
+</html>

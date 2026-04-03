@@ -43,10 +43,12 @@ Dashbase uses a layered architecture to ensure style consistency and easy overri
 
 - **`/src/baseline`**: The foundational design system (reset, tokens, primitives, base).
 - **`/src/components`**: One folder per component, containing its CSS plus any related behavior shims, examples, contracts, or future overrides.
+- **`/src/patterns`**: Higher-level native HTML compositions built from components and other patterns, with their own contracts and metadata.
 - **`/src/examples`**: Cross-component demos and shared example helpers.
 - **`/themes`**: Token overrides for alternate visual systems.
 - **`/scripts`**: Build tooling.
 - **`/dist`**: Generated output after running the build.
+- **`/generated`**: Generated manifests and target-specific adapter output.
 - **`/docs`**: Comprehensive documentation, implementation guidance, and PRDs.
 
 ---
@@ -66,7 +68,18 @@ This generates:
 - `dist/components/<name>/<name>.js` and `.min.js` for optional progressive-enhancement shims
 - `dist/bundles/dashbase.css` and `dist/bundles/dashbase.min.css` as optional convenience bundles
 
+It also refreshes generated metadata such as the pattern catalog in
+`generated/patterns/patterns.manifest.json`.
+
 The readable files stay inspectable on purpose. Use the plain `.css` / `.js` files when you want view-source friendliness, and switch to the matching `.min.css` / `.min.js` files for production delivery.
+
+### Patterns
+
+Dashbase patterns are higher-level native HTML compositions such as `Form Field`,
+`Login Box`, or `Dashboard Shell`. They live under `src/patterns/<category>/<family>/<variant>/`
+with a `pattern.contract.json` file and can depend on components or other
+patterns. Pattern metadata is indexed into `generated/patterns/patterns.manifest.json`
+for future registries, search, and adapter generation.
 
 To use Dashbase in your project, include the base stylesheet followed by the components you need.
 
