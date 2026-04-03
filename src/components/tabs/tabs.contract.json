@@ -74,6 +74,18 @@
       ]
     }
   ],
+  "props": [
+    {
+      "name": "orientation",
+      "kind": "attribute",
+      "target": "list",
+      "attribute": "aria-orientation",
+      "values": [
+        "horizontal",
+        "vertical"
+      ]
+    }
+  ],
   "states": [
     {
       "name": "selected",

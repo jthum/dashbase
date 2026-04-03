@@ -11,35 +11,19 @@ export const buttonAssets = {
 } as const satisfies DashbaseAssetManifest;
 
 export type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
-  primary?: boolean;
-  danger?: boolean;
-  ghost?: boolean;
-  outline?: boolean;
-  link?: boolean;
-  xs?: boolean;
-  small?: boolean;
-  large?: boolean;
-  xl?: boolean;
-  icon?: boolean;
+  variant?: "primary" | "danger" | "ghost" | "outline" | "link";
+  size?: "xs" | "sm" | "lg" | "xl" | "icon";
 };
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button({ className, primary, danger, ghost, outline, link, xs, small, large, xl, icon, ...props }: ButtonProps, ref) {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button({ className, variant, size, ...props }: ButtonProps, ref) {
   return (
     <button
       ref={ref}
       {...props}
       className={cx(
         className,
-        primary && "primary",
-        danger && "danger",
-        ghost && "ghost",
-        outline && "outline",
-        link && "link",
-        xs && "xs",
-        small && "small",
-        large && "large",
-        xl && "xl",
-        icon && "icon",
+        variant && {"primary":"primary","danger":"danger","ghost":"ghost","outline":"outline","link":"link"}[variant],
+        size && {"xs":"xs","sm":"small","lg":"large","xl":"xl","icon":"icon"}[size],
       )}
     >
       {props.children}

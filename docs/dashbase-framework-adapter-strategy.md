@@ -98,6 +98,7 @@ A component contract should capture:
 - canonical root element
 - anatomy elements and their parent-child rules
 - allowed variants and modifiers
+- adapter-facing props that map to classes or native/ARIA attributes
 - state attributes and ARIA expectations
 - emitted events
 - required CSS and optional JS imports
@@ -142,9 +143,10 @@ type ComponentContract = {
   }>;
   props?: Array<{
     name: string;
-    mapsTo: "attribute" | "class" | "text" | "event";
-    target?: string;
-    type: string;
+    target: string;
+    kind: "class-group" | "attribute";
+    values?: Record<string, string> | string[];
+    attribute?: string;
   }>;
   events?: Array<{
     name: string;
@@ -216,9 +218,7 @@ const tabsContract = {
     },
   ],
   props: [
-    { name: "orientation", mapsTo: "attribute", target: "tab-list", type: "\"horizontal\" | \"vertical\"" },
-    { name: "value", mapsTo: "attribute", target: "tab", type: "string" },
-    { name: "defaultValue", mapsTo: "attribute", target: "tab", type: "string" },
+    { name: "orientation", kind: "attribute", target: "list", attribute: "aria-orientation", values: ["horizontal", "vertical"] },
   ],
   events: [
     { name: "change", source: "tab-list" },

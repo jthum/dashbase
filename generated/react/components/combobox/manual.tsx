@@ -40,9 +40,7 @@ export const ComboboxInput = forwardRef<HTMLInputElement, ComboboxInputProps>(fu
       role="combobox"
       {...props}
       className={className}
-    >
-      {props.children}
-    </input>
+    />
   );
 });
 ComboboxInput.displayName = "ComboboxInput";

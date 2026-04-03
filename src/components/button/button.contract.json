@@ -89,6 +89,32 @@
       "value": "icon"
     }
   ],
+  "props": [
+    {
+      "name": "variant",
+      "kind": "class-group",
+      "target": "root",
+      "values": {
+        "primary": "primary",
+        "danger": "danger",
+        "ghost": "ghost",
+        "outline": "outline",
+        "link": "link"
+      }
+    },
+    {
+      "name": "size",
+      "kind": "class-group",
+      "target": "root",
+      "values": {
+        "xs": "xs",
+        "sm": "small",
+        "lg": "large",
+        "xl": "xl",
+        "icon": "icon"
+      }
+    }
+  ],
   "states": [
     {
       "name": "disabled",

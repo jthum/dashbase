@@ -19,7 +19,6 @@ import { Button, buttonAssets } from "@dashbase/react/button/manual";
 ## Anatomy
 
 - `Button` renders `<button>`
-- `Button` renders `<button>`
 
 ## Assets
 
@@ -38,6 +37,11 @@ import { Button, buttonAssets } from "@dashbase/react/button/manual";
 - `large` adds `.large` on `root`
 - `xl` adds `.xl` on `root`
 - `icon` adds `.icon` on `root`
+
+## Adapter Props
+
+- `variant` accepts `primary`, `danger`, `ghost`, `outline`, `link` and maps them to classes on `root`
+- `size` accepts `xs`, `sm`, `lg`, `xl`, `icon` and maps them to classes on `root`
 
 ## State Surface
 

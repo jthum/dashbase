@@ -9,6 +9,7 @@ const CONTRACT_SCHEMA_VERSION = 1;
 const CONTRACT_CATEGORIES = new Set(["presentational", "interactive"]);
 const BEHAVIOR_MODES = new Set(["none", "shim-backed"]);
 const VARIANT_TYPES = new Set(["class", "attribute"]);
+const PROP_KINDS = new Set(["class-group", "attribute"]);
 const FRAMEWORK_TARGETS = new Set(["react", "svelte", "vue", "solid"]);
 
 function isObject(value) {
@@ -232,6 +233,87 @@ function validateEvents({ events, contractPath, errors, allowedTargets }) {
   }
 }
 
+function validateProps({ props, contractPath, errors, allowedTargets, variants }) {
+  if (props === undefined) {
+    return;
+  }
+
+  if (!Array.isArray(props)) {
+    errors.push(`${contractPath}: props must be an array`);
+    return;
+  }
+
+  const seenPropNames = new Set();
+
+  for (const [index, prop] of props.entries()) {
+    const fieldBase = `props[${index}]`;
+
+    if (!isObject(prop)) {
+      errors.push(`${contractPath}: ${fieldBase} must be an object`);
+      continue;
+    }
+
+    const name = ensureString({ value: prop.name, field: `${fieldBase}.name`, errors });
+    const kind = ensureString({ value: prop.kind, field: `${fieldBase}.kind`, errors });
+    const target = validateNamedTarget({
+      value: prop.target,
+      field: `${fieldBase}.target`,
+      contractPath,
+      errors,
+      allowedTargets,
+    });
+
+    if (name) {
+      if (seenPropNames.has(name)) {
+        errors.push(`${contractPath}: props names must be unique (${name})`);
+      }
+
+      seenPropNames.add(name);
+    }
+
+    if (kind && !PROP_KINDS.has(kind)) {
+      errors.push(`${contractPath}: ${fieldBase}.kind must be one of ${[...PROP_KINDS].join(", ")}`);
+      continue;
+    }
+
+    if (kind === "class-group") {
+      if (!isObject(prop.values)) {
+        errors.push(`${contractPath}: ${fieldBase}.values must be an object mapping prop values to class names`);
+        continue;
+      }
+
+      for (const [propValue, classValue] of Object.entries(prop.values)) {
+        if (propValue.trim() === "" || typeof classValue !== "string" || classValue.trim() === "") {
+          errors.push(`${contractPath}: ${fieldBase}.values must map non-empty strings to non-empty class names`);
+          continue;
+        }
+
+        if (target) {
+          const matchingVariant = Array.isArray(variants)
+            ? variants.find((variant) => (
+              isObject(variant) &&
+              variant.type === "class" &&
+              variant.target === target &&
+              variant.value === classValue
+            ))
+            : null;
+
+          if (!matchingVariant) {
+            errors.push(`${contractPath}: ${fieldBase}.values.${propValue} must reference a declared class variant on ${target}`);
+          }
+        }
+      }
+    }
+
+    if (kind === "attribute") {
+      ensureString({ value: prop.attribute, field: `${fieldBase}.attribute`, errors });
+      if (prop.values !== undefined) {
+        ensureStringArray({ value: prop.values, field: `${fieldBase}.values`, errors, required: false });
+      }
+    }
+  }
+}
+
 async function validateDocs({ docs, contractPath, contractDir, errors, declaredExamplePaths }) {
   if (docs === undefined) {
     return;
@@ -450,6 +532,7 @@ async function validateContractEntry(entry) {
   const anatomyEntries = validateAnatomy({ anatomy: contract.anatomy, contractPath, errors });
   const allowedTargets = new Set(["root", ...anatomyEntries.map((entry) => entry.name)]);
   validateVariants({ variants: contract.variants, contractPath, errors, allowedTargets });
+  validateProps({ props: contract.props, contractPath, errors, allowedTargets, variants: contract.variants });
   validateStates({ states: contract.states, contractPath, errors, allowedTargets });
   validateEvents({ events: contract.events, contractPath, errors, allowedTargets });
   await validateDocs({ docs: contract.docs, contractPath, contractDir, errors, declaredExamplePaths });

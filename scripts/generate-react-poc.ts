@@ -16,6 +16,14 @@ type ContractVariant = {
   values?: string[];
 };
 
+type ContractProp = {
+  name: string;
+  kind: "class-group" | "attribute";
+  target: string;
+  values?: Record<string, string> | string[];
+  attribute?: string;
+};
+
 type ContractAnatomy = {
   name: string;
   selector: string;
@@ -54,6 +62,7 @@ type ComponentContract = {
   };
   anatomy: ContractAnatomy[];
   variants?: ContractVariant[];
+  props?: ContractProp[];
   states?: ContractState[];
   imports: {
     css: string[];
@@ -77,6 +86,7 @@ type GeneratorTarget = {
   exportName: string;
   selector: string;
   variants: ContractVariant[];
+  contractProps: ContractProp[];
   root: boolean;
 };
 
@@ -193,6 +203,38 @@ function getTargetVariants(contract: ComponentContract, targetName: string) {
   return (contract.variants ?? []).filter((variant) => variant.target === targetName);
 }
 
+function getTargetContractProps(contract: ComponentContract, targetName: string) {
+  return (contract.props ?? []).filter((prop) => prop.target === targetName);
+}
+
+function getConsumedClassVariantValues(targetProps: ContractProp[]) {
+  const values = new Set<string>();
+
+  for (const prop of targetProps) {
+    if (prop.kind !== "class-group" || !prop.values || Array.isArray(prop.values)) {
+      continue;
+    }
+
+    for (const classValue of Object.values(prop.values)) {
+      values.add(classValue);
+    }
+  }
+
+  return values;
+}
+
+function getConsumedAttributeNames(targetProps: ContractProp[]) {
+  const attributes = new Set<string>();
+
+  for (const prop of targetProps) {
+    if (prop.kind === "attribute" && prop.attribute) {
+      attributes.add(prop.attribute);
+    }
+  }
+
+  return attributes;
+}
+
 function getGeneratorTargets(contract: ComponentContract) {
   const targets: GeneratorTarget[] = [];
   const usedExportNames = new Set<string>();
@@ -204,6 +246,7 @@ function getGeneratorTargets(contract: ComponentContract) {
     exportName: rootExportName,
     selector: contract.root.selector,
     variants: getTargetVariants(contract, "root"),
+    contractProps: getTargetContractProps(contract, "root"),
     root: true,
   });
   usedExportNames.add(rootExportName);
@@ -223,6 +266,7 @@ function getGeneratorTargets(contract: ComponentContract) {
       exportName: anatomy.exportName,
       selector: anatomy.selector,
       variants: getTargetVariants(contract, anatomy.name),
+      contractProps: getTargetContractProps(contract, anatomy.name),
       root: false,
     });
     usedExportNames.add(anatomy.exportName);
@@ -232,16 +276,23 @@ function getGeneratorTargets(contract: ComponentContract) {
 }
 
 function getRenderableAttrVariants(target: GeneratorTarget) {
+  const consumedAttributes = getConsumedAttributeNames(target.contractProps);
   return target.variants.filter((variant) => (
     variant.type === "attribute" &&
     variant.attribute &&
+    !consumedAttributes.has(variant.attribute) &&
     variant.name !== variant.attribute &&
     !RESERVED_VARIANT_PROP_NAMES.has(toCamelCase(variant.name))
   ));
 }
 
 function getRenderableClassVariants(target: GeneratorTarget) {
-  return target.variants.filter((variant) => variant.type === "class" && variant.value);
+  const consumedClassValues = getConsumedClassVariantValues(target.contractProps);
+  return target.variants.filter((variant) => (
+    variant.type === "class" &&
+    variant.value &&
+    !consumedClassValues.has(variant.value)
+  ));
 }
 
 function renderAttrValueType(values: string[] | undefined) {
@@ -256,9 +307,21 @@ function renderTypeBlock(target: GeneratorTarget) {
   const baseType = getPropsBaseType(target.tag);
   const classVariants = getRenderableClassVariants(target);
   const attrVariants = getRenderableAttrVariants(target);
+  const groupedProps = target.contractProps;
   const lines: string[] = [];
 
   lines.push(`export type ${target.exportName}Props = ${baseType} & {`);
+
+  for (const prop of groupedProps) {
+    if (prop.kind === "class-group" && prop.values && !Array.isArray(prop.values)) {
+      lines.push(`  ${toCamelCase(prop.name)}?: ${Object.keys(prop.values).map((value) => JSON.stringify(value)).join(" | ")};`);
+      continue;
+    }
+
+    if (prop.kind === "attribute") {
+      lines.push(`  ${toCamelCase(prop.name)}?: ${renderAttrValueType(Array.isArray(prop.values) ? prop.values : undefined)};`);
+    }
+  }
 
   for (const variant of classVariants) {
     lines.push(`  ${toCamelCase(variant.name)}?: boolean;`);
@@ -274,12 +337,21 @@ function renderTypeBlock(target: GeneratorTarget) {
 
 function renderVariantClassExpression(target: GeneratorTarget) {
   const classVariants = getRenderableClassVariants(target);
-  if (classVariants.length === 0) {
+  const classGroupExpressions = target.contractProps
+    .filter((prop) => prop.kind === "class-group" && prop.values && !Array.isArray(prop.values))
+    .map((prop) => {
+      const propName = toCamelCase(prop.name);
+      return `${propName} && ${JSON.stringify(prop.values)}[${propName}]`;
+    });
+
+  if (classVariants.length === 0 && classGroupExpressions.length === 0) {
     return "className";
   }
 
-  const variantTokens = classVariants
-    .map((variant) => `${toCamelCase(variant.name)} && ${JSON.stringify(variant.value)}`)
+  const variantTokens = [
+    ...classGroupExpressions,
+    ...classVariants.map((variant) => `${toCamelCase(variant.name)} && ${JSON.stringify(variant.value)}`),
+  ]
     .join(",\n        ");
 
   return [
@@ -294,6 +366,11 @@ function renderDefaultAttributeLines(target: GeneratorTarget) {
   const lines: string[] = [];
   const staticAttributes = extractStaticAttributes(target.selector);
   const attrVariants = getRenderableAttrVariants(target);
+  const propAttributes = new Set(
+    target.contractProps
+      .filter((prop) => prop.kind === "attribute" && prop.attribute)
+      .map((prop) => prop.attribute as string),
+  );
 
   for (const attribute of staticAttributes) {
     const propName = attribute.name === "class" ? "className" : attribute.name;
@@ -311,7 +388,19 @@ function renderDefaultAttributeLines(target: GeneratorTarget) {
       continue;
     }
 
+    if (propAttributes.has(attribute.name)) {
+      continue;
+    }
+
     lines.push(`      ${propName}=${JSON.stringify(attribute.value)}`);
+  }
+
+  for (const prop of target.contractProps) {
+    if (prop.kind !== "attribute" || !prop.attribute) {
+      continue;
+    }
+
+    lines.push(`      ${prop.attribute}={${toCamelCase(prop.name)}}`);
   }
 
   for (const variant of attrVariants) {
@@ -329,6 +418,7 @@ function renderComponentBlock(target: GeneratorTarget) {
   const attrVariants = getRenderableAttrVariants(target);
   const propNames = [
     "className",
+    ...target.contractProps.map((prop) => toCamelCase(prop.name)),
     ...classVariants.map((variant) => toCamelCase(variant.name)),
     ...attrVariants.map((variant) => toCamelCase(variant.name)),
   ];
@@ -340,6 +430,7 @@ function renderComponentBlock(target: GeneratorTarget) {
   const classExpression = renderVariantClassExpression(target);
   const tagOpen = `<${target.tag}`;
   const tagClose = `</${target.tag}>`;
+  const isVoidTag = VOID_TAGS.has(target.tag);
 
   return [
     `export const ${target.exportName} = forwardRef<${refType}, ${target.exportName}Props>(function ${target.exportName}(${destructureLine}: ${target.exportName}Props, ref) {`,
@@ -349,9 +440,9 @@ function renderComponentBlock(target: GeneratorTarget) {
     defaultAttributeLines,
     "      {...props}",
     `      className={${classExpression}}`,
-    "    >",
-    "      {props.children}",
-    `    ${tagClose}`,
+    isVoidTag ? "    />" : "    >",
+    isVoidTag ? "" : "      {props.children}",
+    isVoidTag ? "" : `    ${tagClose}`,
     "  );",
     "});",
     `${target.exportName}.displayName = ${JSON.stringify(target.exportName)};`,
@@ -754,12 +845,14 @@ function renderComponentReadme(contract: ComponentContract, examples: ResolvedDo
     "",
     `- \`${contract.root.exportName ?? toPascalCase(contract.slug)}\` renders \`<${contract.root.tag}>\``,
   ];
+  const seenAnatomyExports = new Set([contract.root.exportName ?? toPascalCase(contract.slug)]);
 
   for (const anatomy of contract.anatomy) {
-    if (!anatomy.exportName || !anatomy.tag) {
+    if (!anatomy.exportName || !anatomy.tag || seenAnatomyExports.has(anatomy.exportName)) {
       continue;
     }
 
+    seenAnatomyExports.add(anatomy.exportName);
     lines.push(`- \`${anatomy.exportName}\` renders \`<${anatomy.tag}>\``);
   }
 
@@ -789,6 +882,26 @@ function renderComponentReadme(contract: ComponentContract, examples: ResolvedDo
         lines.push(`- \`${toCamelCase(variant.name)}\` adds \`.${variant.value}\` on \`${variant.target}\``);
       } else {
         lines.push(`- \`${toCamelCase(variant.name)}\` maps to \`${variant.attribute}\` on \`${variant.target}\``);
+      }
+    }
+  }
+
+  if ((contract.props ?? []).length > 0) {
+    lines.push("");
+    lines.push("## Adapter Props");
+    lines.push("");
+
+    for (const prop of contract.props ?? []) {
+      if (prop.kind === "class-group" && prop.values && !Array.isArray(prop.values)) {
+        lines.push(`- \`${toCamelCase(prop.name)}\` accepts ${Object.keys(prop.values).map((value) => `\`${value}\``).join(", ")} and maps them to classes on \`${prop.target}\``);
+        continue;
+      }
+
+      if (prop.kind === "attribute") {
+        const values = Array.isArray(prop.values) && prop.values.length > 0
+          ? ` (${prop.values.map((value) => `\`${value}\``).join(", ")})`
+          : "";
+        lines.push(`- \`${toCamelCase(prop.name)}\` maps to \`${prop.attribute}\` on \`${prop.target}\`${values}`);
       }
     }
   }

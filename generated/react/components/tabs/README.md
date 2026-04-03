@@ -33,6 +33,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent, tabsAssets } from "@dashbase/
 - `vertical` adds `.vertical` on `root`
 - `orientation` maps to `aria-orientation` on `list`
 
+## Adapter Props
+
+- `orientation` maps to `aria-orientation` on `list` (`horizontal`, `vertical`)
+
 ## State Surface
 
 - `aria-selected` on `tab` ("true", "false")
