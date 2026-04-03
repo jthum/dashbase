@@ -41,6 +41,7 @@ Contract expectations:
 - Use `slug`, `family`, `variant`, `category`, `scope`, and `tags` for indexing
 - Declare `dependencies.components` for every composed component
 - Declare `dependencies.patterns` if this pattern composes other patterns
+- Keep `dependencies.patterns` acyclic; use it only for build-time composition, not for loose "related pattern" cross-links
 - Add a `props` block when generated adapters should expose ergonomic string inputs such as titles, helper text, placeholders, button labels, or other copy
 - Add a `slots` block when generated adapters should expose richer content regions such as footer notes, banners, or supporting actions
 - If `docs.examples` references source snippets, mark them with `<!-- @example name:start -->` and `<!-- @example name:end -->`

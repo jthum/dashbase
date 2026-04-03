@@ -445,6 +445,75 @@ export function getPatternDefaultBindings(contract) {
   ]);
 }
 
+function collectPatternDependencyCycles(entries) {
+  const cycles = [];
+  const entriesBySlug = new Map(
+    entries
+      .map((entry) => [entry.contract?.slug, entry])
+      .filter(([slug]) => typeof slug === "string" && slug.length > 0),
+  );
+  const visitState = new Map();
+  const stack = [];
+
+  function visit(slug) {
+    const state = visitState.get(slug);
+
+    if (state === "visiting") {
+      const cycleStart = stack.indexOf(slug);
+      const cyclePath = cycleStart >= 0
+        ? [...stack.slice(cycleStart), slug]
+        : [slug, slug];
+      cycles.push(cyclePath);
+      return;
+    }
+
+    if (state === "visited") {
+      return;
+    }
+
+    visitState.set(slug, "visiting");
+    stack.push(slug);
+
+    const entry = entriesBySlug.get(slug);
+    const patternDeps = Array.isArray(entry?.contract?.dependencies?.patterns)
+      ? entry.contract.dependencies.patterns
+      : [];
+
+    for (const depSlug of patternDeps) {
+      if (!entriesBySlug.has(depSlug)) {
+        continue;
+      }
+
+      visit(depSlug);
+    }
+
+    stack.pop();
+    visitState.set(slug, "visited");
+  }
+
+  for (const slug of entriesBySlug.keys()) {
+    visit(slug);
+  }
+
+  const seen = new Set();
+  return cycles.filter((cyclePath) => {
+    const canonical = (() => {
+      const path = cyclePath.slice(0, -1);
+      const minSlug = [...path].sort()[0];
+      const minIndex = path.indexOf(minSlug);
+      const rotated = [...path.slice(minIndex), ...path.slice(0, minIndex)];
+      return `${rotated.join(" -> ")} -> ${rotated[0]}`;
+    })();
+
+    if (seen.has(canonical)) {
+      return false;
+    }
+
+    seen.add(canonical);
+    return true;
+  });
+}
+
 export async function validatePatternContracts({ log = true } = {}) {
   const entries = await loadPatternContracts();
   const knownSlugs = new Set(entries.map((entry) => entry.contract?.slug).filter(Boolean));
@@ -452,6 +521,10 @@ export async function validatePatternContracts({ log = true } = {}) {
 
   for (const entry of entries) {
     errors.push(...await validatePatternEntry(entry, knownSlugs));
+  }
+
+  for (const cyclePath of collectPatternDependencyCycles(entries)) {
+    errors.push(`Pattern dependency cycle detected: ${cyclePath.join(" -> ")}`);
   }
 
   if (errors.length > 0) {

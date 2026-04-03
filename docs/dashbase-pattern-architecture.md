@@ -152,6 +152,11 @@ Dashbase should mitigate that in two ways:
 In the short term, dependency metadata is mandatory even if the pattern source
 is still expanded HTML.
 
+`dependencies.patterns` should be treated as a build-time composition graph,
+not a loose "see also" graph. That means it must stay acyclic. If two patterns
+only want to cross-link for discovery, use a future informational metadata
+field instead of declaring a dependency loop.
+
 ---
 
 ## Contract Shape
