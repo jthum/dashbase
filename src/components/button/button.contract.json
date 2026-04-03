@@ -4,6 +4,9 @@
   "slug": "button",
   "category": "interactive",
   "summary": "Styles native button elements with class-based variants, sizes, and icon treatment without requiring a behavior shim.",
+  "docs": {
+    "examples": []
+  },
   "files": {
     "css": "./button.css",
     "examples": [

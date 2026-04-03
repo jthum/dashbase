@@ -1,4 +1,4 @@
-import { useEffect, type HTMLAttributes, type ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 export type DashbaseAssetManifest = {
   css: readonly string[];
@@ -50,20 +50,12 @@ function ensureScript(src: string) {
   return promise;
 }
 
-export function useDashbaseAssets(assets: DashbaseAssetManifest, enabled = false) {
-  useEffect(() => {
-    if (!enabled) {
-      return;
-    }
+export function loadDashbaseAssets(assets: DashbaseAssetManifest) {
+  for (const href of assets.css) {
+    ensureStylesheet(href);
+  }
 
-    for (const href of assets.css) {
-      ensureStylesheet(href);
-    }
-
-    for (const src of assets.js) {
-      void ensureScript(src);
-    }
-  }, [assets, enabled]);
+  return Promise.all(assets.js.map((src) => ensureScript(src)));
 }
 
 export function cx(...tokens: Array<string | false | null | undefined>) {

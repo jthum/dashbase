@@ -1,0 +1,28 @@
+{
+  "name": "@dashbase/react",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./manual": "./manual.ts",
+    "./manifest": "./manifest.ts",
+    "./runtime": "./runtime.ts",
+    "./custom-elements": "./custom-elements.d.ts",
+    "./package.json": "./package.json",
+    "./button": "./components/button/index.ts",
+    "./button/manual": "./components/button/manual.tsx",
+    "./carousel": "./components/carousel/index.ts",
+    "./carousel/manual": "./components/carousel/manual.tsx",
+    "./combobox": "./components/combobox/index.ts",
+    "./combobox/manual": "./components/combobox/manual.tsx",
+    "./combobox/examples": "./components/combobox/examples.tsx",
+    "./popover": "./components/popover/index.ts",
+    "./popover/manual": "./components/popover/manual.tsx",
+    "./tabs": "./components/tabs/index.ts",
+    "./tabs/manual": "./components/tabs/manual.tsx",
+    "./tabs/examples": "./components/tabs/examples.tsx"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  }
+}

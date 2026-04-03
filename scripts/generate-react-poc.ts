@@ -1,10 +1,11 @@
-import { mkdir, rm, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadComponentContracts } from "./component-contracts.js";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const OUTPUT_DIR = join(ROOT, "generated/react");
+const COMPONENTS_OUTPUT_DIR = join(OUTPUT_DIR, "components");
 
 type ContractVariant = {
   name: string;
@@ -24,12 +25,28 @@ type ContractAnatomy = {
   exportName?: string;
 };
 
+type ContractDocExample = {
+  id: string;
+  title: string;
+  source: string;
+};
+
+type ContractState = {
+  name: string;
+  target: string;
+  attribute: string;
+  values?: string[];
+};
+
 type ComponentContract = {
   schemaVersion: number;
   name: string;
   slug: string;
   category: "presentational" | "interactive";
   summary: string;
+  docs?: {
+    examples?: ContractDocExample[];
+  };
   root: {
     tag: string;
     selector: string;
@@ -37,6 +54,7 @@ type ComponentContract = {
   };
   anatomy: ContractAnatomy[];
   variants?: ContractVariant[];
+  states?: ContractState[];
   imports: {
     css: string[];
     js?: string[];
@@ -47,6 +65,12 @@ type ComponentContract = {
   };
 };
 
+type ContractEntry = {
+  contract: ComponentContract;
+  contractDir: string;
+  fullPath: string;
+};
+
 type GeneratorTarget = {
   name: string;
   tag: string;
@@ -54,6 +78,12 @@ type GeneratorTarget = {
   selector: string;
   variants: ContractVariant[];
   root: boolean;
+};
+
+type ResolvedDocExample = ContractDocExample & {
+  exportName: string;
+  htmlSnippet: string;
+  reactSnippet: string;
 };
 
 const NATIVE_TAG_REF_TYPES: Record<string, string> = {
@@ -72,11 +102,34 @@ const NATIVE_TAG_PROP_TYPES: Record<string, string> = {
   select: 'React.ComponentPropsWithoutRef<"select">',
 };
 
-const RESERVED_VARIANT_PROP_NAMES = new Set([
-  "children",
-  "className",
-  "loadAssets",
+const RESERVED_VARIANT_PROP_NAMES = new Set(["children", "className"]);
+const VOID_TAGS = new Set([
+  "area",
+  "base",
+  "br",
+  "col",
+  "embed",
+  "hr",
+  "img",
+  "input",
+  "link",
+  "meta",
+  "param",
+  "source",
+  "track",
+  "wbr",
 ]);
+const JSX_ATTRIBUTE_ALIASES: Record<string, string> = {
+  autocomplete: "autoComplete",
+  class: "className",
+  crossorigin: "crossOrigin",
+  for: "htmlFor",
+  inputmode: "inputMode",
+  maxlength: "maxLength",
+  minlength: "minLength",
+  readonly: "readOnly",
+  tabindex: "tabIndex",
+};
 
 function toPascalCase(value: string) {
   return value
@@ -89,6 +142,19 @@ function toPascalCase(value: string) {
 function toCamelCase(value: string) {
   const pascal = toPascalCase(value);
   return pascal ? pascal[0].toLowerCase() + pascal.slice(1) : value;
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function toPosixPath(filePath: string) {
+  return filePath.replaceAll("\\", "/");
+}
+
+function toImportSpecifier(fromFile: string, targetFile: string) {
+  const specifier = toPosixPath(relative(dirname(fromFile), targetFile));
+  return specifier.startsWith(".") ? specifier : `./${specifier}`;
 }
 
 function isCustomElementTag(tag: string) {
@@ -127,7 +193,7 @@ function getTargetVariants(contract: ComponentContract, targetName: string) {
   return (contract.variants ?? []).filter((variant) => variant.target === targetName);
 }
 
-function getGeneratorTargets(contract: ComponentContract): GeneratorTarget[] {
+function getGeneratorTargets(contract: ComponentContract) {
   const targets: GeneratorTarget[] = [];
   const usedExportNames = new Set<string>();
   const rootExportName = contract.root.exportName ?? toPascalCase(contract.slug);
@@ -193,9 +259,6 @@ function renderTypeBlock(target: GeneratorTarget) {
   const lines: string[] = [];
 
   lines.push(`export type ${target.exportName}Props = ${baseType} & {`);
-  if (target.root) {
-    lines.push("  loadAssets?: boolean;");
-  }
 
   for (const variant of classVariants) {
     lines.push(`  ${toCamelCase(variant.name)}?: boolean;`);
@@ -260,32 +323,26 @@ function renderDefaultAttributeLines(target: GeneratorTarget) {
   return lines.join("\n");
 }
 
-function renderComponentBlock(contract: ComponentContract, target: GeneratorTarget) {
+function renderComponentBlock(target: GeneratorTarget) {
   const refType = getRefType(target.tag);
   const classVariants = getRenderableClassVariants(target);
   const attrVariants = getRenderableAttrVariants(target);
   const propNames = [
-    target.root ? "loadAssets = false" : null,
     "className",
     ...classVariants.map((variant) => toCamelCase(variant.name)),
     ...attrVariants.map((variant) => toCamelCase(variant.name)),
-  ].filter(Boolean);
+  ];
 
   const destructureLine = propNames.length > 0
     ? `{ ${propNames.join(", ")}, ...props }`
     : "props";
-  const assetsConstName = getAssetsConstName(contract.slug);
   const defaultAttributeLines = renderDefaultAttributeLines(target);
   const classExpression = renderVariantClassExpression(target);
-  const hookLine = target.root
-    ? `  useDashbaseAssets(${assetsConstName}, loadAssets);\n`
-    : "";
   const tagOpen = `<${target.tag}`;
   const tagClose = `</${target.tag}>`;
 
   return [
     `export const ${target.exportName} = forwardRef<${refType}, ${target.exportName}Props>(function ${target.exportName}(${destructureLine}: ${target.exportName}Props, ref) {`,
-    hookLine ? hookLine.trimEnd() : "",
     "  return (",
     `    ${tagOpen}`,
     "      ref={ref}",
@@ -301,7 +358,7 @@ function renderComponentBlock(contract: ComponentContract, target: GeneratorTarg
   ].filter(Boolean).join("\n");
 }
 
-function renderComponentFile(contract: ComponentContract) {
+function renderManualComponentFile(contract: ComponentContract) {
   const targets = getGeneratorTargets(contract);
   const assetsConstName = getAssetsConstName(contract.slug);
 
@@ -309,7 +366,7 @@ function renderComponentFile(contract: ComponentContract) {
     "/* eslint-disable react-refresh/only-export-components */",
     `/* Generated by scripts/generate-react-poc.ts for ${contract.name}. */`,
     'import React, { forwardRef } from "react";',
-    'import { cx, type DashbaseAssetManifest, type DashbaseCustomElementProps, useDashbaseAssets } from "./runtime";',
+    'import { cx, type DashbaseAssetManifest, type DashbaseCustomElementProps } from "../../runtime";',
     "",
     `export const ${assetsConstName} = {`,
     `  css: ${JSON.stringify(contract.imports.css, null, 2)},`,
@@ -319,15 +376,29 @@ function renderComponentFile(contract: ComponentContract) {
     ...targets.flatMap((target) => [
       renderTypeBlock(target),
       "",
-      renderComponentBlock(contract, target),
+      renderComponentBlock(target),
       "",
     ]),
   ].join("\n");
 }
 
+function renderAutoEntryFile(contract: ComponentContract, outputFile: string) {
+  const imports = [
+    ...contract.imports.css,
+    ...(contract.imports.js ?? []),
+  ].map((assetPath) => `import ${JSON.stringify(toImportSpecifier(outputFile, join(ROOT, assetPath)))};`);
+
+  return [
+    `/* Generated by scripts/generate-react-poc.ts for ${contract.name}. */`,
+    ...imports,
+    'export * from "./manual";',
+    "",
+  ].join("\n");
+}
+
 function renderRuntimeFile() {
   return [
-    'import { useEffect, type HTMLAttributes, type ReactNode } from "react";',
+    'import type { HTMLAttributes, ReactNode } from "react";',
     "",
     "export type DashbaseAssetManifest = {",
     "  css: readonly string[];",
@@ -379,20 +450,12 @@ function renderRuntimeFile() {
     "  return promise;",
     "}",
     "",
-    "export function useDashbaseAssets(assets: DashbaseAssetManifest, enabled = false) {",
-    "  useEffect(() => {",
-    "    if (!enabled) {",
-    "      return;",
-    "    }",
+    "export function loadDashbaseAssets(assets: DashbaseAssetManifest) {",
+    "  for (const href of assets.css) {",
+    "    ensureStylesheet(href);",
+    "  }",
     "",
-    "    for (const href of assets.css) {",
-    "      ensureStylesheet(href);",
-    "    }",
-    "",
-    "    for (const src of assets.js) {",
-    "      void ensureScript(src);",
-    "    }",
-    "  }, [assets, enabled]);",
+    "  return Promise.all(assets.js.map((src) => ensureScript(src)));",
     "}",
     "",
     "export function cx(...tokens: Array<string | false | null | undefined>) {",
@@ -402,28 +465,24 @@ function renderRuntimeFile() {
   ].join("\n");
 }
 
-function renderCustomElementDeclarations(contracts: ComponentContract[]) {
+function collectCustomTagsFromMarkup(markup: string) {
   const tags = new Set<string>();
 
-  for (const contract of contracts) {
-    if (isCustomElementTag(contract.root.tag)) {
-      tags.add(contract.root.tag);
-    }
-
-    for (const anatomy of contract.anatomy) {
-      if (anatomy.tag && isCustomElementTag(anatomy.tag)) {
-        tags.add(anatomy.tag);
-      }
-    }
+  for (const match of markup.matchAll(/<\/?([a-z][a-z0-9]*-[a-z0-9-]*)(?=[\s/>])/g)) {
+    tags.add(match[1]);
   }
 
+  return tags;
+}
+
+function renderCustomElementDeclarations(tags: Iterable<string>) {
   return [
     'import type * as React from "react";',
     "",
     "declare global {",
     "  namespace JSX {",
     "    interface IntrinsicElements {",
-    ...[...tags].sort().map((tag) => `      ${JSON.stringify(tag)}: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;`),
+    ...[...new Set(tags)].sort().map((tag) => `      ${JSON.stringify(tag)}: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;`),
     "    }",
     "  }",
     "}",
@@ -433,11 +492,19 @@ function renderCustomElementDeclarations(contracts: ComponentContract[]) {
   ].join("\n");
 }
 
-function renderIndexFile(contracts: ComponentContract[]) {
+function renderPackageIndexFile() {
+  return [
+    'export * from "./runtime";',
+    'export * from "./manifest";',
+    "",
+  ].join("\n");
+}
+
+function renderPackageManualFile(contracts: ComponentContract[]) {
   const exportLines = contracts
     .slice()
     .sort((a, b) => a.slug.localeCompare(b.slug))
-    .map((contract) => `export * from "./${contract.slug}";`);
+    .map((contract) => `export * from "./components/${contract.slug}/manual";`);
 
   return [
     'export * from "./runtime";',
@@ -466,51 +533,371 @@ function renderManifestFile(contracts: ComponentContract[]) {
   return lines.join("\n");
 }
 
-function renderReadmeFile() {
-  return [
+function renderPackageJson(contracts: ComponentContract[], exampleSlugs: Set<string>) {
+  const exports: Record<string, string> = {
+    ".": "./index.ts",
+    "./manual": "./manual.ts",
+    "./manifest": "./manifest.ts",
+    "./runtime": "./runtime.ts",
+    "./custom-elements": "./custom-elements.d.ts",
+    "./package.json": "./package.json",
+  };
+
+  for (const contract of contracts.slice().sort((a, b) => a.slug.localeCompare(b.slug))) {
+    exports[`./${contract.slug}`] = `./components/${contract.slug}/index.ts`;
+    exports[`./${contract.slug}/manual`] = `./components/${contract.slug}/manual.tsx`;
+
+    if (exampleSlugs.has(contract.slug)) {
+      exports[`./${contract.slug}/examples`] = `./components/${contract.slug}/examples.tsx`;
+    }
+  }
+
+  return JSON.stringify({
+    name: "@dashbase/react",
+    private: true,
+    type: "module",
+    exports,
+    peerDependencies: {
+      react: ">=18",
+    },
+  }, null, 2) + "\n";
+}
+
+function renderPackageReadme(contracts: ComponentContract[], exampleSlugs: Set<string>) {
+  const lines = [
     "# Dashbase React Proof Of Concept",
     "",
     "This folder is generated by `scripts/generate-react-poc.ts`.",
     "",
-    "What it demonstrates:",
+    "Recommended usage:",
     "",
-    "- Bun-native TypeScript generation with no added node modules",
-    "- shim-backed React wrappers generated from Dashbase component contracts",
-    "- generated asset manifests plus an optional `useDashbaseAssets(...)` helper",
-    "- typed custom-element JSX declarations for Dashbase tags",
+    "- import components from `@dashbase/react/{component}` for auto asset imports",
+    "- import from `@dashbase/react/{component}/manual` when you want to manage CSS and behavior assets yourself",
     "",
-    "Current scope:",
+    "Current pilot components:",
     "",
-    "- `button`",
-    "- `tabs`",
-    "- `popover`",
-    "- `combobox`",
-    "- `carousel`",
+  ];
+
+  for (const contract of contracts.slice().sort((a, b) => a.slug.localeCompare(b.slug))) {
+    lines.push(`- \`${contract.slug}\``);
+    lines.push(`  - Auto entry: \`@dashbase/react/${contract.slug}\``);
+    lines.push(`  - Manual entry: \`@dashbase/react/${contract.slug}/manual\``);
+    if (exampleSlugs.has(contract.slug)) {
+      lines.push(`  - Generated examples: \`@dashbase/react/${contract.slug}/examples\``);
+    }
+  }
+
+  lines.push("");
+  lines.push("These files are a generated adapter proof of concept, not the final published package format.");
+  lines.push("");
+  return lines.join("\n");
+}
+
+function getPublicExportNames(contract: ComponentContract) {
+  return getGeneratorTargets(contract).map((target) => target.exportName);
+}
+
+function stripExampleMarkers(source: string) {
+  return source.replace(/<!--\s*@example\s+[^:]+:(?:start|end)\s*-->\s*/g, "");
+}
+
+function dedent(value: string) {
+  const lines = value.replace(/\r\n/g, "\n").trim().split("\n");
+  const indents = lines
+    .filter((line) => line.trim().length > 0)
+    .map((line) => line.match(/^\s*/u)?.[0].length ?? 0);
+  const minIndent = indents.length > 0 ? Math.min(...indents) : 0;
+
+  return lines
+    .map((line) => line.slice(minIndent))
+    .join("\n")
+    .trim();
+}
+
+function selfCloseVoidTags(markup: string) {
+  let output = markup;
+
+  for (const tag of VOID_TAGS) {
+    const pattern = new RegExp(`<${tag}(\\b[^>]*?)(?<!/)>`, "g");
+    output = output.replace(pattern, `<${tag}$1 />`);
+  }
+
+  return output;
+}
+
+function transformHtmlSnippetToReact(contract: ComponentContract, htmlSnippet: string) {
+  const targets = getGeneratorTargets(contract);
+  const tagMap = new Map<string, string>();
+
+  for (const target of targets) {
+    if (isCustomElementTag(target.tag)) {
+      tagMap.set(target.tag, target.exportName);
+    }
+  }
+
+  let output = dedent(stripExampleMarkers(htmlSnippet));
+
+  for (const [tag, exportName] of tagMap) {
+    const pattern = new RegExp(`<(/?)${escapeRegExp(tag)}(?=[\\s>/])`, "g");
+    output = output.replace(pattern, `<$1${exportName}`);
+  }
+
+  for (const [attribute, jsxAttribute] of Object.entries(JSX_ATTRIBUTE_ALIASES)) {
+    output = output.replace(
+      new RegExp(`(?<![A-Za-z0-9:-])${attribute}=`, "g"),
+      `${jsxAttribute}=`,
+    );
+  }
+  output = selfCloseVoidTags(output);
+
+  return output;
+}
+
+function renderJsxBody(markup: string, indent = "    ") {
+  return [
+    `${indent}<>`,
+    ...markup.split("\n").map((line) => `${indent}  ${line}`),
+    `${indent}</>`,
+  ];
+}
+
+function extractExampleSnippet(source: string, id: string) {
+  const startMarker = `<!-- @example ${id}:start -->`;
+  const endMarker = `<!-- @example ${id}:end -->`;
+  const startIndex = source.indexOf(startMarker);
+  const endIndex = source.indexOf(endMarker);
+
+  if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
+    throw new Error(`Missing example markers for ${id}.`);
+  }
+
+  return source.slice(startIndex + startMarker.length, endIndex);
+}
+
+async function resolveDocExamples(entry: ContractEntry) {
+  const docsExamples = entry.contract.docs?.examples ?? [];
+  const resolvedExamples: ResolvedDocExample[] = [];
+
+  for (const docExample of docsExamples) {
+    const sourcePath = resolve(entry.contractDir, docExample.source);
+    const source = await readFile(sourcePath, "utf8");
+    const htmlSnippet = dedent(stripExampleMarkers(extractExampleSnippet(source, docExample.id)));
+
+    resolvedExamples.push({
+      ...docExample,
+      exportName: `${toPascalCase(docExample.id)}Example`,
+      htmlSnippet,
+      reactSnippet: transformHtmlSnippetToReact(entry.contract, htmlSnippet),
+    });
+  }
+
+  return resolvedExamples;
+}
+
+function renderExamplesFile(contract: ComponentContract, examples: ResolvedDocExample[]) {
+  const exportNames = getPublicExportNames(contract).join(", ");
+  const exampleBlocks = examples.flatMap((example) => ([
+    `export function ${example.exportName}() {`,
+    "  return (",
+    ...renderJsxBody(example.reactSnippet),
+    "  );",
+    "}",
     "",
-    "These files are a proof of concept, not the final published adapter format.",
+  ]));
+
+  return [
+    `/* Generated by scripts/generate-react-poc.ts for ${contract.name}. */`,
+    'import React from "react";',
+    `import { ${exportNames} } from "./index";`,
     "",
+    ...exampleBlocks,
   ].join("\n");
 }
 
-async function generateReactPoc() {
-  const entries = await loadComponentContracts();
-  const contracts = entries.map((entry) => entry.contract as ComponentContract);
-  const eligibleContracts = contracts.filter((contract) => contract.root.exportName);
+function renderExampleCodeBlock(contract: ComponentContract, example: ResolvedDocExample) {
+  const exportNames = getPublicExportNames(contract).join(", ");
+  return [
+    `import { ${exportNames} } from "@dashbase/react/${contract.slug}";`,
+    "",
+    `export function ${example.exportName}() {`,
+    "  return (",
+    ...renderJsxBody(example.reactSnippet, "    "),
+    "  );",
+    "}",
+  ].join("\n");
+}
 
-  await rm(OUTPUT_DIR, { recursive: true, force: true });
-  await mkdir(OUTPUT_DIR, { recursive: true });
+function renderComponentReadme(contract: ComponentContract, examples: ResolvedDocExample[]) {
+  const exportNames = getPublicExportNames(contract).join(", ");
+  const autoImportPath = `@dashbase/react/${contract.slug}`;
+  const manualImportPath = `@dashbase/react/${contract.slug}/manual`;
+  const lines = [
+    `# ${contract.name}`,
+    "",
+    contract.summary,
+    "",
+    "## Imports",
+    "",
+    "Default entrypoint with automatic CSS and behavior asset imports:",
+    "",
+    "```tsx",
+    `import { ${exportNames} } from "${autoImportPath}";`,
+    "```",
+    "",
+    "Manual entrypoint when you want to control asset loading yourself:",
+    "",
+    "```tsx",
+    `import { ${exportNames}, ${getAssetsConstName(contract.slug)} } from "${manualImportPath}";`,
+    "```",
+    "",
+    "## Anatomy",
+    "",
+    `- \`${contract.root.exportName ?? toPascalCase(contract.slug)}\` renders \`<${contract.root.tag}>\``,
+  ];
 
-  await writeFile(join(OUTPUT_DIR, "runtime.ts"), renderRuntimeFile());
-  await writeFile(join(OUTPUT_DIR, "custom-elements.d.ts"), renderCustomElementDeclarations(eligibleContracts));
-  await writeFile(join(OUTPUT_DIR, "manifest.ts"), renderManifestFile(eligibleContracts));
-  await writeFile(join(OUTPUT_DIR, "index.ts"), renderIndexFile(eligibleContracts));
-  await writeFile(join(OUTPUT_DIR, "README.md"), renderReadmeFile());
+  for (const anatomy of contract.anatomy) {
+    if (!anatomy.exportName || !anatomy.tag) {
+      continue;
+    }
 
-  for (const contract of eligibleContracts) {
-    await writeFile(join(OUTPUT_DIR, `${contract.slug}.tsx`), renderComponentFile(contract));
+    lines.push(`- \`${anatomy.exportName}\` renders \`<${anatomy.tag}>\``);
   }
 
-  console.log(`Generated React proof-of-concept wrappers for ${eligibleContracts.length} contracts in ${join("generated", "react")}.`);
+  lines.push("");
+  lines.push("## Assets");
+  lines.push("");
+
+  for (const cssPath of contract.imports.css) {
+    lines.push(`- CSS: \`${cssPath}\``);
+  }
+
+  for (const jsPath of contract.imports.js ?? []) {
+    lines.push(`- JS: \`${jsPath}\``);
+  }
+
+  if ((contract.imports.js ?? []).length === 0) {
+    lines.push("- No behavior shim is required.");
+  }
+
+  if ((contract.variants ?? []).length > 0) {
+    lines.push("");
+    lines.push("## Variants");
+    lines.push("");
+
+    for (const variant of contract.variants ?? []) {
+      if (variant.type === "class") {
+        lines.push(`- \`${toCamelCase(variant.name)}\` adds \`.${variant.value}\` on \`${variant.target}\``);
+      } else {
+        lines.push(`- \`${toCamelCase(variant.name)}\` maps to \`${variant.attribute}\` on \`${variant.target}\``);
+      }
+    }
+  }
+
+  if ((contract.states ?? []).length > 0) {
+    lines.push("");
+    lines.push("## State Surface");
+    lines.push("");
+
+    for (const state of contract.states ?? []) {
+      const values = Array.isArray(state.values) && state.values.length > 0
+        ? ` (${state.values.map((value) => JSON.stringify(value)).join(", ")})`
+        : "";
+      lines.push(`- \`${state.attribute}\` on \`${state.target}\`${values}`);
+    }
+  }
+
+  if (examples.length > 0) {
+    lines.push("");
+    lines.push("## Examples");
+    lines.push("");
+
+    for (const example of examples) {
+      lines.push(`### ${example.title}`);
+      lines.push("");
+      lines.push("```tsx");
+      lines.push(renderExampleCodeBlock(contract, example));
+      lines.push("```");
+      lines.push("");
+    }
+  }
+
+  return lines.join("\n");
+}
+
+async function ensureDir(filePath: string) {
+  await mkdir(dirname(filePath), { recursive: true });
+}
+
+async function writeTextFile(filePath: string, source: string) {
+  await ensureDir(filePath);
+  await writeFile(filePath, source);
+}
+
+async function generateReactPoc() {
+  const entries = await loadComponentContracts() as ContractEntry[];
+  const eligibleEntries = entries.filter((entry) => entry.contract.root.exportName);
+  const contracts = eligibleEntries.map((entry) => entry.contract);
+  const exampleSlugs = new Set<string>();
+  const exampleTags = new Set<string>();
+
+  await rm(OUTPUT_DIR, { recursive: true, force: true });
+  await mkdir(COMPONENTS_OUTPUT_DIR, { recursive: true });
+
+  await writeTextFile(join(OUTPUT_DIR, "runtime.ts"), renderRuntimeFile());
+  await writeTextFile(join(OUTPUT_DIR, "index.ts"), renderPackageIndexFile());
+  await writeTextFile(join(OUTPUT_DIR, "manual.ts"), renderPackageManualFile(contracts));
+  await writeTextFile(join(OUTPUT_DIR, "manifest.ts"), renderManifestFile(contracts));
+
+  for (const entry of eligibleEntries) {
+    const { contract } = entry;
+    const componentDir = join(COMPONENTS_OUTPUT_DIR, contract.slug);
+    const manualFile = join(componentDir, "manual.tsx");
+    const autoEntryFile = join(componentDir, "index.ts");
+    const readmeFile = join(componentDir, "README.md");
+    const resolvedExamples = await resolveDocExamples(entry);
+
+    await writeTextFile(manualFile, renderManualComponentFile(contract));
+    await writeTextFile(autoEntryFile, renderAutoEntryFile(contract, autoEntryFile));
+    await writeTextFile(readmeFile, renderComponentReadme(contract, resolvedExamples));
+
+    if (resolvedExamples.length > 0) {
+      exampleSlugs.add(contract.slug);
+      for (const example of resolvedExamples) {
+        for (const tag of collectCustomTagsFromMarkup(example.reactSnippet)) {
+          exampleTags.add(tag);
+        }
+      }
+
+      await writeTextFile(
+        join(componentDir, "examples.tsx"),
+        renderExamplesFile(contract, resolvedExamples),
+      );
+    }
+  }
+
+  const declarationTags = new Set<string>();
+
+  for (const contract of contracts) {
+    if (isCustomElementTag(contract.root.tag)) {
+      declarationTags.add(contract.root.tag);
+    }
+
+    for (const anatomy of contract.anatomy) {
+      if (anatomy.tag && isCustomElementTag(anatomy.tag)) {
+        declarationTags.add(anatomy.tag);
+      }
+    }
+  }
+
+  for (const tag of exampleTags) {
+    declarationTags.add(tag);
+  }
+
+  await writeTextFile(join(OUTPUT_DIR, "custom-elements.d.ts"), renderCustomElementDeclarations(declarationTags));
+  await writeTextFile(join(OUTPUT_DIR, "package.json"), renderPackageJson(contracts, exampleSlugs));
+  await writeTextFile(join(OUTPUT_DIR, "README.md"), renderPackageReadme(contracts, exampleSlugs));
+
+  console.log(`Generated package-style React proof-of-concept output for ${contracts.length} contracts in ${join("generated", "react")}.`);
 }
 
 generateReactPoc().catch((error) => {

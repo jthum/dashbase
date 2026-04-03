@@ -42,6 +42,9 @@ Contract expectations:
 - Colocate the contract with the component's CSS, shim, and example page
 - Use relative `files.*` paths for source assets and `dist/...` paths for generated imports
 - Include enough anatomy, variant, and state detail that a shim-backed generator can build a working adapter without guessing
+- Add a small `docs` block when the component has adapter-facing usage docs or generated examples
+- If `docs.examples` references source snippets, mark those snippets in the HTML with `<!-- @example name:start -->` and `<!-- @example name:end -->`
+- Keep those marked snippets honest to the component contract; do not rely on undeclared companion components unless the contract explicitly models that dependency
 
 Overlay-specific rules:
 

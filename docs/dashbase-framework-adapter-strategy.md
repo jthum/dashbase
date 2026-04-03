@@ -101,6 +101,7 @@ A component contract should capture:
 - state attributes and ARIA expectations
 - emitted events
 - required CSS and optional JS imports
+- small docs/example metadata for generated adapter docs
 - slot or child-content regions
 - whether an override exists for any target
 - whether the default adapter path is shim-backed
@@ -171,6 +172,9 @@ This is a contract format, not a user-facing DSL.
 The current proof of concept uses those optional `exportName` and `tag` fields
 to generate React wrappers into `generated/react/` via
 `scripts/generate-react-poc.ts`, with no additional npm dependencies.
+It now also uses a small `docs.examples` block plus named example markers in
+component HTML files to generate per-component React usage docs and the first
+target-specific `examples.tsx` modules.
 
 ---
 

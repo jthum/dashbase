@@ -232,6 +232,80 @@ function validateEvents({ events, contractPath, errors, allowedTargets }) {
   }
 }
 
+async function validateDocs({ docs, contractPath, contractDir, errors, declaredExamplePaths }) {
+  if (docs === undefined) {
+    return;
+  }
+
+  if (!isObject(docs)) {
+    errors.push(`${contractPath}: docs must be an object`);
+    return;
+  }
+
+  if (docs.examples === undefined) {
+    return;
+  }
+
+  if (!Array.isArray(docs.examples)) {
+    errors.push(`${contractPath}: docs.examples must be an array`);
+    return;
+  }
+
+  const seenExampleIds = new Set();
+
+  for (const [index, example] of docs.examples.entries()) {
+    const fieldBase = `docs.examples[${index}]`;
+
+    if (!isObject(example)) {
+      errors.push(`${contractPath}: ${fieldBase} must be an object`);
+      continue;
+    }
+
+    const id = ensureString({ value: example.id, field: `${fieldBase}.id`, errors });
+    ensureString({ value: example.title, field: `${fieldBase}.title`, errors });
+    const sourcePath = ensureLocalFilePath({
+      value: example.source,
+      field: `${fieldBase}.source`,
+      contractDir,
+      errors,
+    });
+
+    if (id) {
+      if (seenExampleIds.has(id)) {
+        errors.push(`${contractPath}: docs example ids must be unique (${id})`);
+      }
+
+      seenExampleIds.add(id);
+    }
+
+    if (!sourcePath) {
+      continue;
+    }
+
+    if (!declaredExamplePaths.has(sourcePath)) {
+      errors.push(`${contractPath}: ${fieldBase}.source must point to a file already declared in files.examples`);
+      continue;
+    }
+
+    if (!(await pathExists(sourcePath))) {
+      errors.push(`${contractPath}: ${fieldBase}.source does not exist (${formatPath(sourcePath)})`);
+      continue;
+    }
+
+    if (!id) {
+      continue;
+    }
+
+    const source = await readFile(sourcePath, "utf8");
+    const startMarker = `<!-- @example ${id}:start -->`;
+    const endMarker = `<!-- @example ${id}:end -->`;
+
+    if (!source.includes(startMarker) || !source.includes(endMarker)) {
+      errors.push(`${contractPath}: ${fieldBase} must reference matching ${startMarker} / ${endMarker} markers`);
+    }
+  }
+}
+
 function validateAnatomy({ anatomy, contractPath, errors }) {
   if (!Array.isArray(anatomy) || anatomy.length === 0) {
     errors.push(`${contractPath}: anatomy must be a non-empty array`);
@@ -342,6 +416,8 @@ async function validateContractEntry(entry) {
     errors.push(`${contractPath}: files.behavior does not exist (${formatPath(behaviorPath)})`);
   }
 
+  const resolvedExamplePaths = [];
+
   for (const [index, examplePath] of examplePaths.entries()) {
     const resolvedExamplePath = ensureProjectFilePath({
       value: examplePath,
@@ -350,10 +426,16 @@ async function validateContractEntry(entry) {
       errors,
     });
 
+    if (resolvedExamplePath) {
+      resolvedExamplePaths.push(resolvedExamplePath);
+    }
+
     if (resolvedExamplePath && !(await pathExists(resolvedExamplePath))) {
       errors.push(`${contractPath}: files.examples[${index}] does not exist (${formatPath(resolvedExamplePath)})`);
     }
   }
+
+  const declaredExamplePaths = new Set(resolvedExamplePaths);
 
   if (!isObject(contract.root)) {
     errors.push(`${contractPath}: root must be an object`);
@@ -370,6 +452,7 @@ async function validateContractEntry(entry) {
   validateVariants({ variants: contract.variants, contractPath, errors, allowedTargets });
   validateStates({ states: contract.states, contractPath, errors, allowedTargets });
   validateEvents({ events: contract.events, contractPath, errors, allowedTargets });
+  await validateDocs({ docs: contract.docs, contractPath, contractDir, errors, declaredExamplePaths });
 
   if (!isObject(contract.behavior)) {
     errors.push(`${contractPath}: behavior must be an object`);

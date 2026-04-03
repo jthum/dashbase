@@ -4,6 +4,9 @@
   "slug": "carousel",
   "category": "interactive",
   "summary": "Enhances a scroll-snap sequence with previous/next controls, authored dot navigation, and active snap-state sync while keeping the DOM as the source of truth.",
+  "docs": {
+    "examples": []
+  },
   "files": {
     "css": "./carousel.css",
     "behavior": "./carousel.js",

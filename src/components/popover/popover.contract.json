@@ -4,6 +4,9 @@
   "slug": "popover",
   "category": "interactive",
   "summary": "Provides the shared anchored overlay primitive for utility popovers and menus, with panel anatomy, menu mode, and a browser-native popover shim.",
+  "docs": {
+    "examples": []
+  },
   "files": {
     "css": "./popover.css",
     "behavior": "./popover.js",

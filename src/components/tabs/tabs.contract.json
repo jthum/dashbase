@@ -4,6 +4,20 @@
   "slug": "tabs",
   "category": "interactive",
   "summary": "Uses ui-tabs, tab-list, and tab-panel anatomy with ARIA roles, authored hidden panels, and a small shim for keyboard navigation and selection sync.",
+  "docs": {
+    "examples": [
+      {
+        "id": "horizontal-tabs",
+        "title": "Horizontal tabs",
+        "source": "./tabs.html"
+      },
+      {
+        "id": "vertical-tabs",
+        "title": "Vertical tabs",
+        "source": "./tabs.html"
+      }
+    ]
+  },
   "files": {
     "css": "./tabs.css",
     "behavior": "./tabs.js",

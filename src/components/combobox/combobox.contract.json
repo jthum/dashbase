@@ -4,6 +4,20 @@
   "slug": "combobox",
   "category": "interactive",
   "summary": "Builds a searchable combobox from a semantic input plus a popover listbox, with filtering, active option movement, and selection handled by a small shim.",
+  "docs": {
+    "examples": [
+      {
+        "id": "assignee-combobox",
+        "title": "Assignee picker",
+        "source": "./combobox.html"
+      },
+      {
+        "id": "framework-combobox",
+        "title": "Library picker",
+        "source": "./combobox.html"
+      }
+    ]
+  },
   "files": {
     "css": "./combobox.css",
     "behavior": "./combobox.js",
