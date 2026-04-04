@@ -5,7 +5,7 @@
  * - filtering via a text input
  * - keyboard navigation across listbox options
  * - selection that writes back to the input value
- * - popover positioning anchored to the input
+ * - open / close coordination for an anchor-positioned listbox panel
  */
 
 const COMBOBOX_ROOT_SELECTOR = "combo-box";
@@ -13,7 +13,6 @@ const COMBOBOX_INPUT_SELECTOR = 'input[role="combobox"]';
 const COMBOBOX_PANEL_SELECTOR = 'popover-panel[popover][role="listbox"]';
 const COMBOBOX_OPTION_SELECTOR = 'button[role="option"]';
 const COMBOBOX_EMPTY_SELECTOR = "combobox-empty";
-const COMBOBOX_MARGIN = 16;
 let comboboxCount = 0;
 
 function isComboboxRoot(value) {
@@ -125,51 +124,6 @@ function getActiveOption(root) {
   return active instanceof HTMLButtonElement ? active : null;
 }
 
-function positionComboboxPanel(root) {
-  const input = getComboboxInput(root);
-  const panel = getComboboxPanel(root);
-  if (!input || !panel) {
-    return;
-  }
-
-  const rect = input.getBoundingClientRect();
-  let inlineStart = rect.left;
-  const inlineSize = rect.width;
-  let blockStart = rect.bottom + 4;
-
-  panel.style.setProperty("--combobox-inline-size", `${inlineSize}px`);
-  panel.style.setProperty("--combobox-inline-start", `${inlineStart}px`);
-  panel.style.setProperty("--combobox-block-start", `${blockStart}px`);
-
-  requestAnimationFrame(() => {
-    const panelRect = panel.getBoundingClientRect();
-    let nextInlineStart = inlineStart;
-    let nextBlockStart = blockStart;
-
-    if (panelRect.right > window.innerWidth - COMBOBOX_MARGIN) {
-      nextInlineStart = Math.max(
-        COMBOBOX_MARGIN,
-        inlineStart - (panelRect.right - (window.innerWidth - COMBOBOX_MARGIN)),
-      );
-    }
-
-    if (panelRect.bottom > window.innerHeight - COMBOBOX_MARGIN) {
-      const above = rect.top - panelRect.height - 4;
-      if (above >= COMBOBOX_MARGIN) {
-        nextBlockStart = above;
-      } else {
-        nextBlockStart = Math.max(
-          COMBOBOX_MARGIN,
-          blockStart - (panelRect.bottom - (window.innerHeight - COMBOBOX_MARGIN)),
-        );
-      }
-    }
-
-    panel.style.setProperty("--combobox-inline-start", `${nextInlineStart}px`);
-    panel.style.setProperty("--combobox-block-start", `${nextBlockStart}px`);
-  });
-}
-
 function openCombobox(root) {
   const panel = getComboboxPanel(root);
   if (!panel) {
@@ -177,7 +131,6 @@ function openCombobox(root) {
   }
 
   closeOpenComboboxes(root);
-  positionComboboxPanel(root);
 
   if (!panel.matches(":popover-open")) {
     panel.showPopover();
@@ -382,9 +335,6 @@ function initializeCombobox(root) {
 
   panel.addEventListener("toggle", () => {
     syncExpandedState(root);
-    if (panel.matches(":popover-open")) {
-      positionComboboxPanel(root);
-    }
   });
 }
 
@@ -435,29 +385,3 @@ document.addEventListener("focusin", (event) => {
     closeCombobox(root);
   }
 });
-
-window.addEventListener("resize", () => {
-  for (const root of document.querySelectorAll(COMBOBOX_ROOT_SELECTOR)) {
-    if (!isComboboxRoot(root)) {
-      continue;
-    }
-
-    const panel = getComboboxPanel(root);
-    if (panel?.matches(":popover-open")) {
-      positionComboboxPanel(root);
-    }
-  }
-});
-
-window.addEventListener("scroll", () => {
-  for (const root of document.querySelectorAll(COMBOBOX_ROOT_SELECTOR)) {
-    if (!isComboboxRoot(root)) {
-      continue;
-    }
-
-    const panel = getComboboxPanel(root);
-    if (panel?.matches(":popover-open")) {
-      positionComboboxPanel(root);
-    }
-  }
-}, true);

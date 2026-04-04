@@ -147,10 +147,6 @@
       }
     }
 
-    &[open] > :not(summary) {
-      animation: accordion-content-in var(--duration-base) var(--easing-default);
-    }
-
     &:not(:has(> accordion-panel))[open] > summary {
       margin-block-end: var(--space-sm);
     }
@@ -198,22 +194,28 @@
     }
   }
 
-  @keyframes accordion-content-in {
-    from {
-      opacity: 0;
-      translate: 0 calc(var(--space-xs) * -1);
+  @supports (interpolate-size: allow-keywords) and selector(::details-content) {
+    details {
+      interpolate-size: allow-keywords;
     }
 
-    to {
-      opacity: 1;
-      translate: 0 0;
+    details::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition: block-size var(--duration-base) var(--easing-default);
     }
-  }
 
-  @starting-style {
-    details[open] > :not(summary) {
-      opacity: 0;
-      translate: 0 calc(var(--space-xs) * -1);
+    details[open]::details-content {
+      block-size: auto;
+    }
+
+    @supports (transition-behavior: allow-discrete) {
+      details::details-content {
+        transition:
+          block-size var(--duration-base) var(--easing-default),
+          content-visibility var(--duration-base) var(--easing-default) allow-discrete;
+        transition-behavior: allow-discrete;
+      }
     }
   }
 }

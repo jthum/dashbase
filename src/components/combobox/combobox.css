@@ -31,6 +31,7 @@
   }
 
   combo-box > input[role="combobox"] {
+    anchor-name: --combobox-anchor;
     padding-inline-end: calc(var(--control-padding-inline) + 1.25rem);
     background-image:
       linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
@@ -56,17 +57,26 @@
     --popover-padding: var(--space-xs);
     --popover-radius: var(--radius-lg);
     --popover-min-inline: 14rem;
-    --popover-max-inline: min(var(--combobox-inline-size, 20rem), calc(100vi - (var(--space-lg) * 2)));
-    --popover-inset-block-start: var(--combobox-block-start, var(--space-lg));
-    --popover-inset-block-end: auto;
-    --popover-inset-inline-start: var(--combobox-inline-start, var(--space-lg));
-    --popover-inset-inline-end: auto;
+    --popover-max-inline: min(20rem, calc(100vi - (var(--space-lg) * 2)));
 
-    inline-size: var(--combobox-inline-size, var(--popover-min-inline));
-    min-inline-size: var(--combobox-inline-size, var(--popover-min-inline));
-    max-inline-size: min(var(--combobox-inline-size, var(--popover-max-inline)), calc(100vi - (var(--space-lg) * 2)));
     max-block-size: min(18rem, calc(100vb - (var(--space-lg) * 2)));
     overflow: auto;
+  }
+
+  @supports (position-anchor: --combobox-anchor) and (inset-block-start: anchor(bottom)) {
+    combo-box > popover-panel[popover][role="listbox"] {
+      position-anchor: --combobox-anchor;
+      --popover-min-inline: anchor-size(width);
+      --popover-max-inline: min(anchor-size(width), calc(100vi - (var(--space-lg) * 2)));
+      --popover-inset-block-start: calc(anchor(bottom) + 4px);
+      --popover-inset-block-end: auto;
+      --popover-inset-inline-start: anchor(left);
+      --popover-inset-inline-end: auto;
+
+      inline-size: anchor-size(width);
+      min-inline-size: anchor-size(width);
+      max-inline-size: min(anchor-size(width), calc(100vi - (var(--space-lg) * 2)));
+    }
   }
 
   combo-box > popover-panel[popover][role="listbox"]::backdrop {

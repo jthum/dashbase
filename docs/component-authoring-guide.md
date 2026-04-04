@@ -207,7 +207,9 @@ shrink the shim:
 
 - `details[name]` for exclusive disclosure groups
 - Popover API and Invoker Commands for overlays and trigger wiring
+- CSS anchor positioning for comboboxes, date pickers, and other anchored surfaces before adding geometry math in JS
 - `transition-behavior: allow-discrete` for open/close polish on overlays
+- `interpolate-size` for disclosure and panel motion when the browser can animate intrinsic sizes directly
 - container queries when layout should respond to the component or pattern width rather than the viewport
 - `field-sizing: content` when native form controls can grow without JS
 
@@ -220,7 +222,6 @@ Keep this watchlist in mind for future adoption when the fit is real:
 - `subgrid` for pattern-level alignment across nested regions
 - `@property` for theme or motion polish when registered tokens make transitions cleaner
 - scroll-driven animations when the effect is purely presentational, not functional
-- `interpolate-size` when it meaningfully improves disclosure or panel motion without forcing a fallback maze
 
 Do not add a second implementation path just to say a new feature is used. The
 feature must either remove JS, reduce markup, or make the authored code

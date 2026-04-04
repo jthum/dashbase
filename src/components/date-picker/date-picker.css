@@ -27,6 +27,7 @@
   }
 
   date-picker > input[type="text"] {
+    anchor-name: --date-picker-anchor;
     inline-size: 100%;
     padding-inline-end: calc(var(--control-padding-inline) + 2rem);
     cursor: pointer;
@@ -73,27 +74,43 @@
 
   date-picker > popover-panel[popover] {
     --popover-padding: var(--space-sm);
-    --popover-min-inline: max(18rem, var(--datepicker-inline-size, 18rem));
-    --popover-max-inline: min(max(18rem, var(--datepicker-inline-size, 18rem)), calc(100vi - (var(--space-lg) * 2)));
-    --popover-inset-block-start: var(--datepicker-block-start, var(--space-lg));
-    --popover-inset-block-end: auto;
-    --popover-inset-inline-start: var(--datepicker-inline-start, var(--space-lg));
-    --popover-inset-inline-end: auto;
+    --popover-min-inline: 18rem;
+    --popover-max-inline: min(24rem, calc(100vi - (var(--space-lg) * 2)));
     --panel-padding: var(--space-sm);
     --panel-gap: var(--space-sm);
 
-    inline-size: max(18rem, var(--datepicker-inline-size, 18rem));
-    min-inline-size: max(18rem, var(--datepicker-inline-size, 18rem));
-    max-inline-size: min(max(18rem, var(--datepicker-inline-size, 18rem)), calc(100vi - (var(--space-lg) * 2)));
     overflow: clip;
   }
 
+  @supports (position-anchor: --date-picker-anchor) and (inset-block-start: anchor(bottom)) {
+    date-picker > popover-panel[popover] {
+      position-anchor: --date-picker-anchor;
+      --popover-min-inline: max(18rem, anchor-size(width));
+      --popover-max-inline: min(max(18rem, anchor-size(width)), calc(100vi - (var(--space-lg) * 2)));
+      --popover-inset-block-start: calc(anchor(bottom) + 4px);
+      --popover-inset-block-end: auto;
+      --popover-inset-inline-start: anchor(left);
+      --popover-inset-inline-end: auto;
+
+      inline-size: max(18rem, anchor-size(width));
+      min-inline-size: max(18rem, anchor-size(width));
+      max-inline-size: min(max(18rem, anchor-size(width)), calc(100vi - (var(--space-lg) * 2)));
+    }
+  }
+
   date-picker:has(> popover-panel[popover] > calendar-view[data-mode="range"]) > popover-panel[popover] {
-    --popover-min-inline: max(22rem, var(--datepicker-inline-size, 22rem));
-    --popover-max-inline: min(max(22rem, var(--datepicker-inline-size, 22rem)), calc(100vi - (var(--space-lg) * 2)));
-    inline-size: max(22rem, var(--datepicker-inline-size, 22rem));
-    min-inline-size: max(22rem, var(--datepicker-inline-size, 22rem));
-    max-inline-size: min(max(22rem, var(--datepicker-inline-size, 22rem)), calc(100vi - (var(--space-lg) * 2)));
+    --popover-min-inline: 22rem;
+    --popover-max-inline: min(32rem, calc(100vi - (var(--space-lg) * 2)));
+  }
+
+  @supports (position-anchor: --date-picker-anchor) and (inset-block-start: anchor(bottom)) {
+    date-picker:has(> popover-panel[popover] > calendar-view[data-mode="range"]) > popover-panel[popover] {
+      --popover-min-inline: max(22rem, anchor-size(width));
+      --popover-max-inline: min(max(22rem, anchor-size(width)), calc(100vi - (var(--space-lg) * 2)));
+      inline-size: max(22rem, anchor-size(width));
+      min-inline-size: max(22rem, anchor-size(width));
+      max-inline-size: min(max(22rem, anchor-size(width)), calc(100vi - (var(--space-lg) * 2)));
+    }
   }
 
   date-picker > popover-panel[popover] > calendar-view {

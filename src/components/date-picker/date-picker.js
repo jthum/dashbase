@@ -2,7 +2,6 @@
  * Dashbase — Date Picker behavior
  *
  * Enhances <date-picker> roots with:
- * - anchored popover positioning
  * - input/display value sync from nested <calendar-view>
  * - open / close coordination between input, trigger, and panel
  * - optional clear and done actions
@@ -15,7 +14,6 @@ const DATE_PICKER_PANEL_SELECTOR = "popover-panel[popover]";
 const DATE_PICKER_CALENDAR_SELECTOR = "calendar-view";
 const DATE_PICKER_CLEAR_SELECTOR = "[data-date-picker-clear]";
 const DATE_PICKER_CLOSE_SELECTOR = "[data-date-picker-close]";
-const DATE_PICKER_MARGIN = 16;
 let datePickerCount = 0;
 
 const singleDateFormatter = new Intl.DateTimeFormat(undefined, {
@@ -230,51 +228,6 @@ function syncHiddenInputs(root) {
   }
 }
 
-function positionDatePickerPanel(root) {
-  const input = getDatePickerInput(root);
-  const panel = getDatePickerPanel(root);
-  if (!input || !panel) {
-    return;
-  }
-
-  const rect = input.getBoundingClientRect();
-  let inlineStart = rect.left;
-  const inlineSize = rect.width;
-  let blockStart = rect.bottom + 4;
-
-  panel.style.setProperty("--datepicker-inline-size", `${inlineSize}px`);
-  panel.style.setProperty("--datepicker-inline-start", `${inlineStart}px`);
-  panel.style.setProperty("--datepicker-block-start", `${blockStart}px`);
-
-  requestAnimationFrame(() => {
-    const panelRect = panel.getBoundingClientRect();
-    let nextInlineStart = inlineStart;
-    let nextBlockStart = blockStart;
-
-    if (panelRect.right > window.innerWidth - DATE_PICKER_MARGIN) {
-      nextInlineStart = Math.max(
-        DATE_PICKER_MARGIN,
-        inlineStart - (panelRect.right - (window.innerWidth - DATE_PICKER_MARGIN)),
-      );
-    }
-
-    if (panelRect.bottom > window.innerHeight - DATE_PICKER_MARGIN) {
-      const above = rect.top - panelRect.height - 4;
-      if (above >= DATE_PICKER_MARGIN) {
-        nextBlockStart = above;
-      } else {
-        nextBlockStart = Math.max(
-          DATE_PICKER_MARGIN,
-          blockStart - (panelRect.bottom - (window.innerHeight - DATE_PICKER_MARGIN)),
-        );
-      }
-    }
-
-    panel.style.setProperty("--datepicker-inline-start", `${nextInlineStart}px`);
-    panel.style.setProperty("--datepicker-block-start", `${nextBlockStart}px`);
-  });
-}
-
 function openDatePicker(root) {
   const panel = getDatePickerPanel(root);
   if (!panel) {
@@ -282,7 +235,6 @@ function openDatePicker(root) {
   }
 
   closeOpenDatePickers(root);
-  positionDatePickerPanel(root);
 
   if (!panel.matches(":popover-open")) {
     panel.showPopover();
@@ -418,9 +370,6 @@ function initializeDatePicker(root) {
 
   panel.addEventListener("toggle", () => {
     syncDatePickerState(root);
-    if (panel.matches(":popover-open")) {
-      positionDatePickerPanel(root);
-    }
   });
 
   calendar.addEventListener("change", () => {
@@ -476,29 +425,3 @@ document.addEventListener("pointerdown", (event) => {
     closeDatePicker(root);
   }
 });
-
-window.addEventListener("resize", () => {
-  for (const root of document.querySelectorAll(DATE_PICKER_ROOT_SELECTOR)) {
-    if (!isDatePickerRoot(root)) {
-      continue;
-    }
-
-    const panel = getDatePickerPanel(root);
-    if (panel?.matches(":popover-open")) {
-      positionDatePickerPanel(root);
-    }
-  }
-});
-
-window.addEventListener("scroll", () => {
-  for (const root of document.querySelectorAll(DATE_PICKER_ROOT_SELECTOR)) {
-    if (!isDatePickerRoot(root)) {
-      continue;
-    }
-
-    const panel = getDatePickerPanel(root);
-    if (panel?.matches(":popover-open")) {
-      positionDatePickerPanel(root);
-    }
-  }
-}, true);
