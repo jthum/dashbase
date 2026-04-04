@@ -16,6 +16,7 @@
   <style>
     body {
       margin: 0;
+      container-type: inline-size;
     }
 
     /* @fragment pattern-styles:start */
@@ -27,7 +28,7 @@
         linear-gradient(180deg, color-mix(in oklch, var(--bg-raised) 90%, transparent), var(--bg-default));
     }
 
-    @media (min-width: 70rem) {
+    @container (min-width: 70rem) {
       .login-screen {
         grid-template-columns: minmax(0, 1.1fr) minmax(24rem, 28rem);
       }

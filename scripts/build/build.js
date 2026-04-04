@@ -3,6 +3,7 @@
  *
  * 0. Validates example HTML and current docs snippets against component + pattern contracts
  * 0.5. Generates the pattern manifest
+ * 0.75. Generates a lightweight preview tree + index in dist/preview
  * 1. Resolves @import in baseline.css (inline the imports)
  * 2. Copies individual component files to dist/components/<component>/
  * 3. Emits readable + minified component assets side by side
@@ -16,6 +17,7 @@ import { dirname, join, relative } from "node:path";
 import { gzipSync } from "node:zlib";
 import { validateContracts } from "./validate-examples.js";
 import { generatePatternManifest } from "./generate-pattern-manifest.js";
+import { generatePreview } from "./generate-preview.js";
 
 const ROOT = new URL("../..", import.meta.url).pathname;
 const BASELINE_DIR = join(ROOT, "src/baseline");
@@ -129,6 +131,8 @@ async function build() {
   await mkdir(DIST, { recursive: true });
   await mkdir(DIST_COMPONENTS, { recursive: true });
   await mkdir(DIST_BUNDLES, { recursive: true });
+  await generatePreview({ log: false });
+  console.log("  ✓ dist/preview/index.html");
 
   // 1. Build baseline.css with resolved imports
   const baselineContent = await resolveImports(join(BASELINE_DIR, "baseline.css"));

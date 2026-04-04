@@ -10,7 +10,6 @@
 
 const TOAST_REGION_SELECTOR = "toast-region";
 const TOAST_SELECTOR = "ui-toast";
-const CLOSE_ANIMATION_MS = 180;
 const DEFAULT_DURATION = 5000;
 
 const toastTimers = new WeakMap();
@@ -67,9 +66,22 @@ function dismissToast(toast) {
   clearToastTimer(toast);
   toast.setAttribute("data-state", "closing");
 
-  window.setTimeout(() => {
+  const hasExitAnimation = getComputedStyle(toast).animationName !== "none";
+  if (!hasExitAnimation) {
     toast.remove();
-  }, CLOSE_ANIMATION_MS);
+    return;
+  }
+
+  const handleAnimationEnd = (event) => {
+    if (event.target !== toast) {
+      return;
+    }
+
+    toast.removeEventListener("animationend", handleAnimationEnd);
+    toast.remove();
+  };
+
+  toast.addEventListener("animationend", handleAnimationEnd);
 }
 
 function scheduleAutoDismiss(toast, duration) {

@@ -8,7 +8,7 @@
       );
     }
 
-    @media (min-width: 64rem) {
+    @container (min-width: 64rem) {
       .dashboard-shell {
         grid-template-columns: 15rem minmax(0, 1fr);
       }

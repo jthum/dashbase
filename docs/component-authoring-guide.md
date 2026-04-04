@@ -200,6 +200,32 @@ Prefer shared surface anatomy where needed:
 
 See `docs/dashbase-overlay-architecture.md` for the full model.
 
+### 15. Prefer baseline platform features before growing shims
+
+Before adding JavaScript, check whether a modern baseline feature can replace or
+shrink the shim:
+
+- `details[name]` for exclusive disclosure groups
+- Popover API and Invoker Commands for overlays and trigger wiring
+- `transition-behavior: allow-discrete` for open/close polish on overlays
+- container queries when layout should respond to the component or pattern width rather than the viewport
+- `field-sizing: content` when native form controls can grow without JS
+
+Use these when they materially simplify the implementation and degrade
+gracefully. Unsupported browsers may miss the enhancement as long as the
+component still works correctly.
+
+Keep this watchlist in mind for future adoption when the fit is real:
+
+- `subgrid` for pattern-level alignment across nested regions
+- `@property` for theme or motion polish when registered tokens make transitions cleaner
+- scroll-driven animations when the effect is purely presentational, not functional
+- `interpolate-size` when it meaningfully improves disclosure or panel motion without forcing a fallback maze
+
+Do not add a second implementation path just to say a new feature is used. The
+feature must either remove JS, reduce markup, or make the authored code
+meaningfully clearer.
+
 ---
 
 ## Component Template

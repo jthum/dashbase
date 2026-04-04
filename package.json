@@ -14,6 +14,7 @@
     "validate:contracts": "bun run scripts/build/validate-examples.js",
     "validate:examples": "bun run scripts/build/validate-examples.js",
     "generate:pattern-manifest": "bun run scripts/build/generate-pattern-manifest.js",
+    "generate:preview": "bun run scripts/build/generate-preview.js",
     "generate:react": "bun run scripts/targets/react/generate.ts",
     "validate:react": "bun run scripts/targets/react/validate.ts",
     "generate:svelte": "bun run scripts/targets/svelte/generate.ts",

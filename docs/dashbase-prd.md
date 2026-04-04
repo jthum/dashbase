@@ -1,7 +1,7 @@
 # Dashbase — Product Requirements & Implementation Plan
 
 > A semantic-first CSS component library for web applications.  
-> Version 0.1 — Working Document
+> Version 0.2 — Current Direction
 
 ---
 
@@ -26,179 +26,88 @@
 
 ## 1. Philosophy & Origin
 
-### The Problem
+Dashbase exists because modern frontend HTML often becomes unreadable long before it becomes powerful. The library starts from a simple belief: the web platform is already strong enough to carry much more of the UI layer than most projects let it.
 
-Modern frontend HTML has become unreadable. View-source on any React or Tailwind project and you see:
+Dashbase restores a clearer contract:
 
-```html
-<div class="inline-flex items-center justify-center rounded-md text-sm font-medium
-            ring-offset-background transition-colors focus-visible:outline-none
-            focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-            disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground
-            hover:bg-primary/90 h-10 px-4 py-2">
-  Click me
-</div>
-```
+- HTML expresses structure and meaning
+- CSS expresses presentation and theming
+- JS is only introduced when the platform has a genuine behavioral gap
 
-This is a button. HTML has `<button>`. This is a regression.
-
-HTML was designed with XML roots — it was meant to encode the **structure and meaning of content**, not carry styling instructions as class names. `<button>`, `<dialog>`, `<input>`, `<fieldset>` exist because someone thought carefully about semantics. When we route around them, we lose:
-
-- Native browser accessibility behaviour (keyboard nav, focus management, ARIA roles)
-- System integration (mobile keyboards, OS-level form autofill, date pickers)
-- Institutional knowledge baked into browser engines by accessibility teams
-- Legibility — humans can no longer read the source
-
-### The Insight
-
-The root cause isn't Tailwind — Tailwind is a fine tool for what it does. The root cause is that existing component libraries force an all-or-nothing choice:
-
-- **Utility-first (Tailwind/shadcn):** Maximum control, zero readability, enormous class soup.
-- **Classless (Pico, Water.css):** Readable HTML, but no variant system, no ecosystem, no Tailwind interop.
-- **Class-based (DaisyUI, Bootstrap):** Better than utility-first, but still requires `.btn`, `.card` — you can't just write `<button>`.
-
-Dashbase occupies the genuine gap: **style HTML elements directly**, embrace browser defaults, use CSS variables for theming, and remain composable with the Tailwind ecosystem when needed.
-
-### The Bet
-
-The modern web platform is good enough. Browsers have earned more trust than the ecosystem gives them. CSS has become powerful enough that the JS-for-everything era is ending. The readability of HTML is a first-class concern worth designing around.
+This is not nostalgia. It is a deliberate product decision aimed at application UI, where teams usually own the HTML and can benefit from styling semantic elements directly instead of wrapping everything in utility classes or framework-only abstractions.
 
 ---
 
 ## 2. What Dashbase Is
 
-- A **CSS component library** for **web applications** (not universal/marketing sites)
-- Styles **semantic HTML elements directly**: `<button>`, `<input>`, `<dialog>`, etc.
-- Uses **named custom elements** (not web components) as readable structural containers where no semantic HTML equivalent exists: `<form-field>`, `<input-group>`, `<tab-panel>`
-- **Themeable via CSS custom properties** — from zero overrides (pure browser defaults) to a fully opinionated design system
-- **Compiled to pure CSS** — no runtime dependency on Tailwind or any framework
-- **Optionally composable with Tailwind** — import Dashbase alongside Tailwind for utility overrides
-- **Modular** — import `base.css` + only the component files you use
-- Authored using **`@apply`** against Tailwind during development; output is vanilla CSS
-- Targets the **three major browser engines**: Blink (Chrome/Edge), Gecko (Firefox), WebKit (Safari) — and welcomes Ladybird as a future target
+- A **semantic-first CSS component library** for **web applications**
+- A **browser-native design system** built on modern CSS, CSS custom properties, and small progressive-enhancement shims
+- A **component-first source tree** where each component owns its CSS, optional behavior, examples, and contract metadata
+- A **pattern system** for higher-level native HTML compositions such as form fields, login boxes, and dashboard shells
+- A **contract-first generator pipeline** that can emit framework targets such as React, Svelte, and Vue from the same source of truth
+- A **modular distribution**: baseline layers, per-component assets, optional bundles, generated adapters, and a lightweight preview tree
 
 ---
 
 ## 3. What Dashbase Is Not
 
-- **Not a universal CSS library.** It assumes you own the HTML. Global element targeting is intentional and acceptable in a web application context.
-- **Not pixel-perfect across browsers.** Browser rendering differences are embraced, not fought. What matters is functional consistency, not visual identity across renderers.
-- **Not a CSS reset library.** Dashbase does not zero out browser defaults. It refines them.
-- **Not a JavaScript component library.** Core styling requires no JS. Progressive enhancement via minimal vanilla JS is acceptable and documented per component.
-- **Not a web component library.** Named custom elements are plain HTML unknowns — no shadow DOM, no registration, no framework.
-- **Not a Tailwind replacement.** It complements Tailwind by handling the semantic layer. Tailwind handles exceptions.
+- **Not a classless website stylesheet.** Dashbase targets app UIs, not arbitrary third-party content.
+- **Not a utility-first library.** Utilities can sit on top, but they are not the primary authoring model.
+- **Not a JS framework.** Behavior shims exist, but they are intentionally small and browser-oriented.
+- **Not a web component system.** Named custom elements are plain HTML tags without registration or shadow DOM.
+- **Not a pixel-perfect renderer.** Cross-browser functional consistency matters more than visual identity down to the last pixel.
+- **Not a universal behavior DSL.** The source of truth is plain HTML, CSS, minimal JS, and explicit contracts.
 
 ---
 
 ## 4. Core Design Decisions & Why
 
-### 4.1 Global Element Targeting
+### 4.1 Style Semantic Elements Directly
 
-**Decision:** Style `<button>`, `<input>`, `<select>` etc. at the element level, not via opt-in classes.
+Dashbase styles real HTML elements like `<button>`, `<input>`, `<dialog>`, and `<details>` directly. This keeps authored markup readable and preserves platform semantics.
 
-**Why:** In a web application, you own the HTML. There is no third-party content that will accidentally inherit styles. Opt-in via class (`.btn`) means every element requires ceremony. Opt-out is dramatically less friction. The few exceptions (icon buttons, reset buttons) use a modifier class or attribute to override.
+### 4.2 Use Named Custom Elements Only Where Semantics Run Out
 
----
+When HTML has no honest structural equivalent, Dashbase prefers readable custom element names such as `<form-field>`, `<tab-list>`, `<popover-panel>`, or `<ui-carousel>` instead of anonymous `<div>` wrappers.
 
-### 4.2 No CSS Reset (or Minimum Reset)
+### 4.3 Keep the Reset Minimal
 
-**Decision:** Do not use a CSS reset. Do not use normalize.css. Apply only surgical fixes for genuinely broken cross-browser behaviour (e.g., `box-sizing: border-box`).
+Browser defaults are load-bearing. Dashbase uses only a light reset and then layers tokens, primitives, base rules, and components above the browser rather than erasing the platform and rebuilding it.
 
-**Why:** Browser defaults exist because accessibility and platform teams thought about them. A reset discards focus rings, form element behaviour, touch target sizes, and system integration — all of which then need to be rebuilt in JS at worse quality. Browsers have largely converged since the normalize era. Most of what normalize "fixed" no longer needs fixing.
+### 4.4 Use CSS Variables Across the Whole Spectrum
 
-**Minimum reset (the only globally applied rules):**
+Dashbase should work across a theming spectrum:
 
-```css
-@layer dashbase.reset {
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-}
-```
+- no overrides: near-native browser look
+- minimal overrides: lightly branded
+- full token set: fully designed product UI
 
-That's it unless a specific, documented cross-browser bug requires more.
+Components read from tokens and derived values rather than hardcoded visual constants.
 
----
+### 4.5 Prefer Native State and Native Behavior
 
-### 4.3 CSS Custom Properties for Theming (Spectrum Model)
+Dashbase uses native states and selectors whenever possible:
 
-**Decision:** All visual opinions are expressed as CSS custom properties with browser-native fallbacks. Components read from variables; variables are optional.
+- `:has()`
+- `[open]`
+- `[disabled]`
+- `[aria-selected="true"]`
+- `[aria-expanded="true"]`
+- `details[name]`
 
-**Why:** This creates a natural theming spectrum:
+If the platform can already do the job, Dashbase should not replace it with extra wrappers or JS.
 
-| Level | What's defined | Result |
-|---|---|---|
-| **None** | Nothing | Pure browser defaults. Fully native. |
-| **Minimal** | `--color-primary`, `--radius` | Tinted native. Still feels system-native. |
-| **Full** | Entire token set | Fully designed product. Opinionated. Still not pixel-perfect — and that's fine. |
+### 4.6 Keep Shims Small and Browser-Focused
 
-The same component CSS works across all three levels. Undefined variables fall back to browser values. This is intentional graceful degradation toward the platform, not error handling.
+Behavior shims exist for things like tabs, popovers, comboboxes, and carousels. They should stay lean and serve plain HTML first. Framework adapters can add their own lifecycle or event-bridging glue on top.
 
----
+### 4.7 Make Contracts Explicit
 
-### 4.4 Named Custom Elements (Not Web Components)
+Dashbase does not infer everything from source. Each component or pattern can carry an explicit contract that describes the public anatomy, variants, states, docs examples, and adapter-facing metadata. This keeps generated targets and docs from silently drifting.
 
-**Decision:** Use named custom HTML elements — `<form-field>`, `<input-group>`, `<tab-panel>` — as structural wrappers where no semantic HTML equivalent exists. These are **not** web components. They require no registration, no shadow DOM, no JavaScript.
+### 4.8 Patterns Are First-Class
 
-**Why:** The HTML spec permits unknown elements. They parse as `HTMLUnknownElement`, render as block elements (like `<div>`), and are fully styleable via CSS. An anonymous `<div class="form-field">` carries no meaning to a reader. `<form-field>` is self-documenting. This restores readability to structural markup without inventing a parallel component system.
-
-**The rule is strict:**
-- If a semantic HTML element exists → use it (`<fieldset>`, `<dialog>`, `<details>`, `<output>`)
-- If no semantic equivalent exists → use a named custom element
-- Never use `<div>` as a container if either of the above applies
-
----
-
-### 4.5 `@layer` as the Foundation
-
-**Decision:** All Dashbase styles live in named `@layer` blocks. Layer order is declared in `base.css`.
-
-**Why:** Layers make Dashbase composable without specificity conflicts. Dashbase styles live below utilities. Tailwind utilities land above and can override without `!important`. Teams can add their own layers. Nothing fights.
-
-```css
-@layer dashbase.reset, dashbase.tokens, dashbase.base, dashbase.components, utilities;
-```
-
----
-
-### 4.6 Tailwind as Build-Time Vocabulary, Not Runtime Dependency
-
-**Decision:** Author component CSS using `@apply` against Tailwind's utility classes. Compile to plain CSS. Ship no Tailwind dependency in the output.
-
-**Why:** Tailwind's design tokens (spacing scale, color system, shadow values, easing curves) represent years of considered defaults. `@apply` lets us consume that vocabulary at build time without coupling consumers to Tailwind. Teams that want Tailwind get it. Teams that don't are unaffected.
-
-**Future direction:** A planned sister project, **Baseline CSS**, will replace even the `@apply`/Tailwind compiler dependency with a standalone token vocabulary, making Dashbase fully self-contained.
-
----
-
-### 4.7 Modularity Model
-
-**Decision:** `base.css` is always required and must remain small (tokens + layer declarations only). All component files are optional and independently importable.
-
-**Why:** shadcn demonstrated that per-component delivery is the right model for larger projects. Unlike shadcn, Dashbase doesn't require copy-paste ceremony — it's just CSS file imports. Small projects import everything; large projects import what they use.
-
-```html
-<!-- Always -->
-<link rel="stylesheet" href="dashbase/base.css">
-
-<!-- Only what you need -->
-<link rel="stylesheet" href="dashbase/components/button.css">
-<link rel="stylesheet" href="dashbase/components/dialog.css">
-```
-
----
-
-### 4.8 Progressive Enhancement for JS-Dependent Behaviour
-
-**Decision:** Core styling requires zero JavaScript. Components that require behaviour (dialog open/close, tab switching, dropdown) use the most native available HTML/CSS mechanism first, then add a minimal vanilla JS progressive enhancement layer where unavoidable. No framework dependency.
-
-**JS-free components (CSS/HTML only):**
-`<button>`, `<input>`, `<textarea>`, `<select>`, `<checkbox>`, `<radio>`, `<fieldset>`, `<input-group>`, `<card>`, `<badge>`, `<alert>`, `<avatar>`, `<table>`, `<details>` (accordion)
-
-**Components requiring minimal progressive enhancement:**
-- `<dialog>` — Use Popover API (`popovertarget`) for panels; use Invoker Commands (`invoketarget="showModal"`) for modal dialogs. Chrome 135+ supports invoker commands natively; a small shim handles the gap.
-- `tabs` — No native HTML element exists. Use `role="tablist"` / `role="tab"` / `aria-selected` + a small JS snippet for keyboard navigation and panel switching.
-- `dropdown` — Custom content dropdowns use the Popover API. `<select>` is used where native semantics apply.
+App builders reach for patterns before primitives. Dashbase therefore treats native HTML patterns as a formal layer, with composition references, contracts, manifests, and future registry potential.
 
 ---
 
@@ -207,220 +116,118 @@ The same component CSS works across all three levels. Undefined variables fall b
 ### Layer Stack
 
 ```
-┌─────────────────────────────────────┐
-│  utilities          (Tailwind / user overrides)  │  highest specificity
-├─────────────────────────────────────┤
-│  dashbase.components                │
-├─────────────────────────────────────┤
-│  dashbase.base                      │
-├─────────────────────────────────────┤
-│  dashbase.tokens                    │
-├─────────────────────────────────────┤
-│  dashbase.reset     (box-sizing only)│
-├─────────────────────────────────────┤
-│  browser defaults                   │  lowest — load-bearing, not discarded
-└─────────────────────────────────────┘
+browser defaults
+  -> reset
+  -> tokens
+  -> primitives
+  -> base
+  -> components
+  -> utilities
 ```
 
-### Token Dependency Rule
+Dashbase currently uses that explicit order in baseline CSS and in the authored component files.
 
-`base.css` must be loaded before any component. Component files have no dependencies on each other. This means any subset of components can be imported in any order after `base.css`.
+### Source of Truth
 
-### State Management via CSS
+Dashbase source is organized around three parallel concerns:
 
-Prefer CSS-native state selectors over JS class toggling wherever possible:
+- **components**: primitive UI building blocks
+- **patterns**: higher-level compositions built from components and other patterns
+- **contracts**: explicit machine-readable descriptions used for validation and generation
 
-```css
-/* Invalid state — no JS needed */
-form-field:has(input:invalid) label { color: var(--color-danger); }
+### Distribution Model
 
-/* Focus styling the container — no JS needed */
-form-field:has(input:focus-visible) { outline: ...; }
+Build output currently includes:
 
-/* Disabled — use the attribute, not a class */
-button[disabled] { ... }
+- `dist/baseline.css` and `dist/baseline.min.css`
+- `dist/components/<name>/<name>.css|js` and matching `.min.*`
+- `dist/bundles/dashbase.css` and `.min.css`
+- `dist/preview/index.html` and a lightweight preview tree
+- generated framework targets under `generated/`
 
-/* Checked — native attribute */
-input[type="checkbox"]:checked { ... }
+### Generated Targets
 
-/* ARIA states for JS-managed components */
-[aria-selected="true"] { ... }
-[aria-expanded="true"] { ... }
-[aria-invalid="true"] { ... }
-```
+Dashbase does not maintain fully separate hand-authored React, Svelte, and Vue libraries as the primary path. Instead:
+
+- the core library remains HTML/CSS/JS
+- contracts define the adapter surface
+- generators emit shim-backed targets by default
+- per-target overrides remain opt-in
 
 ---
 
 ## 6. Theming System
 
-### Token Categories
+Dashbase theming is token-driven.
 
-All tokens are CSS custom properties defined in `base.css` under `@layer dashbase.tokens`. All have fallbacks to browser system values or sensible minimums.
+### Token Layers
 
-```css
-@layer dashbase.tokens {
-  :root {
-    /* Color — oklch for perceptual uniformity */
-    --color-primary: oklch(55% 0.2 250);
-    --color-primary-fg: oklch(98% 0 0);
-    --color-danger: oklch(55% 0.22 25);
-    --color-success: oklch(55% 0.18 145);
-    --color-warning: oklch(75% 0.18 80);
-    --color-neutral: oklch(50% 0.01 270);
-    --color-surface: oklch(98% 0 0);
-    --color-border: oklch(85% 0.01 270);
+- foundation tokens live in `src/baseline/tokens.css`
+- primitives and base rules sit above them
+- themes override tokens rather than restyling every component from scratch
 
-    /* Derived states via color-mix — no separate hover tokens needed */
-    --color-primary-hover: color-mix(in oklch, var(--color-primary) 85%, black);
-    --color-primary-subtle: color-mix(in oklch, var(--color-primary) 15%, white);
+### Theme Modes
 
-    /* Typography */
-    --font-sans: system-ui, sans-serif;
-    --font-mono: ui-monospace, monospace;
-    --text-sm: clamp(0.75rem, 1.5vw, 0.875rem);
-    --text-base: clamp(0.875rem, 2vw, 1rem);
-    --text-lg: clamp(1rem, 2.5vw, 1.125rem);
+- `themes/minimal.css`: near-native, very light touch
+- `themes/default.css`: richer opinionated token set
 
-    /* Spacing */
-    --space-1: 0.25rem;
-    --space-2: 0.5rem;
-    --space-3: 0.75rem;
-    --space-4: 1rem;
-    --space-6: 1.5rem;
-    --space-8: 2rem;
+### Desired Property
 
-    /* Radius */
-    --radius-sm: 0.25rem;
-    --radius-md: 0.375rem;
-    --radius-lg: 0.5rem;
-    --radius-full: 9999px;
-
-    /* Shadows */
-    --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.05);
-    --shadow-md: 0 4px 6px oklch(0% 0 0 / 0.07);
-
-    /* Transitions */
-    --duration-fast: 100ms;
-    --duration-base: 150ms;
-    --easing-default: ease;
-
-    /* Color scheme */
-    color-scheme: light dark;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-surface: oklch(15% 0.01 270);
-      --color-border: oklch(30% 0.01 270);
-      /* primary, danger etc. adjust automatically via oklch */
-    }
-  }
-}
-```
-
-### color-mix() Pattern
-
-Dashbase uses `color-mix(in oklch, ...)` throughout to derive hover, active, subtle, and disabled states from a single base token. This means a minimal theme needs to define very few variables — derived states come for free.
+Any component should remain usable even when only a partial token set is present. Missing visual opinions should degrade toward the browser, not toward broken UI.
 
 ---
 
 ## 7. Modern CSS Feature Set
 
-Dashbase targets the **Baseline: Widely Available** tier or better for most features. Newly available features are used where the enhancement is significant and the fallback is graceful. The list below is the explicit target — implementors should default to these over older equivalents and should continue adopting new platform features as they reach adequate coverage.
+Dashbase should continue leaning on the platform aggressively, as long as fallback behavior remains graceful.
 
-### Required (use everywhere)
+### Foundational Features
 
-| Feature | Usage |
-|---|---|
-| `@layer` | Entire cascade architecture |
-| CSS Custom Properties | All theming and tokens |
-| CSS Nesting | Component state and variant styles |
-| `:is()` / `:where()` | Selector grouping without specificity cost |
-| `:has()` | Parent/sibling state styling, eliminates JS class toggling |
-| Enhanced `:not()` | Complex exclusion selectors |
-| `oklch()` colors | Perceptually uniform color system |
-| `color-mix()` | Derived state colors from base tokens |
-| `color-scheme` | Native light/dark integration |
-| Logical properties | `margin-inline`, `padding-block` — RTL free |
-| `clamp()` / `min()` / `max()` | Fluid typography and spacing |
-| `aspect-ratio` | Media and avatar sizing |
-| `fit-content` | Intrinsic sizing |
-| Grid layout | All two-dimensional layouts |
-| `gap` | Spacing in flex and grid |
-| Individual transform properties | `translate`, `rotate`, `scale` |
-| Media query range syntax | `@media (width >= 768px)` |
+- `@layer`
+- CSS custom properties
+- CSS nesting
+- logical properties
+- `:is()`, `:where()`, `:has()`
+- `oklch()` and `color-mix()`
+- `@starting-style`
+- `aspect-ratio`
+- grid / flex / gap
 
-### Use where applicable
+### Features to Use Opportunistically
 
-| Feature | Usage |
-|---|---|
-| Container size queries | Components that respond to their container, not the viewport |
-| `:nth-child(n of selector)` | Filtered child selection |
-| `@property` | Typed custom properties, animatable variables |
-| Popover API (HTML + CSS) | Dialog, dropdown, tooltip without JS |
-| Invoker Commands | `invoketarget` / `invokeaction` for dialog triggers |
-| `field-sizing: content` | Auto-growing textarea |
-| `text-wrap: balance` / `pretty` | Typographic refinement |
-| `interpolate-size` | Animating to/from `auto` dimensions |
-| `anchor-positioning` | Tooltip and popover placement (when baseline improves) |
-| `appearance: base-select` | Native select styling (Chrome flag → watch for release) |
-| `@starting-style` | Entry animations without JS |
-| View Transitions API | Page and component transitions |
-| Subgrid | Alignment across nested grid components |
+- container queries where the component truly responds to container size
+- `details[name]` for native exclusive disclosure groups
+- `transition-behavior: allow-discrete` when it improves open/close polish without a JS fallback
+- `interpolate-size` when it provides meaningful animation and unsupported browsers still behave correctly
+- subgrid where pattern-level alignment benefits from it
+- CSS math functions when they simplify real layout logic rather than merely looking clever
 
-### Guiding principle
+### Guiding Principle
 
-> If a modern CSS feature eliminates a JavaScript dependency, use it. If it eliminates a wrapper `<div>`, use it. If it makes the HTML more readable, use it. Browser support concerns are secondary to platform progress — graceful degradation is acceptable; blocking on legacy browsers is not.
+If a modern CSS feature removes JS, removes wrapper markup, or makes authored HTML clearer, it is a good candidate for Dashbase. Unsupported browsers should still get a working component, even if they miss the enhancement.
 
 ---
 
 ## 8. Component Inventory
 
-### Phase 1 — Form Elements (pure CSS, no JS)
+Dashbase now has broad component coverage across:
 
-| Component | HTML Element | Notes |
-|---|---|---|
-| Button | `<button>` | Variants: `.primary`, `.danger`, `.ghost`, `.outline`, `.link`. Sizes: `.sm`, `.lg` |
-| Input | `<input>` | All relevant types: `text`, `email`, `password`, `number`, `search`, `url`, `tel` |
-| Textarea | `<textarea>` | Auto-grow via `field-sizing: content` with JS fallback |
-| Select | `<select>` | Native; `appearance: base-select` opt-in when available |
-| Checkbox | `<input type="checkbox">` | Custom mark via CSS, no `<div>` wrapper |
-| Radio | `<input type="radio">` | Custom mark via CSS |
-| Form Field | `<form-field>` (custom element) | Wraps label + input + hint + error. State via `:has()` |
-| Input Group | `<input-group>` (custom element) | Prefix/suffix slots using CSS grid |
-| Fieldset | `<fieldset>` / `<legend>` | Group of related fields |
+- form controls
+- content and layout primitives
+- overlays
+- navigation
+- data display
+- interactive composites
 
-### Phase 2 — Layout & Content (pure CSS)
+Representative shipped areas include:
 
-| Component | HTML Element | Notes |
-|---|---|---|
-| Card | `<ui-card>` or any `.card` host | Flush shell by default; padding lives in `card-content` / header / footer regions. `.simple` adds anatomy-free shell padding |
-| Separator | `<hr>` or `[role="separator"]` | Horizontal by default; vertical with `aria-orientation="vertical"` or `.vertical` |
-| Badge | `<mark>` or `<span>` with role | Inline, no wrapper needed |
-| Alert | `<output>` or `<aside>` with `role="alert"` | Variants: info, success, warning, danger |
-| Avatar | `<ui-avatar>` | Inline initials or child `<img>`. Use `<avatar-group>` for stacks. |
-| Table | `<table>` | Full semantic table with `<thead>`, `<tbody>`, etc. |
-| Breadcrumb | `<nav aria-label="Breadcrumb">` | Ordered or unordered list; current item uses `aria-current="page"`. |
-| Pagination | `<nav aria-label="Pagination">` | Link or button list; active item uses `aria-current="page"`. |
-| Collapsible | `<details class="collapsible">` | Lightweight hide-and-show section, simpler than the accordion shell. |
-| Aspect Ratio | `<aspect-ratio>` | Media frame controlled with `--aspect-ratio`. |
+- buttons, inputs, selects, labels, switches, sliders, form fields
+- cards, tables, badges, avatars, separators, breadcrumbs, pagination
+- dialogs, drawers, popovers, menus, tooltips, hover cards, toast
+- tabs, command palette, combobox, calendar, date picker
+- resizable layouts, scroll areas, carousel, charts, data tables
 
-### Phase 3 — Interactive (JS progressive enhancement)
-
-| Component | HTML Basis | JS Requirement |
-|---|---|---|
-| Dialog / Modal | `<dialog>` | Invoker Commands for `.showModal()` / `.show()`. `popover="auto"` is available for light-dismiss dialog surfaces. |
-| Popover Panel | `<popover-panel popover>` | Anchored non-dialog utility surfaces via the Popover API and CSS anchor positioning. |
-| Menu / Dropdown | `<popover-panel popover role="menu">` | Small JS for `aria-expanded` sync, roving focus, Arrow keys, Home / End, checkbox / radio items, and optional submenu coordination. |
-| Alert Dialog | `<dialog class="alert-dialog">` | Dialog variant for urgent confirmation; use `role="alertdialog"`. |
-| Drawer / Sheet | `<dialog class="drawer">` | Dialog variant for edge-attached flows and slide-over panels. |
-| Accordion / Disclosure | `<details>` / `<summary>` | Zero JS — native open/close. Plain disclosures by default; add `<accordion-panel>` for the richer accordion shell. |
-| Tabs | `<tab-list>`, `<tab-panel>` custom elements | Small JS for `aria-selected` + keyboard nav (arrow keys, Home, End) |
-| Tooltip | `title` / `data-tooltip` | CSS bubble with a tiny JS shim for `title` enhancement and accessibility wiring. |
-
-### Phase 4 — Ecosystem Reach (post-MVP)
-
-Combobox, Date Picker, Command Palette, Toast/Notification, Data Grid. These are explicitly behaviour-first and will require JS. Architecture TBD in a separate spec.
+Patterns are now a separate layer above these components and should keep growing.
 
 ---
 
@@ -428,418 +235,150 @@ Combobox, Date Picker, Command Palette, Toast/Notification, Data Grid. These are
 
 ### Rules
 
-1. Names must be hyphenated (HTML spec requirement for custom elements)
-2. Names must be self-documenting — a developer should understand the element's role without a glossary
-3. Use only where no semantic HTML equivalent exists
-4. Never use for elements that carry interaction meaning — those must be real HTML elements
+1. Names must be hyphenated.
+2. Prefer native HTML first.
+3. Use custom element names only when they genuinely improve readability.
+4. Keep names structural and honest.
 
-### Approved Custom Elements (v1)
+### Good Examples
 
 ```html
-<form-field>       <!-- label + input + hint + error unit -->
-<input-group>      <!-- prefix + input + suffix -->
-<ui-card>          <!-- presentational card shell -->
-<card-header>      <!-- heading area of a presentational card -->
-<card-content>     <!-- content area of a card -->
-<card-footer>      <!-- action area of a presentational card -->
-<accordion-panel>  <!-- optional rich content wrapper inside <details> -->
-<ui-tabs>          <!-- tabs shell around tab-list and tab-panel -->
-<ui-avatar>        <!-- presentational avatar shell -->
-<aspect-ratio>     <!-- proportional media frame -->
-<tab-list>         <!-- container for tab triggers -->
-<tab-panel>        <!-- content panel for a tab -->
-<popover-panel>    <!-- anchored non-dialog surface using the Popover API -->
-<panel-header>     <!-- shared header anatomy for dialogs and panels -->
-<panel-content>    <!-- shared content anatomy for dialogs and panels -->
-<panel-footer>     <!-- shared footer anatomy for dialogs and panels -->
-<avatar-group>     <!-- stacked avatar container -->
-<badge-group>      <!-- inline cluster of badges -->
-<page-header>      <!-- top-level app header region -->
-<page-sidebar>     <!-- lateral navigation region -->
-<page-main>        <!-- primary content region -->
-<page-footer>      <!-- bottom region -->
+<form-field>
+<input-group>
+<tab-list>
+<tab-panel>
+<popover-panel>
+<ui-carousel>
+<control-bar>
 ```
 
-### Anti-patterns
+### Bad Examples
 
 ```html
-<!-- ❌ Too generic — use real HTML -->
-<container>
-<wrapper>
 <box>
-<stack>
-
-<!-- ❌ Has a real HTML equivalent — use it -->
-<nav-bar>         <!-- use <nav> -->
-<form-group>      <!-- use <fieldset> -->
-<section-header>  <!-- use <hgroup> or <header> -->
-<modal>           <!-- use <dialog> -->
-<accordion>       <!-- use <details>/<summary> -->
+<wrapper>
+<container>
+<carousel>
+<item>
 ```
+
+The naming rule is not cosmetic. Invalid or vague names weaken both readability and generated-target stability.
 
 ---
 
 ## 10. Build Pipeline
 
-### Development
+### Current Build Responsibilities
 
-```
-src/
-  baseline/
-    baseline.css      ← imports reset/tokens/primitives/base
-  components/
-    button/
-      button.css      ← authored with @apply
-    input/
-      input.css
-    ...
-tailwind.config.js    ← configured to scan src/ for @apply
-```
+The build currently:
 
-### Compilation
+1. validates examples and docs snippets against component and pattern contracts
+2. generates the pattern manifest
+3. mirrors component assets into `dist/`
+4. emits readable and minified outputs side by side
+5. emits an optional full CSS bundle
+6. generates a lightweight preview tree and preview index
 
-```bash
-# Tailwind CLI compiles @apply → vanilla CSS
-npx tailwindcss -i src/baseline/baseline.css -o dist/baseline.css
-npx tailwindcss -i src/components/button/button.css -o dist/components/button/button.css
-# ... per component, or via a build script
-```
+### Current Generator Responsibilities
 
-### Output (`dist/`)
+The target generators currently:
 
-```
-dist/
-  baseline.css              ← tokens + layer declarations (always required)
-  baseline.min.css          ← optimized baseline for production
-  bundles/
-    dashbase.css            ← all components bundled (convenience)
-    dashbase.min.css        ← optimized bundle
-  components/
-    button/
-      button.css
-      button.min.css
-    input/
-      input.css
-      input.min.css
-    tabs/
-      tabs.css
-      tabs.min.css
-      tabs.js
-      tabs.min.js
-    popover/
-      popover.css
-      popover.min.css
-      popover.js
-      popover.min.js
-```
+- read explicit contracts
+- emit package-shaped React, Svelte, and Vue outputs
+- generate component docs and selected examples
+- default to shim-backed adapters
+- reserve opt-in target overrides for later
 
-### Output Properties
+### Design Goal
 
-- Optional progressive-enhancement JavaScript
-- Zero Tailwind dependency
-- Zero framework dependency
-- Plain CSS plus optional browser-native behavior shims
-- `baseline.css` target size: < 5kb uncompressed
-
-### Optional Tailwind Interop
-
-Teams using Tailwind include Dashbase `dist/` files before Tailwind's stylesheet. The `@layer` ordering ensures Tailwind utilities override Dashbase component styles without specificity conflicts.
+Keep the pipeline simple, inspectable, and portable. The long-term shape should still be compatible with a leaner custom build tool if Bun-specific conveniences become limiting.
 
 ---
 
 ## 11. File & Folder Structure
 
-### Source Repository
+### Current High-Level Layout
 
+```text
+src/
+  baseline/
+  components/<component>/
+  patterns/<category>/<family>/<variant>/
+  examples/
+themes/
+scripts/
+  build/
+  contracts/
+  patterns/
+  targets/
+generated/
+dist/
+docs/
 ```
-dashbase/
-├── src/
-│   ├── baseline/
-│   │   ├── baseline.css          ← imports reset/tokens/primitives/base
-│   │   ├── reset.css
-│   │   ├── tokens.css
-│   │   ├── primitives.css
-│   │   └── base.css
-│   ├── components/
-│   │   ├── button/
-│   │   │   └── button.css
-│   │   ├── tabs/
-│   │   │   ├── tabs.css
-│   │   │   ├── tabs.js
-│   │   │   └── tabs.html
-│   │   ├── popover/
-│   │   │   ├── popover.css
-│   │   │   ├── popover.js
-│   │   │   ├── popover.html
-│   │   │   ├── dropdown.html
-│   │   │   └── context-menu.html
-│   │   └── ...
-│   └── examples/                 ← cross-component demos + shared helpers
-├── dist/                         ← compiled output (git-ignored or published)
-├── themes/
-│   ├── minimal.css               ← ~5 variables, near-native look
-│   └── default.css               ← full token set, opinionated design
-├── docs/                         ← examples and usage docs
-├── tailwind.config.js
-├── package.json
-└── README.md
-```
+
+### Component Folder Principle
+
+Each component folder should be the obvious home for:
+
+- CSS
+- optional behavior shim
+- example page(s)
+- contract file(s)
+- future target overrides or additional metadata
+
+### Pattern Folder Principle
+
+Each pattern folder should be the obvious home for:
+
+- canonical native HTML source
+- pattern contract
+- author-time composition references
+- future assets or target-specific overrides
 
 ---
 
 ## 12. Implementation Phases
 
-### Phase 0 — Foundation (before any components)
+The project has already moved beyond the early “prove the concept” phase. The next phases are more about quality, completeness, and tooling.
 
-**Goal:** Establish the token system, layer architecture, and build pipeline. Nothing visual yet.
+### Current Focus
 
-Tasks:
-- [ ] Set up build pipeline: Tailwind CLI, per-file compilation, `dist/` output
-- [ ] Author `base.css`: `@layer` declarations in correct order
-- [ ] Define full token set in `dashbase.tokens` layer
-- [ ] Implement `color-mix(in oklch)` derived state tokens
-- [ ] Implement `color-scheme` light/dark token variants
-- [ ] Write `reset.css` (box-sizing only — resist scope creep)
-- [ ] Create `themes/minimal.css` and `themes/default.css`
-- [ ] Verify `base.css` compiled size is under 5kb
+- keep docs aligned with the real repo
+- expand contract coverage beyond the current pilot set
+- keep generated targets honest and deterministic
+- expand pattern coverage and composition ergonomics
+- improve discoverability and preview tooling
+- add stronger accessibility, visual, and browser-level validation
 
-**Exit criteria:** Import `base.css` into a blank HTML file. Open in Chrome, Firefox, Safari. Browser renders native elements with no visual regression. Token variables are inspectable in DevTools.
+### Near-Term Priorities
 
----
-
-### Phase 1 — Form Elements
-
-**Goal:** The most day-to-day components. Prove the concept where the "view source" problem is worst.
-
-Order: `button` → `input` → `textarea` → `checkbox` → `radio` → `select` → `form-field` → `input-group` → `fieldset`
-
-For each component:
-- [ ] Author `src/components/{name}/{name}.css` using `@apply`
-- [ ] Compile to `dist/components/{name}/{name}.css`
-- [ ] Write a minimal HTML test page using only semantic elements
-- [ ] Verify: renders reasonably in Chrome, Firefox, Safari (not pixel-perfect — functionally consistent)
-- [ ] Verify: keyboard navigation works without JS
-- [ ] Verify: disabled, invalid, focus states via native attributes only
-- [ ] Document any variant classes used (`.primary`, `.danger`, `.sm`, `.lg`)
-
-**Button specifics:**
-```css
-@layer dashbase.components {
-  button {
-    /* Only override what matters — let browser set font, cursor, etc. */
-    background-color: var(--color-neutral, ButtonFace);
-    color: var(--color-neutral-fg, ButtonText);
-    border-radius: var(--radius-md);
-    padding-block: var(--space-2);
-    padding-inline: var(--space-4);
-    transition: background-color var(--duration-fast) var(--easing-default);
-
-    &:hover:not([disabled]) {
-      background-color: color-mix(in oklch, var(--color-neutral) 85%, black);
-    }
-
-    &[disabled] {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    &.primary {
-      background-color: var(--color-primary);
-      color: var(--color-primary-fg);
-    }
-
-    &.danger {
-      background-color: var(--color-danger);
-      color: white;
-    }
-  }
-}
-```
-
-**form-field specifics (uses `:has()`):**
-```css
-@layer dashbase.components {
-  form-field {
-    display: grid;
-    gap: var(--space-1);
-
-    & label { ... }
-    & [data-hint] { font-size: var(--text-sm); color: var(--color-neutral); }
-    & [data-error] { display: none; color: var(--color-danger); }
-
-    /* Parent responds to child state — zero JS */
-    &:has(input:invalid) {
-      & [data-error] { display: block; }
-      & label { color: var(--color-danger); }
-      & input { border-color: var(--color-danger); }
-    }
-
-    &:has(input:focus-visible) label {
-      color: var(--color-primary);
-    }
-  }
-}
-```
-
----
-
-### Phase 2 — Layout & Content Components
-
-Order: `card` → `badge` → `alert` → `avatar` → `table`
-
-Key decisions:
-- `<ui-card>` is the presentational card shell; semantic hosts opt in with `.card`.
-- `.card` hosts may use native `header` / `footer`; `<ui-card>` uses `card-header` / `card-footer`.
-- the card shell is flush by default; padded regions own their own spacing.
-- `<card-content>` is the canonical non-semantic content region for padded card content.
-- `.simple` is the shorthand for anatomy-free padded cards.
-- `<badge>` uses `<mark>` for inline highlighted content; `<span role="status">` for dynamic badges.
-- `<alert>` uses `<output role="alert">` for live regions; `<aside>` for static contextual alerts.
-- Avatar stack uses `<avatar-group>` with CSS `margin-inline-start: -var(--space-2)` via `:not(:first-child)`.
-
----
-
-### Phase 3 — Interactive Components
-
-Order: `accordion` → `dialog` → `tabs` → `dropdown`
-
-**Accordion (zero JS):**
-
-```html
-<details>
-  <summary>Section title</summary>
-  <p>Content here</p>
-</details>
-```
-
-Animation via `@starting-style` + `interpolate-size: allow-keywords`:
-
-```css
-details[open] > :not(summary) {
-  animation: slide-down var(--duration-base) ease;
-}
-
-@starting-style {
-  details[open] > :not(summary) {
-    opacity: 0;
-    translate: 0 -0.5rem;
-  }
-}
-```
-
-**Dialog:**
-
-```html
-<!-- Panel (Popover API — zero JS) -->
-<button popovertarget="settings-panel">Open Settings</button>
-<dialog id="settings-panel" popover>...</dialog>
-
-<!-- Modal (Invoker Commands — shim for non-Chrome) -->
-<button invoketarget="confirm-modal" invokeaction="showModal">Confirm</button>
-<dialog id="confirm-modal">...</dialog>
-```
-
-JS shim (`js/dialog.js`, ~10 lines) for browsers without invoker command support:
-```js
-document.querySelectorAll('[invoketarget]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const target = document.getElementById(btn.getAttribute('invoketarget'));
-    const action = btn.getAttribute('invokeaction');
-    if (target && action === 'showModal') target.showModal();
-    if (target && action === 'close') target.close();
-  });
-});
-```
-
-**Tabs:**
-
-```html
-<tab-list role="tablist">
-  <button role="tab" aria-selected="true" aria-controls="panel-1">One</button>
-  <button role="tab" aria-selected="false" aria-controls="panel-2">Two</button>
-</tab-list>
-<tab-panel id="panel-1" role="tabpanel">...</tab-panel>
-<tab-panel id="panel-2" role="tabpanel" hidden>...</tab-panel>
-```
-
-JS (`js/tabs.js`, ~30 lines): manages `aria-selected`, `hidden`, keyboard navigation (ArrowLeft/Right, Home, End).
-
----
-
-### Phase 4 — Theme Verification
-
-- [ ] Test all components with no theme (pure browser defaults, no Dashbase tokens)
-- [ ] Test all components with `themes/minimal.css`
-- [ ] Test all components with `themes/default.css`
-- [ ] Test all components in dark mode (automatic via `color-scheme`)
-- [ ] Verify `base.css` + all components < 20kb uncompressed total
-- [ ] Verify all components in Chrome, Firefox, Safari — document any intentional rendering differences
+1. contract rollout across more components
+2. better preview and docs surface
+3. stronger SSR/client-hosting rules in generated adapters
+4. testing and parity verification across targets
+5. more native platform wins where they clearly reduce JS or markup
 
 ---
 
 ## 13. Authoring Guidelines for Implementors
 
-### Do
-
-- **Style the element, not a wrapper.** `button { }` not `.button { }`.
-- **Use native attributes for state.** `[disabled]`, `[aria-invalid]`, `:checked`, `:focus-visible`.
-- **Use `:has()` for parent state.** Eliminate JS class toggling wherever CSS can do it.
-- **Use `color-mix(in oklch)` for derived colors.** Never define separate hover/active tokens.
-- **Use logical properties.** `padding-inline` not `padding-left/right`. `margin-block` not `margin-top/bottom`.
-- **Use `clamp()` for fluid sizing.** Avoid fixed px values for typography and spacing where fluid behaviour makes sense.
-- **Use CSS nesting for variants and states.** Keep component CSS self-contained.
-- **Use `@layer dashbase.components` for all component rules.** No naked rules outside layers.
-- **Fallback to browser/system values.** `var(--color-primary, ButtonFace)` — the fallback is load-bearing.
-- **Minimise what you set.** Every property you set that the browser would've set the same way is maintenance debt.
-
-### Don't
-
-- **Don't reset browser defaults** unless a specific documented cross-browser bug requires it.
-- **Don't use `!important`.** If you're reaching for it, the layer architecture is wrong.
-- **Don't use `<div>` as a container** when a semantic HTML element or a named custom element is appropriate.
-- **Don't add class names for styling state** that CSS can detect via attributes or `:has()`.
-- **Don't define both a base token and a hover token** if `color-mix()` can derive the hover.
-- **Don't pixel-perfect across browsers.** Test for functional consistency, not visual identity.
-- **Don't add JavaScript** if the HTML/CSS platform can handle it. If JS is needed, keep it under 50 lines per component and document why.
-- **Don't use vendor prefixes** unless required by a specific, documented browser bug.
-- **Don't use `em` for spacing** — prefer `rem` for predictability or logical properties.
+- Prefer semantic HTML first.
+- Prefer native behavior first.
+- Keep CSS layered and readable.
+- Keep behavior shims narrowly scoped.
+- Use contracts to describe public structure, not every implementation detail.
+- Treat examples as product assets, not throwaway demos.
+- When adding pattern composition, keep the authored source expressive and the built output plain.
+- Only add contract fields when generation, validation, or docs genuinely need them.
 
 ---
 
 ## 14. Open Questions & Future Work
 
-### Open Questions
+- How far should contract coverage go before adapter generation becomes a default expectation?
+- Which components should remain shim-backed long term, and which should graduate to controller-backed or framework-native overrides?
+- How should future registries for components and patterns be indexed and distributed?
+- What is the smallest practical testing stack that still catches visual, accessibility, and parity regressions?
+- Which modern platform features should be adopted next as graceful enhancements?
 
-1. **`<select>` styling** — `appearance: base-select` is Chrome-only behind a flag. Decision needed: accept limited styling for now, or provide a custom select built on the Popover API? Recommendation: ship native `<select>` with modest styling for Phase 1; track `base-select` and upgrade when widely available.
-
-2. **Dark mode token strategy** — Should dark mode tokens be defined in `base.css` via `@media (prefers-color-scheme: dark)`, or should a `data-theme="dark"` attribute be supported for manual override? Recommendation: both — `prefers-color-scheme` by default, `[data-theme="dark"]` override for apps with a theme toggle.
-
-3. **Icon button pattern** — A bare `<button>` with only an icon needs a different shape (square, smaller padding). Convention: `<button class="icon" aria-label="Close">` or detect via `:has(svg:only-child)`. Prefer `:has()` approach.
-
-4. **Anchor positioning** — Currently limited browser support. Tooltips and floating dropdowns will need a JS fallback. Track `@property anchor-name` / `position-anchor` and upgrade when baseline improves.
-
-### Future Work
-
-- **Baseline CSS** — A standalone token vocabulary project that replaces the `@apply`/Tailwind compiler dependency entirely. Makes Dashbase fully self-contained.
-- **ReUI-style patterns** — Once shadcn-parity is reached for the semantic layer, evolve with composition patterns inspired by ReUI.
-- **Phase 4 components** — Combobox, Date Picker, Toast, Command Palette. Behaviour-first; separate JS architecture spec needed.
-- **Design tokens export** — Export tokens in Style Dictionary format for Figma / design tool integration.
-- **View Transitions** — Page-level and component-level transitions using the View Transitions API once cross-browser support improves.
-- **Ladybird compatibility** — Track the Ladybird browser engine and add to the test matrix when available.
-
----
-
-## Appendix: Principles Summary
-
-> 1. The browser is an ally, not a bug to be worked around.
-> 2. HTML should be readable by a human without tooling.
-> 3. Native elements carry semantics, accessibility, and platform integration for free — never discard that for styling convenience.
-> 4. Where HTML has a gap, named custom elements fill it readably.
-> 5. CSS custom properties + `@layer` + `:has()` have made most JavaScript UI glue obsolete.
-> 6. Pixel-perfect across browsers is the wrong goal. Functionally consistent is the right one.
-> 7. Minimise what you set. Browser defaults are load-bearing until proven otherwise.
-> 8. Every property you define is maintenance. Every class you require is ceremony.
-
----
-
-*Document prepared for implementation handoff. Pass to implementing model alongside any additional context on the current state of the token system or component specs.*
+Dashbase should continue moving toward a contract-first, source-readable, browser-native system without collapsing into a mini framework of its own.

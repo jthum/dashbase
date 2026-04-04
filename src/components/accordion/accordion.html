@@ -112,6 +112,28 @@
     <hr>
 
     <section>
+      <h2>Exclusive Groups with <code>name</code></h2>
+      <p>On modern browsers, give related disclosures the same <code>name</code> to make them behave like an exclusive accordion without any JavaScript. Browsers without support simply fall back to independent disclosures.</p>
+
+      <details name="shipping-faq" open>
+        <summary>How quickly do preview builds update?</summary>
+        <p>The preview tree is regenerated as part of the normal build, so the browseable examples always reflect the current source files.</p>
+      </details>
+
+      <details name="shipping-faq">
+        <summary>Do I need a separate accordion script?</summary>
+        <p>No. The exclusive behavior comes from the browser's native <code>details[name]</code> support rather than a Dashbase shim.</p>
+      </details>
+
+      <details name="shipping-faq">
+        <summary>What happens without support?</summary>
+        <p>The disclosures still work normally. The only difference is that more than one section can stay open at once.</p>
+      </details>
+    </section>
+
+    <hr>
+
+    <section>
       <h2>Accordion Panels</h2>
 
       <details open>

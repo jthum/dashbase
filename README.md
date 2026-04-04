@@ -67,11 +67,14 @@ This generates:
 - `dist/components/<name>/<name>.css` and `.min.css` for modular component imports
 - `dist/components/<name>/<name>.js` and `.min.js` for optional progressive-enhancement shims
 - `dist/bundles/dashbase.css` and `dist/bundles/dashbase.min.css` as optional convenience bundles
+- `dist/preview/index.html` plus a lightweight source-shaped preview tree for browsing current examples and patterns
 
 It also refreshes generated metadata such as the pattern catalog in
 `generated/patterns/patterns.manifest.json`.
 
 The readable files stay inspectable on purpose. Use the plain `.css` / `.js` files when you want view-source friendliness, and switch to the matching `.min.css` / `.min.js` files for production delivery.
+
+For local browsing, open `dist/preview/index.html` after a build. It links to the current component pages, pattern pages, and shared cross-component demos without requiring a separate docs app.
 
 ### Patterns
 
@@ -177,6 +180,8 @@ To use Dashbase in your project, include the base stylesheet followed by the com
   </accordion-panel>
 </details>
 ```
+
+Give related disclosures the same `name` to get exclusive-accordion behavior on browsers that support `details[name]`. Browsers without support simply keep the disclosures independent.
 
 ```html
 <ui-tabs>

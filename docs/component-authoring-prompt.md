@@ -22,6 +22,7 @@ Requirements:
 - Use design tokens and existing component variables, never hardcoded colors or spacing
 - Keep variants as variable reassignment only unless escaping the pattern is truly necessary
 - Keep JavaScript tiny and behavior-focused; never recreate platform behavior without a strong reason
+- Before adding or expanding a behavior shim, explicitly check whether a baseline platform feature such as `details[name]`, the Popover API, Invoker Commands, `transition-behavior: allow-discrete`, container queries, or `field-sizing: content` can remove or reduce the JS instead
 - Make the component contract explicit enough that a future generator could build framework adapters from it
 
 Output expectations:
@@ -55,6 +56,7 @@ Contract expectations:
 - If `docs.examples` references source snippets, mark those snippets in the HTML with `<!-- @example name:start -->` and `<!-- @example name:end -->`
 - Keep those marked snippets honest to the component contract; do not rely on undeclared companion components unless the contract explicitly models that dependency
 - Grow the contract only when generation, parity testing, or docs truly need a new field
+- Keep a running eye on future-fit platform features such as `subgrid`, `@property`, scroll-driven animations, and `interpolate-size`; adopt them when they simplify the implementation cleanly and degrade gracefully, not just because they are new
 
 Overlay-specific rules:
 
