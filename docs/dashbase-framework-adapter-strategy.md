@@ -99,6 +99,49 @@ The important thing is that overrides are exceptions, not the baseline model.
 
 ---
 
+## Browser Shims vs Framework Adapters
+
+Dashbase should **not** solve every framework concern by making the vanilla
+browser shims much larger.
+
+That would push React/Svelte/Vue/Solid lifecycle and SSR complexity into the
+plain HTML runtime, even though plain browser consumers do not need most of it.
+
+The healthier split is:
+
+1. **Browser shims stay optimized for native HTML usage**
+   - lightweight auto-boot where appropriate
+   - direct DOM coordination
+   - minimal assumptions about framework lifecycles
+
+2. **Generated framework adapters take on framework-specific glue**
+   - client-only boot for SSR-safe hydration
+   - attaching and removing DOM listeners in framework lifecycle hooks
+   - translating native custom events into idiomatic adapter events
+   - deciding when a shim-backed component is no longer safe enough and needs a
+     controller-backed or native override
+
+3. **Only add lifecycle surface to shims when it clearly pays off**
+   - `init(root)`
+   - `destroy(root)`
+   - optional `boot()` for plain browser auto-init
+
+That means the default strategy is **not** “make every shim framework-aware.”
+It is “keep browser shims lean, and make the adapters smart enough to host them
+correctly.”
+
+This matters because otherwise every shim would need to grow support for:
+
+- mount/unmount cleanup
+- observer teardown
+- SSR guards
+- re-init safety
+- framework-specific event assumptions
+
+That would make the browser implementation heavier than it needs to be.
+
+---
+
 ## What The Contract Needs To Describe
 
 A component contract should capture:
@@ -114,6 +157,10 @@ A component contract should capture:
 - slot or child-content regions
 - whether an override exists for any target
 - whether the default adapter path is shim-backed
+- whether the shim must only boot on the client
+- whether the shim exposes lifecycle hooks such as `init` / `destroy`
+- whether emitted events need adapter-level remapping
+- whether the shim mutates live DOM state in ways that make VDOM desync likely
 
 It should **not** try to describe every algorithmic behavior as declarative
 logic.
@@ -160,10 +207,18 @@ type ComponentContract = {
     name: string;
     source: string;
     detail?: string;
+    adapterName?: Partial<Record<"react" | "svelte" | "vue" | "solid", string>>;
   }>;
   behavior?: {
     shim?: string;
     defaultMode: "none" | "shim-backed";
+    clientOnly?: boolean;
+    lifecycle?: {
+      init?: string;
+      destroy?: string;
+      boot?: string;
+    };
+    domOwnership?: "adapter-safe" | "shim-mutates-live-state";
     overrides?: Partial<Record<"react" | "svelte" | "vue" | "solid", {
       mode: "native" | "controller-backed";
       entry: string;
@@ -179,12 +234,22 @@ type ComponentContract = {
 
 This is a contract format, not a user-facing DSL.
 
-The current proof of concept uses those optional `exportName` and `tag` fields
-to generate React wrappers into `generated/react/` via
+The current generated React target uses those optional `exportName` and `tag`
+fields to generate wrappers into `generated/react/` via
 `scripts/targets/react/generate.ts`, with no additional npm dependencies.
 It now also uses a small `docs.examples` block plus named example markers in
 component HTML files to generate per-component React usage docs and the first
 target-specific `examples.tsx` modules.
+
+The contract should gradually grow the minimum metadata needed to host browser
+shims safely inside framework runtimes. That does **not** mean encoding every
+behavior in declarative form; it means exposing the handful of facts the
+adapter runtime needs in order to:
+
+- boot only on the client
+- attach and detach listeners safely
+- bridge custom events into framework idioms
+- identify components that are likely to need controller-backed overrides later
 
 ---
 
@@ -304,9 +369,9 @@ const comboboxContract = {
     },
   ],
   props: [
-    { name: "placeholder", mapsTo: "attribute", target: "input", type: "string" },
-    { name: "value", mapsTo: "attribute", target: "input", type: "string" },
-    { name: "disabled", mapsTo: "attribute", target: "input", type: "boolean" },
+    { name: "placeholder", kind: "attribute", target: "input", attribute: "placeholder" },
+    { name: "value", kind: "attribute", target: "input", attribute: "value" },
+    { name: "disabled", kind: "attribute", target: "input", attribute: "disabled" },
   ],
   events: [
     { name: "change", source: "input", detail: "{ value: string }" },
@@ -350,6 +415,18 @@ The baseline adapter can still be generated against the browser shim.
 Only when a specific target proves it needs a better experience should Dashbase
 opt into a controller-backed or native override.
 
+### Why Shim-Backed Does Not Mean Naive
+
+Even for shim-backed components, the framework adapter should still be
+responsible for:
+
+- mounting the shim only after client hydration
+- wiring DOM custom events into `onChange` / `@change` / callback props
+- cleaning up any adapter-owned listeners on unmount
+
+That lets the browser shim remain focused on DOM behavior instead of becoming a
+full framework runtime.
+
 ---
 
 ## Overrides And Controller Layer
@@ -377,6 +454,45 @@ The override wrappers would then:
 
 This prevents drift while still letting complex components stay expressive,
 without forcing every component to start there.
+
+This controller path is especially important for components where a browser shim
+mutates live DOM state that a Virtual DOM framework may later overwrite during
+an unrelated re-render. Examples include:
+
+- `aria-expanded`
+- `aria-activedescendant`
+- `hidden`
+- selection and active-item attributes
+
+When that mutation pattern becomes too hard to host safely from the outside,
+the component should graduate from shim-backed to controller-backed or native.
+
+---
+
+## Known Gotchas
+
+Generated framework adapters should explicitly account for four recurring
+problems:
+
+1. **Lifecycle teardown**
+   - Shims may attach listeners, observers, or other long-lived resources.
+   - Adapters must ensure client-only boot and reliable cleanup on unmount.
+
+2. **Event translation**
+   - Native custom events do not automatically feel idiomatic in every
+     framework.
+   - Adapters should translate contract events into target-appropriate props or
+     listeners instead of assuming a framework will pick them up automatically.
+
+3. **Virtual DOM desync**
+   - A shim may mutate live DOM state that the framework later overwrites.
+   - This is the main trigger for controller-backed or native overrides.
+
+4. **SSR / hydration timing**
+   - Shims that touch `document`, `window`, or layout measurement must boot only
+     after the client runtime is active.
+   - Generated adapters should treat browser shims as client-hosted behavior,
+     not as code that runs during server rendering.
 
 ---
 
