@@ -34,7 +34,7 @@ Baseline CSS
    ↓
 Dashbase components
    ↓
-DSL + framework generators
+component contracts + framework generators
 ```
 
 Baseline becomes the **design vocabulary**, while Dashbase provides **semantic UI components**.
@@ -89,7 +89,7 @@ Dashbase should contain:
 - custom semantic elements
 - progressive enhancement JS
 - component composition patterns
-- DSL definitions
+- colocated component contracts
 
 Dashbase components consume **Baseline tokens and primitives**.
 

@@ -1,6 +1,6 @@
 
 # Dashbase — Architectural Context & Implementation Guidance
-*Companion document to `dashbase-prd.md` and `dashbase-dsl-architecture.md`*
+*Companion document to `dashbase-prd.md` and `dashbase-framework-adapter-strategy.md`*
 
 Version: 0.1  
 Purpose: Preserve architectural intent and implementation philosophy for agents and contributors.
@@ -9,7 +9,8 @@ Purpose: Preserve architectural intent and implementation philosophy for agents 
 
 # 1. Purpose of This Document
 
-The PRD and DSL architecture documents describe **what Dashbase is** and **how it should work**.
+The PRD and framework adapter strategy documents describe **what Dashbase is**
+and **how it should work**.
 
 This document captures the **design philosophy, constraints, and engineering decisions discussed during planning** that may not be explicit in those documents.
 
@@ -71,11 +72,11 @@ Framework wrappers are therefore **disposable convenience layers**, not the core
 
 Dashbase treats CSS as the authoritative implementation layer.
 
-The DSL does **not describe styling**.
+Component contracts do **not describe styling**.
 
-The DSL only describes:
+Component contracts only describe:
 
-- component contracts
+- anatomy
 - props
 - slots
 - events
@@ -98,53 +99,53 @@ CSS always remains the **canonical styling implementation**.
 
 ---
 
-# 5. The Role of the DSL
+# 5. The Role of Contracts
 
-The DSL exists **only for development and code generation**.
+Contracts exist **only for development and code generation**.
 
-It is not used in application code.
+They are not used directly in application code.
 
-The DSL enables:
+Contracts enable:
 
 - generation of framework adapters
 - consistent component APIs
 - automated documentation
 - machine-readable contracts for agents
 
-Consumers of Dashbase **never interact with the DSL**.
+Consumers of Dashbase **never interact with the contracts directly**.
 
 ---
 
-# 6. DSL Is an Internal Contract Layer
+# 6. Contracts Are an Internal Generation Layer
 
 The architecture looks like:
 
 ```
 Dashbase CSS + JS
         ↓
-DSL contracts
+component contracts
         ↓
-dashbase-gen
+target generators
         ↓
 framework adapters
         ↓
 applications
 ```
 
-The DSL should be treated as **internal infrastructure**.
+Contracts should be treated as **internal infrastructure**.
 
-It may evolve without concern for external compatibility.
+They may evolve without concern for external compatibility.
 
 ---
 
-# 7. dashbase-gen Is Deterministic
+# 7. Generators Must Be Deterministic
 
-The generator (`dashbase-gen`) must be **fully deterministic**.
+The generators must be **fully deterministic**.
 
 It performs mechanical transformations only:
 
 ```
-DSL → framework adapter code
+contract → framework adapter code
 ```
 
 It must not perform inference or interpretation.
@@ -157,13 +158,14 @@ This ensures:
 
 ---
 
-# 8. dashbase-extract Is NOT a Tool
+# 8. Contract Inference Is Advisory
 
-Originally conceived as a tool, `dashbase-extract` should instead be treated as:
+Originally, Dashbase considered a stronger DSL extraction story.
 
-**an optional inference prompt**.
+The healthier version is **an optional inference workflow**.
 
-It exists as a workflow for agents or developers to generate a *candidate DSL contract* from source files.
+It exists as a way for agents or developers to generate a *candidate component
+contract* from source files.
 
 Example workflow:
 
@@ -172,11 +174,11 @@ component source (CSS + JS + HTML examples)
         ↓
 inference prompt
         ↓
-proposed DSL
+proposed contract
         ↓
 human review
         ↓
-committed DSL contract
+committed component contract
 ```
 
 Important constraints:
@@ -184,7 +186,7 @@ Important constraints:
 - extraction is **advisory**
 - extraction is **never part of the build**
 - extraction output must be **reviewed**
-- DSL remains the **canonical contract**
+- the committed contract remains the **canonical machine-readable layer**
 
 ---
 
@@ -199,20 +201,20 @@ Expected tooling footprint:
 ```
 dashbase/
  ├ src/
- │   ├ css/
- │   ├ js/
+ │   ├ baseline/
+ │   ├ components/
+ │   ├ patterns/
  │   └ examples/
  │
- ├ dsl/
- │   ├ button.json
- │   ├ dialog.json
- │   └ tabs.json
+ ├ scripts/
+ │   ├ contracts/
+ │   ├ patterns/
+ │   └ targets/
  │
- ├ tools/
- │   └ dashbase-gen
- │
- └ prompts/
-     └ dsl_inference.md
+ └ generated/
+     ├ react/
+     ├ svelte/
+     └ vue/
 ```
 
 The goal is to avoid modern frontend ecosystems that require hundreds of megabytes of dependencies.
@@ -329,7 +331,7 @@ This improves:
 - agent reasoning
 - automated UI generation
 
-The DSL reinforces this by exposing a machine-readable contract.
+The contract layer reinforces this by exposing a machine-readable structure.
 
 ---
 
@@ -340,7 +342,7 @@ The architecture effectively creates a **UI intermediate representation (UI‑IR
 ```
 HTML + CSS source
         ↓
-DSL contracts
+component contracts
         ↓
 framework adapters
 ```
@@ -356,7 +358,7 @@ Dashbase assumes agents will participate in development.
 Agents may:
 
 - generate component CSS
-- infer DSL contracts
+- infer component contracts
 - maintain documentation
 - generate framework adapters
 
@@ -447,8 +449,12 @@ Likely future use cases include content-bearing composites such as cards, dialog
 
 ---
 
-# 23. CSS ↔ DSL Validation Comes After Component Parity
+# 23. CSS ↔ Contract Validation Comes After Component Parity
 
-Strict validation between component CSS and the future DSL is desirable, but it should arrive after the component surface is broad enough to be worth locking down.
+Strict validation between component CSS and contracts is desirable, but it
+should arrive after the component surface is broad enough to be worth locking
+down.
 
-The current priority is reaching stable component parity and letting the CSS and vanilla behavior patterns settle. Once that surface is mature, Dashbase can add automated checks to ensure DSL contracts and CSS modifiers never drift apart.
+The current priority is reaching stable component parity and letting the CSS
+and vanilla behavior patterns settle. Once that surface is mature, Dashbase can
+add automated checks to ensure contracts and CSS modifiers never drift apart.

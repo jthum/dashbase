@@ -48,29 +48,30 @@ Generators produce **framework adapters**.
     README.md
 
 /dashbase
-    /components
-        button.css
-        dialog.css
-        tabs.css
-        input.css
-    /patterns
-        dashboard.css
-        auth.css
-    /behaviors
-        dialog.js
-        tabs.js
-        popover.js
-    /dsl
-        button.json
-        dialog.json
-        tabs.json
+    /src
+        /components
+            /button
+                button.css
+                button.contract.json
+            /dialog
+                dialog.css
+                dialog.js
+                dialog.contract.json
+            /tabs
+                tabs.css
+                tabs.js
+                tabs.contract.json
+        /patterns
+            ...
     README.md
 
-/tools
-    dashbase-gen/
+/scripts
+    /targets
 
-/prompts
-    dsl_inference.md
+/generated
+    /react
+    /svelte
+    /vue
 ```
 
 ---
@@ -301,25 +302,25 @@ Guidelines:
 
 ---
 
-# 7. DSL Contracts
+# 7. Component Contracts
 
 Located in:
 
 ```
-dashbase/dsl/
+src/components/{component-name}/
 ```
 
-Each component has a DSL contract.
+Each component has a colocated component contract.
 
 Example:
 
 ```
-button.json
-dialog.json
-tabs.json
+button/button.contract.json
+dialog/dialog.contract.json
+tabs/tabs.contract.json
 ```
 
-The DSL describes:
+The contract describes:
 
 - props
 - slots
@@ -337,7 +338,7 @@ Generators produce framework adapters.
 Directory:
 
 ```
-tools/dashbase-gen/
+scripts/targets/
 ```
 
 Example outputs:
@@ -352,20 +353,20 @@ Generators must be deterministic.
 
 ---
 
-# 9. DSL Inference Prompt
+# 9. Contract Inference Prompt
 
-Instead of a tool, DSL extraction is implemented as a prompt.
+Instead of a build tool, contract inference may be implemented as a prompt.
 
 Directory:
 
 ```
-prompts/
+docs/ or prompts/
 ```
 
 Example:
 
 ```
-dsl_inference.md
+contract_inference.md
 ```
 
 Workflow:
@@ -375,11 +376,11 @@ component source
     ↓
 inference prompt
     ↓
-candidate DSL
+candidate contract
     ↓
 human review
     ↓
-commit DSL
+commit contract
 ```
 
 ---

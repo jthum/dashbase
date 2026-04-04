@@ -1,6 +1,6 @@
 # Dashbase — Color System Specification
 
-> Companion document to `dashbase-prd.md`, `dashbase-dsl-architecture.md`, and `dashbase-implementation-guidance.md`
+> Companion document to `dashbase-prd.md`, `dashbase-framework-adapter-strategy.md`, and `dashbase-implementation-guidance.md`
 
 ---
 

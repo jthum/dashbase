@@ -420,5 +420,5 @@ Baseline CSS
    ↓
 Dashbase components
    ↓
-DSL + framework adapters
+contracts + framework adapters
 ```
