@@ -16,6 +16,10 @@ Manual entrypoint when you want to control asset loading yourself:
 import { Button, buttonAssets } from "@dashbase/react/button/manual";
 ```
 
+## Behavior Hosting
+
+- Generated adapter mode: `generated`
+
 ## Anatomy
 
 - `Button` renders `<button>`

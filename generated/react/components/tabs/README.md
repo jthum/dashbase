@@ -16,6 +16,13 @@ Manual entrypoint when you want to control asset loading yourself:
 import { Tabs, TabsList, TabsTrigger, TabsContent, tabsAssets } from "@dashbase/react/tabs/manual";
 ```
 
+## Behavior Hosting
+
+- Generated adapter mode: `browser-shim`
+- The default entrypoint auto-imports a browser behavior shim.
+- In SSR frameworks, mount this component from a client boundary or after client hydration.
+- The shim mutates live DOM state. If a framework starts fighting those mutations, prefer a controller-backed or native override.
+
 ## Anatomy
 
 - `Tabs` renders `<ui-tabs>`
@@ -42,6 +49,22 @@ import { Tabs, TabsList, TabsTrigger, TabsContent, tabsAssets } from "@dashbase/
 - `aria-selected` on `tab` ("true", "false")
 - `hidden` on `panel`
 - `aria-disabled` on `tab` ("true", "false")
+
+## Accessibility
+
+- Focus model: `roving-tabindex`
+- Required authored attributes on `tab`: `id`, `aria-controls`, `aria-selected`
+- Required authored attributes on `panel`: `id`, `aria-labelledby`
+- Relationship: `tab` uses `aria-controls` to reference `panel`
+- Relationship: `panel` uses `aria-labelledby` to reference `tab`
+- Keyboard: `ArrowRight` on `tab` moves focus to the next tab in horizontal tab lists.
+- Keyboard: `ArrowLeft` on `tab` moves focus to the previous tab in horizontal tab lists.
+- Keyboard: `ArrowDown` on `tab` moves focus to the next tab in vertical tab lists.
+- Keyboard: `ArrowUp` on `tab` moves focus to the previous tab in vertical tab lists.
+- Keyboard: `Home` on `tab` moves focus to the first tab.
+- Keyboard: `End` on `tab` moves focus to the last tab.
+- Keyboard: `Enter` on `tab` activates the focused tab and reveals its panel.
+- Keyboard: `Space` on `tab` activates the focused tab and reveals its panel.
 
 ## Examples
 

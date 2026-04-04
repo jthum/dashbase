@@ -130,6 +130,10 @@ That means the default strategy is **not** “make every shim framework-aware.�
 It is “keep browser shims lean, and make the adapters smart enough to host them
 correctly.”
 
+Internally the contract may still use `defaultMode: "shim-backed"` for
+historical consistency, but generated docs and adapter-facing output should
+prefer the friendlier term **browser shim**.
+
 This matters because otherwise every shim would need to grow support for:
 
 - mount/unmount cleanup
@@ -151,6 +155,7 @@ A component contract should capture:
 - allowed variants and modifiers
 - adapter-facing props that map to classes or native/ARIA attributes
 - state attributes and ARIA expectations
+- keyboard, focus, and relationship accessibility invariants that cannot be inferred safely from selectors alone
 - emitted events
 - required CSS and optional JS imports
 - small docs/example metadata for generated adapter docs
@@ -164,6 +169,17 @@ A component contract should capture:
 
 It should **not** try to describe every algorithmic behavior as declarative
 logic.
+
+To keep growth under control, Dashbase should prefer one contract file with
+clear internal boundaries rather than many small companion files. In practice,
+that means:
+
+- keep core anatomy, props, states, imports, and examples in the stable root
+- keep framework-hosting hints small and explicit
+- reserve an `adapters` namespace for target-specific metadata when it becomes
+  necessary
+- add new fields only when generation, parity testing, or documentation
+  actually needs them
 
 ---
 
@@ -209,6 +225,23 @@ type ComponentContract = {
     detail?: string;
     adapterName?: Partial<Record<"react" | "svelte" | "vue" | "solid", string>>;
   }>;
+  accessibility?: {
+    focusModel?: "native" | "roving-tabindex" | "active-descendant";
+    requiredAttributes?: Array<{
+      target: string;
+      attributes: string[];
+    }>;
+    relationships?: Array<{
+      from: string;
+      attribute: string;
+      to: string;
+    }>;
+    keyboardInteractions?: Array<{
+      target: string;
+      key: string;
+      effect: string;
+    }>;
+  };
   behavior?: {
     shim?: string;
     defaultMode: "none" | "shim-backed";
@@ -225,6 +258,12 @@ type ComponentContract = {
     }>>;
     controller?: string;
   };
+  adapters?: Partial<Record<"react" | "svelte" | "vue" | "solid", {
+    mode?: "generated" | "browser-shim" | "controller-backed" | "native";
+    clientOnly?: boolean;
+    eventMap?: Record<string, string>;
+    notes?: string[];
+  }>>;
   imports: {
     css: string[];
     js?: string[];
@@ -250,6 +289,16 @@ adapter runtime needs in order to:
 - attach and detach listeners safely
 - bridge custom events into framework idioms
 - identify components that are likely to need controller-backed overrides later
+
+The accessibility block should stay intentionally narrow. Roles and many ARIA
+expectations are already implied by anatomy selectors and `states`. The extra
+metadata should only capture what generators and parity tests cannot infer
+reliably from structure alone:
+
+- authored attributes that must always be present
+- keyboard interactions that are part of the public contract
+- focus models such as roving tabindex or active descendant
+- explicit element-to-element relationships such as `aria-controls`
 
 ---
 

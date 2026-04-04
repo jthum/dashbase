@@ -109,7 +109,9 @@
   "events": [],
   "behavior": {
     "defaultMode": "shim-backed",
-    "shim": "./popover.js"
+    "shim": "./popover.js",
+    "clientOnly": true,
+    "domOwnership": "shim-mutates-live-state"
   },
   "imports": {
     "css": [

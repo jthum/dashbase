@@ -111,10 +111,86 @@
       ]
     }
   ],
+  "accessibility": {
+    "focusModel": "roving-tabindex",
+    "requiredAttributes": [
+      {
+        "target": "tab",
+        "attributes": [
+          "id",
+          "aria-controls",
+          "aria-selected"
+        ]
+      },
+      {
+        "target": "panel",
+        "attributes": [
+          "id",
+          "aria-labelledby"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from": "tab",
+        "attribute": "aria-controls",
+        "to": "panel"
+      },
+      {
+        "from": "panel",
+        "attribute": "aria-labelledby",
+        "to": "tab"
+      }
+    ],
+    "keyboardInteractions": [
+      {
+        "target": "tab",
+        "key": "ArrowRight",
+        "effect": "moves focus to the next tab in horizontal tab lists."
+      },
+      {
+        "target": "tab",
+        "key": "ArrowLeft",
+        "effect": "moves focus to the previous tab in horizontal tab lists."
+      },
+      {
+        "target": "tab",
+        "key": "ArrowDown",
+        "effect": "moves focus to the next tab in vertical tab lists."
+      },
+      {
+        "target": "tab",
+        "key": "ArrowUp",
+        "effect": "moves focus to the previous tab in vertical tab lists."
+      },
+      {
+        "target": "tab",
+        "key": "Home",
+        "effect": "moves focus to the first tab."
+      },
+      {
+        "target": "tab",
+        "key": "End",
+        "effect": "moves focus to the last tab."
+      },
+      {
+        "target": "tab",
+        "key": "Enter",
+        "effect": "activates the focused tab and reveals its panel."
+      },
+      {
+        "target": "tab",
+        "key": "Space",
+        "effect": "activates the focused tab and reveals its panel."
+      }
+    ]
+  },
   "events": [],
   "behavior": {
     "defaultMode": "shim-backed",
-    "shim": "./tabs.js"
+    "shim": "./tabs.js",
+    "clientOnly": true,
+    "domOwnership": "shim-mutates-live-state"
   },
   "imports": {
     "css": [

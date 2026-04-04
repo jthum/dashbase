@@ -49,9 +49,12 @@ Contract expectations:
 - Use relative `files.*` paths for source assets and `dist/...` paths for generated imports
 - Include enough anatomy, variant, and state detail that a shim-backed generator can build a working adapter without guessing
 - Add a `props` block when adapter-facing ergonomic props should map to classes or native/ARIA attributes
+- Add an `accessibility` block when keyboard behavior, focus model, required authored ARIA attributes, or element relationships cannot be inferred safely from anatomy selectors and `states` alone
 - Add a small `docs` block when the component has adapter-facing usage docs or generated examples
+- Keep target-specific hosting hints small and place them under an `adapters` namespace instead of bloating the core contract
 - If `docs.examples` references source snippets, mark those snippets in the HTML with `<!-- @example name:start -->` and `<!-- @example name:end -->`
 - Keep those marked snippets honest to the component contract; do not rely on undeclared companion components unless the contract explicitly models that dependency
+- Grow the contract only when generation, parity testing, or docs truly need a new field
 
 Overlay-specific rules:
 

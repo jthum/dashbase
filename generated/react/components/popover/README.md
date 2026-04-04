@@ -16,6 +16,13 @@ Manual entrypoint when you want to control asset loading yourself:
 import { PopoverPanel, PopoverHeader, PopoverContent, PopoverFooter, popoverAssets } from "@dashbase/react/popover/manual";
 ```
 
+## Behavior Hosting
+
+- Generated adapter mode: `browser-shim`
+- The default entrypoint auto-imports a browser behavior shim.
+- In SSR frameworks, mount this component from a client boundary or after client hydration.
+- The shim mutates live DOM state. If a framework starts fighting those mutations, prefer a controller-backed or native override.
+
 ## Anatomy
 
 - `PopoverPanel` renders `<popover-panel>`

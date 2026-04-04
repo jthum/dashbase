@@ -94,6 +94,59 @@
       "attribute": "hidden"
     }
   ],
+  "accessibility": {
+    "focusModel": "active-descendant",
+    "requiredAttributes": [
+      {
+        "target": "input",
+        "attributes": [
+          "aria-autocomplete",
+          "aria-expanded",
+          "aria-controls"
+        ]
+      },
+      {
+        "target": "panel",
+        "attributes": [
+          "id"
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from": "input",
+        "attribute": "aria-controls",
+        "to": "panel"
+      },
+      {
+        "from": "input",
+        "attribute": "aria-activedescendant",
+        "to": "option"
+      }
+    ],
+    "keyboardInteractions": [
+      {
+        "target": "input",
+        "key": "ArrowDown",
+        "effect": "opens the list and moves the active option forward."
+      },
+      {
+        "target": "input",
+        "key": "ArrowUp",
+        "effect": "opens the list and moves the active option backward."
+      },
+      {
+        "target": "input",
+        "key": "Enter",
+        "effect": "commits the active option as the current value."
+      },
+      {
+        "target": "input",
+        "key": "Escape",
+        "effect": "dismisses the listbox without selecting another option."
+      }
+    ]
+  },
   "events": [
     {
       "name": "change",
@@ -102,7 +155,16 @@
   ],
   "behavior": {
     "defaultMode": "shim-backed",
-    "shim": "./combobox.js"
+    "shim": "./combobox.js",
+    "clientOnly": true,
+    "domOwnership": "shim-mutates-live-state"
+  },
+  "adapters": {
+    "react": {
+      "notes": [
+        "If React state starts competing with aria-expanded or aria-activedescendant, prefer a controller-backed override before deepening the browser-shim wrapper."
+      ]
+    }
   },
   "imports": {
     "css": [

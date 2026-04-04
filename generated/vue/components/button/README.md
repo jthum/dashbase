@@ -18,6 +18,10 @@ Manual entrypoint when you want to control asset loading yourself:
 import { Button, buttonAssets } from "@dashbase/vue/button/manual";
 ```
 
+## Behavior Hosting
+
+- Generated adapter mode: `generated`
+
 ## Adapter Props
 
 - `variant?: "primary" | "danger" | "ghost" | "outline" | "link"`

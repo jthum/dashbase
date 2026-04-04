@@ -18,9 +18,28 @@ Manual entrypoint when you want to control asset loading yourself:
 import { Combobox, ComboboxInput, ComboboxPanel, ComboboxOption, ComboboxEmpty, comboboxAssets } from "@dashbase/vue/combobox/manual";
 ```
 
+## Behavior Hosting
+
+- Generated adapter mode: `browser-shim`
+- The default entrypoint auto-imports a browser behavior shim.
+- In SSR runtimes, mount this component from a client boundary or after client hydration.
+- The shim mutates live DOM state. If the framework starts fighting those mutations, prefer a controller-backed or native override.
+
 ## Generated Examples
 
 - `@dashbase/vue/combobox/examples`
+
+## Accessibility
+
+- Focus model: `active-descendant`
+- Required authored attributes on `input`: `aria-autocomplete`, `aria-expanded`, `aria-controls`
+- Required authored attributes on `panel`: `id`
+- Relationship: `input` uses `aria-controls` to reference `panel`
+- Relationship: `input` uses `aria-activedescendant` to reference `option`
+- Keyboard: `ArrowDown` on `input` opens the list and moves the active option forward.
+- Keyboard: `ArrowUp` on `input` opens the list and moves the active option backward.
+- Keyboard: `Enter` on `input` commits the active option as the current value.
+- Keyboard: `Escape` on `input` dismisses the listbox without selecting another option.
 
 ## Usage
 

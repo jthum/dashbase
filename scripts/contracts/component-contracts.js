@@ -11,6 +11,9 @@ const BEHAVIOR_MODES = new Set(["none", "shim-backed"]);
 const VARIANT_TYPES = new Set(["class", "attribute"]);
 const PROP_KINDS = new Set(["class-group", "attribute"]);
 const FRAMEWORK_TARGETS = new Set(["react", "svelte", "vue", "solid"]);
+const DOM_OWNERSHIP_MODES = new Set(["adapter-safe", "shim-mutates-live-state"]);
+const ACCESSIBILITY_FOCUS_MODELS = new Set(["native", "roving-tabindex", "active-descendant"]);
+const ADAPTER_MODES = new Set(["generated", "browser-shim", "controller-backed", "native"]);
 
 function isObject(value) {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -89,6 +92,23 @@ function ensureStringArray({ value, field, errors, required = true }) {
   }
 
   return valid;
+}
+
+function ensureBoolean({ value, field, errors, required = true }) {
+  if (value === undefined) {
+    if (required) {
+      errors.push(`${field} is required`);
+    }
+
+    return null;
+  }
+
+  if (typeof value !== "boolean") {
+    errors.push(`${field} must be a boolean`);
+    return null;
+  }
+
+  return value;
 }
 
 function ensureLocalFilePath({ value, field, contractDir, errors }) {
@@ -230,6 +250,154 @@ function validateEvents({ events, contractPath, errors, allowedTargets }) {
       errors,
       allowedTargets,
     });
+  }
+}
+
+function validateAccessibility({ accessibility, contractPath, errors, allowedTargets }) {
+  if (accessibility === undefined) {
+    return;
+  }
+
+  if (!isObject(accessibility)) {
+    errors.push(`${contractPath}: accessibility must be an object`);
+    return;
+  }
+
+  if (accessibility.focusModel !== undefined) {
+    const focusModel = ensureString({ value: accessibility.focusModel, field: "accessibility.focusModel", errors });
+    if (focusModel && !ACCESSIBILITY_FOCUS_MODELS.has(focusModel)) {
+      errors.push(`${contractPath}: accessibility.focusModel must be one of ${[...ACCESSIBILITY_FOCUS_MODELS].join(", ")}`);
+    }
+  }
+
+  if (accessibility.requiredAttributes !== undefined) {
+    if (!Array.isArray(accessibility.requiredAttributes)) {
+      errors.push(`${contractPath}: accessibility.requiredAttributes must be an array`);
+    } else {
+      for (const [index, entry] of accessibility.requiredAttributes.entries()) {
+        const fieldBase = `accessibility.requiredAttributes[${index}]`;
+
+        if (!isObject(entry)) {
+          errors.push(`${contractPath}: ${fieldBase} must be an object`);
+          continue;
+        }
+
+        validateNamedTarget({
+          value: entry.target,
+          field: `${fieldBase}.target`,
+          contractPath,
+          errors,
+          allowedTargets,
+        });
+        ensureStringArray({ value: entry.attributes, field: `${fieldBase}.attributes`, errors });
+      }
+    }
+  }
+
+  if (accessibility.relationships !== undefined) {
+    if (!Array.isArray(accessibility.relationships)) {
+      errors.push(`${contractPath}: accessibility.relationships must be an array`);
+    } else {
+      for (const [index, entry] of accessibility.relationships.entries()) {
+        const fieldBase = `accessibility.relationships[${index}]`;
+
+        if (!isObject(entry)) {
+          errors.push(`${contractPath}: ${fieldBase} must be an object`);
+          continue;
+        }
+
+        validateNamedTarget({
+          value: entry.from,
+          field: `${fieldBase}.from`,
+          contractPath,
+          errors,
+          allowedTargets,
+        });
+        ensureString({ value: entry.attribute, field: `${fieldBase}.attribute`, errors });
+        validateNamedTarget({
+          value: entry.to,
+          field: `${fieldBase}.to`,
+          contractPath,
+          errors,
+          allowedTargets,
+        });
+      }
+    }
+  }
+
+  if (accessibility.keyboardInteractions !== undefined) {
+    if (!Array.isArray(accessibility.keyboardInteractions)) {
+      errors.push(`${contractPath}: accessibility.keyboardInteractions must be an array`);
+    } else {
+      for (const [index, entry] of accessibility.keyboardInteractions.entries()) {
+        const fieldBase = `accessibility.keyboardInteractions[${index}]`;
+
+        if (!isObject(entry)) {
+          errors.push(`${contractPath}: ${fieldBase} must be an object`);
+          continue;
+        }
+
+        validateNamedTarget({
+          value: entry.target,
+          field: `${fieldBase}.target`,
+          contractPath,
+          errors,
+          allowedTargets,
+        });
+        ensureString({ value: entry.key, field: `${fieldBase}.key`, errors });
+        ensureString({ value: entry.effect, field: `${fieldBase}.effect`, errors });
+      }
+    }
+  }
+}
+
+function validateAdapters({ adapters, contractPath, errors }) {
+  if (adapters === undefined) {
+    return;
+  }
+
+  if (!isObject(adapters)) {
+    errors.push(`${contractPath}: adapters must be an object`);
+    return;
+  }
+
+  for (const [target, adapter] of Object.entries(adapters)) {
+    if (!FRAMEWORK_TARGETS.has(target)) {
+      errors.push(`${contractPath}: adapters.${target} is not a supported framework target`);
+      continue;
+    }
+
+    if (!isObject(adapter)) {
+      errors.push(`${contractPath}: adapters.${target} must be an object`);
+      continue;
+    }
+
+    if (adapter.mode !== undefined) {
+      const mode = ensureString({ value: adapter.mode, field: `adapters.${target}.mode`, errors });
+      if (mode && !ADAPTER_MODES.has(mode)) {
+        errors.push(`${contractPath}: adapters.${target}.mode must be one of ${[...ADAPTER_MODES].join(", ")}`);
+      }
+    }
+
+    if (adapter.clientOnly !== undefined) {
+      ensureBoolean({ value: adapter.clientOnly, field: `adapters.${target}.clientOnly`, errors });
+    }
+
+    if (adapter.notes !== undefined) {
+      ensureStringArray({ value: adapter.notes, field: `adapters.${target}.notes`, errors, required: false });
+    }
+
+    if (adapter.eventMap !== undefined) {
+      if (!isObject(adapter.eventMap)) {
+        errors.push(`${contractPath}: adapters.${target}.eventMap must be an object`);
+      } else {
+        for (const [eventName, adapterName] of Object.entries(adapter.eventMap)) {
+          if (eventName.trim() === "" || typeof adapterName !== "string" || adapterName.trim() === "") {
+            errors.push(`${contractPath}: adapters.${target}.eventMap must map non-empty event names to non-empty adapter names`);
+          }
+        }
+      }
+    }
   }
 }
 
@@ -535,6 +703,8 @@ async function validateContractEntry(entry) {
   validateProps({ props: contract.props, contractPath, errors, allowedTargets, variants: contract.variants });
   validateStates({ states: contract.states, contractPath, errors, allowedTargets });
   validateEvents({ events: contract.events, contractPath, errors, allowedTargets });
+  validateAccessibility({ accessibility: contract.accessibility, contractPath, errors, allowedTargets });
+  validateAdapters({ adapters: contract.adapters, contractPath, errors });
   await validateDocs({ docs: contract.docs, contractPath, contractDir, errors, declaredExamplePaths });
 
   if (!isObject(contract.behavior)) {
@@ -547,6 +717,35 @@ async function validateContractEntry(entry) {
 
     if (defaultMode && !BEHAVIOR_MODES.has(defaultMode)) {
       errors.push(`${contractPath}: behavior.defaultMode must be one of ${[...BEHAVIOR_MODES].join(", ")}`);
+    }
+
+    if (contract.behavior.clientOnly !== undefined) {
+      ensureBoolean({ value: contract.behavior.clientOnly, field: "behavior.clientOnly", errors });
+    }
+
+    if (contract.behavior.lifecycle !== undefined) {
+      if (!isObject(contract.behavior.lifecycle)) {
+        errors.push(`${contractPath}: behavior.lifecycle must be an object`);
+      } else {
+        if (contract.behavior.lifecycle.init !== undefined) {
+          ensureString({ value: contract.behavior.lifecycle.init, field: "behavior.lifecycle.init", errors });
+        }
+
+        if (contract.behavior.lifecycle.destroy !== undefined) {
+          ensureString({ value: contract.behavior.lifecycle.destroy, field: "behavior.lifecycle.destroy", errors });
+        }
+
+        if (contract.behavior.lifecycle.boot !== undefined) {
+          ensureString({ value: contract.behavior.lifecycle.boot, field: "behavior.lifecycle.boot", errors });
+        }
+      }
+    }
+
+    if (contract.behavior.domOwnership !== undefined) {
+      const domOwnership = ensureString({ value: contract.behavior.domOwnership, field: "behavior.domOwnership", errors });
+      if (domOwnership && !DOM_OWNERSHIP_MODES.has(domOwnership)) {
+        errors.push(`${contractPath}: behavior.domOwnership must be one of ${[...DOM_OWNERSHIP_MODES].join(", ")}`);
+      }
     }
 
     if (defaultMode === "shim-backed" && !behaviorPath) {

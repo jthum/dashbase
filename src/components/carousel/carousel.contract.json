@@ -107,7 +107,9 @@
   "events": [],
   "behavior": {
     "defaultMode": "shim-backed",
-    "shim": "./carousel.js"
+    "shim": "./carousel.js",
+    "clientOnly": true,
+    "domOwnership": "shim-mutates-live-state"
   },
   "imports": {
     "css": [
